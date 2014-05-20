@@ -29,7 +29,8 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="false"
                     android:scaleType="center"
-                    android:padding="10dp"
+                    android:padding="1dp"
+                    android:background="@drawable/border1"
                     android:src="@drawable/plantin" />
 
             </FrameLayout>
@@ -57,7 +58,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/editText1"
+                    android:id="@+id/userField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -81,7 +82,7 @@
                     />
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/passField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="17dp"
@@ -98,7 +99,7 @@
                 android:gravity="center" >
 
                 <Button
-                    android:id="@+id/button1"
+                    android:id="@+id/loginButton"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

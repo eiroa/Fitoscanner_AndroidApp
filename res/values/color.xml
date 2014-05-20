@@ -2,6 +2,8 @@
 
     <color name="greenLeaf">#124A00</color>
     <color name="yellowFont">#F8E62A</color>
+    <color name="greyBorder">#CCC3C3</color>
+    <color name="white">#FFFFFF</color>
     
 
 </resources>
