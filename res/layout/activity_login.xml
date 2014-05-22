@@ -33,7 +33,7 @@
                     android:background="@drawable/border1"
                     android:src="@drawable/plantin" />
 
-            </FrameLayout>
+            </FrameLayout>get
         </LinearLayout>
 
         <LinearLayout
@@ -49,7 +49,7 @@
                 android:layout_gravity="center_horizontal">
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/loginUserText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Usuario:"
@@ -73,7 +73,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/loginPassText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Clave:"
