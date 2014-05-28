@@ -33,7 +33,7 @@
                     android:background="@drawable/border1"
                     android:src="@drawable/plantin" />
 
-            </FrameLayout>get
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
