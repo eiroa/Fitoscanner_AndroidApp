@@ -33,10 +33,11 @@ public class LoginActivity extends Activity implements OnClickListener{
         this.activity = this;
         TextView txtView1 = (TextView) findViewById(R.id.loginUserText);
         TextView txtView2 = (TextView) findViewById(R.id.loginPassText);
-        Button bt = (Button) findViewById(R.id.loginButton);
+        
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         txtView1.setTypeface(font);
         txtView2.setTypeface(font);
+        Button bt = (Button) findViewById(R.id.loginButton);
         bt.setTypeface(font);
         
         bt.setOnClickListener(new View.OnClickListener() {

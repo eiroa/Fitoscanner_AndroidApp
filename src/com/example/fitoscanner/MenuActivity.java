@@ -46,7 +46,7 @@ public class MenuActivity extends Activity {
         arrowTakePic.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
-            	Intent intent = new Intent(activity, ImageActivity.class);
+            	Intent intent = new Intent(activity, MakePhotoActivity.class);
         		activity.startActivity(intent);      		
             }
         });

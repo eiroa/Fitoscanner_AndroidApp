@@ -6,27 +6,45 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
+import java.util.HashMap;
 
+import com.example.fitoscanner.helpers.Base64Helper;
 import com.example.fitoscanner.helpers.CameraPreview;
+import com.example.fitoscanner.helpers.CustomListViewAdapter;
 import com.example.fitoscanner.helpers.PhotoHandler;
+import com.example.fitoscanner.model.Image;
+
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Surface;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
@@ -38,7 +56,8 @@ public class MakePhotoActivity extends Activity {
 	  private Camera camera;
 	  private int cameraId = 0;
 	  public boolean hasCamera;
-	  private ArrayList<File> previews = new ArrayList<File>();
+	  Bitmap recentPhoto;
+	  private ArrayList<Image> previews = new ArrayList<Image>();
 	  CameraPreview mPreview;
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +77,47 @@ public class MakePhotoActivity extends Activity {
 	                 // get an image from the camera
 	                 camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
 	                 setContentView(R.layout.previews_layout);
-	             }
+	                 Log.i(TAG, "Layout changed to previews layout");
+	                 
+	                 
+	                 
+	 		        
+	                 
+//	                 String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+//	                     "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+//	                     "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+//	                     "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+//	                     "Android", "iPhone", "WindowsMobile" };
+//               
+//
+//	                 final ArrayList<String> list = new ArrayList<String>();
+//	                 for (int i = 0; i < values.length; ++i) {
+//	                   list.add(values[i]);
+//	                 }
+	                 Log.i(TAG, "previews are... "+previews.toString());
+//	                 final CustomListViewAdapter customAdapter = new CustomListViewAdapter(
+//	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
+//	                
+//	                 
+//	                 listview.setAdapter(customAdapter);
+//	                 Log.i(TAG, "Adapter set...");
+//	                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//	                   @Override
+//	                   public void onItemClick(AdapterView<?> parent, final View view,
+//	                       int position, long id) {
+//	                	   Toast toast = Toast.makeText(getApplicationContext(),
+//	                	            "Item " + (position + 1) + ": " + previews.get(position),
+//	                	            Toast.LENGTH_SHORT);
+//	                	        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//	                	        toast.show();
+//	                     
+//	                   }
+//
+//	                 });
+	               }
+
+	               
 	         }
 	     ); 
 
@@ -67,15 +126,39 @@ public class MakePhotoActivity extends Activity {
 	  
 	  @Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		hasCamera = checkCameraHardware(this);
 		if(hasCamera){
 	    	try {
 	    		camera = Camera.open();
+	    		camera.setDisplayOrientation(90);
 	    		mPreview = new CameraPreview(this, camera);
     	        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
     	        preview.addView(mPreview);
+    	        
+    	        
+    	        CameraInfo info =new android.hardware.Camera.CameraInfo();
+    	        Camera.getCameraInfo(cameraId, info);
+    	        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+    	        int degrees = 0;
+    	        switch (rotation) {
+    	            case Surface.ROTATION_0: degrees = 0; break;
+    	            case Surface.ROTATION_90: degrees = 90; break;
+    	            case Surface.ROTATION_180: degrees = 180; break;
+    	            case Surface.ROTATION_270: degrees = 270; break;
+    	        }
+
+    	        int result;
+    	        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+    	            result = (info.orientation + degrees) % 360;
+    	            result = (360 - result) % 360;  // compensate the mirror
+    	        } else {  // back-facing
+    	            result = (info.orientation - degrees + 360) % 360;
+    	        }
+    	        camera.setDisplayOrientation(result);
+    	        
+    	        
+
 	 		} catch (Exception e) {
 	 			Toast.makeText(getApplicationContext(), "Error opening camera", Toast.LENGTH_LONG).show();
 	 		} 
@@ -91,28 +174,11 @@ public class MakePhotoActivity extends Activity {
 		    }
 		}
 	  
-//	@SuppressLint("NewApi")
-//	private int findFrontFacingCamera() {
-//	    int cameraId = -1;
-//	    // Search for the front facing camera
-//	    int numberOfCameras = Camera.getNumberOfCameras();
-//	    for (int i = 0; i < numberOfCameras; i++) {
-//	      CameraInfo info = new CameraInfo();
-//	      Camera.getCameraInfo(i, info);
-//	      if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
-//	        Log.d(DEBUG_TAG, "Camera found");
-//	        cameraId = i;
-//	        break;
-//	      }
-//	    }
-//	    return cameraId;
-//	  }
 	  
 	  ShutterCallback myShutterCallback = new ShutterCallback(){
 
 		  @Override
 		  public void onShutter() {
-		   // TODO Auto-generated method stub
 		  
 		  }};
 
@@ -120,7 +186,6 @@ public class MakePhotoActivity extends Activity {
 
 		  @Override
 		  public void onPictureTaken(byte[] arg0, Camera arg1) {
-		   // TODO Auto-generated method stub
 		  
 		  }};
 	  
@@ -142,14 +207,48 @@ public class MakePhotoActivity extends Activity {
 		        if (pictureFile == null){
 		        	Toast.makeText(getApplicationContext(), "Failed to create File " +pictureFile.getPath(), Toast.LENGTH_LONG).show();
 		            return;
+		        }else if(pictureFile.exists()){
+		        	pictureFile.delete();
 		        }
-
+		       String absPath = pictureFile.getAbsolutePath();
+		        
+		        Log.i(TAG, "Picture saved "+absPath);
+		        
+		        
 		        try {
+		        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            fos.write(data);
 		            fos.close();
-		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+pictureFile.getPath(), Toast.LENGTH_LONG).show();
-		            previews.add(pictureFile);
+		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
+		            recentPhoto = BitmapFactory.decodeFile(absPath);
+//		            ImageView myImage = (ImageView) findViewById(R.id.takenPhoto);
+//	                myImage.setImageBitmap(recentPhoto);
+	                Image newImage = new Image(Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath);
+	                previews.add(newImage);
+	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
+	                final CustomListViewAdapter customAdapter = new CustomListViewAdapter(
+	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
+	                
+	                 
+	                 listview.setAdapter(customAdapter);
+	                 Log.i(TAG, "Adapter set...");
+	                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+	                   @Override
+	                   public void onItemClick(AdapterView<?> parent, final View view,
+	                       int position, long id) {
+	                	   Toast toast = Toast.makeText(getApplicationContext(),
+	                	            "Item " + (position + 1) + ": " + previews.get(position),
+	                	            Toast.LENGTH_SHORT);
+	                	        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+	                	        toast.show();
+	                     
+	                   }
+
+	                 });
+	                Log.i(TAG, "Recent photo loaded");
+	                Log.i(TAG,previews.toString());
 		        } catch (FileNotFoundException e) {
 		            Log.d(TAG, "File not found: " + e.getMessage());
 		        } catch (IOException e) {
@@ -193,4 +292,5 @@ public class MakePhotoActivity extends Activity {
 		    return mediaFile;
 		}
 
+	
 }
