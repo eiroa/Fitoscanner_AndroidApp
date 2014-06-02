@@ -27,6 +27,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.net.Uri;
@@ -62,15 +63,44 @@ public class MakePhotoActivity extends Activity {
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.takepic_layout);
-	     
-	     
-	     
 
-	     
-	     
-	     Button captureButton = (Button) findViewById(R.id.button_capture);
-	     captureButton.setOnClickListener(
+	   this.hasCamera = checkCameraHardware(this);
+	    if(this.hasCamera){
+	    	this.camera = Camera.open();
+	    	this.setShotView();
+	    }
+    
+	  }
+	  
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+	}
+	
+	private void setShotView(){
+		setContentView(R.layout.takepic_layout);
+        Log.i(TAG, "Layout changed to previews layout");
+        Log.i(TAG, "previews are... "+previews.toString());
+        startPreview();
+        setShotButton();
+	}
+	  
+	private void setTakeOneMoreButton(){
+		Button takeOneMoreButton = (Button) findViewById(R.id.button_takePicAgain);
+	     takeOneMoreButton.setOnClickListener(
+	         new View.OnClickListener() {
+	             @Override
+	             public void onClick(View v) {
+	                 setShotView();
+	               }              
+	         }
+	     );
+	}
+	
+	private void setShotButton(){
+		Button captureButton = (Button) findViewById(R.id.button_capture);
+	    captureButton.setOnClickListener(
 	         new View.OnClickListener() {
 	             @Override
 	             public void onClick(View v) {
@@ -78,92 +108,31 @@ public class MakePhotoActivity extends Activity {
 	                 camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
 	                 setContentView(R.layout.previews_layout);
 	                 Log.i(TAG, "Layout changed to previews layout");
-	                 
-	                 
-	                 
-	 		        
-	                 
-//	                 String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-//	                     "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-//	                     "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-//	                     "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-//	                     "Android", "iPhone", "WindowsMobile" };
-//               
-//
-//	                 final ArrayList<String> list = new ArrayList<String>();
-//	                 for (int i = 0; i < values.length; ++i) {
-//	                   list.add(values[i]);
-//	                 }
 	                 Log.i(TAG, "previews are... "+previews.toString());
-//	                 final CustomListViewAdapter customAdapter = new CustomListViewAdapter(
-//	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
-//	                
-//	                 
-//	                 listview.setAdapter(customAdapter);
-//	                 Log.i(TAG, "Adapter set...");
-//	                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//	                   @Override
-//	                   public void onItemClick(AdapterView<?> parent, final View view,
-//	                       int position, long id) {
-//	                	   Toast toast = Toast.makeText(getApplicationContext(),
-//	                	            "Item " + (position + 1) + ": " + previews.get(position),
-//	                	            Toast.LENGTH_SHORT);
-//	                	        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-//	                	        toast.show();
-//	                     
-//	                   }
-//
-//	                 });
-	               }
-
-	               
+	                 setTakeOneMoreButton();
+	               }              
 	         }
 	     ); 
-
-	    
+	}
+	  
+	  private void startPreview(){
+		  if(hasCamera){
+		    	try {
+		    		
+		    		camera.setDisplayOrientation(90);
+		    		mPreview = new CameraPreview(this, camera);
+	    	        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+	    	        preview.addView(mPreview);
+	    	        
+	    	        Camera.Parameters p = camera.getParameters();
+	    	        p.setRotation(90);
+	    	        camera.setParameters(p);
+		    	} catch (Exception e) {
+		 			Toast.makeText(getApplicationContext(), "Error opening camera", Toast.LENGTH_LONG).show();
+		 		} 
+		  }
 	  }
 	  
-	  @Override
-	protected void onStart() {
-		super.onStart();
-		hasCamera = checkCameraHardware(this);
-		if(hasCamera){
-	    	try {
-	    		camera = Camera.open();
-	    		camera.setDisplayOrientation(90);
-	    		mPreview = new CameraPreview(this, camera);
-    	        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-    	        preview.addView(mPreview);
-    	        
-    	        
-    	        CameraInfo info =new android.hardware.Camera.CameraInfo();
-    	        Camera.getCameraInfo(cameraId, info);
-    	        int rotation = getWindowManager().getDefaultDisplay().getRotation();
-    	        int degrees = 0;
-    	        switch (rotation) {
-    	            case Surface.ROTATION_0: degrees = 0; break;
-    	            case Surface.ROTATION_90: degrees = 90; break;
-    	            case Surface.ROTATION_180: degrees = 180; break;
-    	            case Surface.ROTATION_270: degrees = 270; break;
-    	        }
-
-    	        int result;
-    	        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-    	            result = (info.orientation + degrees) % 360;
-    	            result = (360 - result) % 360;  // compensate the mirror
-    	        } else {  // back-facing
-    	            result = (info.orientation - degrees + 360) % 360;
-    	        }
-    	        camera.setDisplayOrientation(result);
-    	        
-    	        
-
-	 		} catch (Exception e) {
-	 			Toast.makeText(getApplicationContext(), "Error opening camera", Toast.LENGTH_LONG).show();
-	 		} 
-	     }
-	}
 	  private boolean checkCameraHardware(Context context) {
 		    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
 		    	Toast.makeText(this, "Camera detected", Toast.LENGTH_SHORT).show();
@@ -214,18 +183,18 @@ public class MakePhotoActivity extends Activity {
 		        
 		        Log.i(TAG, "Picture saved "+absPath);
 		        
-		        
+		        setTakeOneMoreButton();
 		        try {
+				     
 		        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            fos.write(data);
 		            fos.close();
 		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-//		            ImageView myImage = (ImageView) findViewById(R.id.takenPhoto);
-//	                myImage.setImageBitmap(recentPhoto);
 	                Image newImage = new Image(Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath);
 	                previews.add(newImage);
+	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
 	                final CustomListViewAdapter customAdapter = new CustomListViewAdapter(
 	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
