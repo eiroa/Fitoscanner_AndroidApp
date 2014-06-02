@@ -25,8 +25,9 @@ public class ImageDataSource {
 		String name = cursor.getString(1);
 		String description = cursor.getString(2);
 		String base64 = cursor.getString(3);
+		Long idSample = cursor.getLong(4);
 		
-		Image image = new Image(id,base64,name,description);
+		Image image = new Image(id,base64,name,description,idSample);
 		return image;
 	}
 	

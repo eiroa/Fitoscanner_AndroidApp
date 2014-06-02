@@ -1,5 +1,6 @@
 package com.example.fitoscanner;
 
+import com.example.fitoscanner.datasources.ImageDataSource;
 import com.example.fitoscanner.helpers.TypefacesHelper;
 
 import android.app.Activity;
@@ -13,11 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RecordsActivity extends Activity{
-	
+	ImageDataSource dataSource;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.records_layout);
+        dataSource = new ImageDataSource(this);
         
-      
     }
 }

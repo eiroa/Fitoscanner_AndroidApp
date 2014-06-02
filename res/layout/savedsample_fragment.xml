@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="3dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:padding="3dp" >
+
+            <TextView
+                android:id="@+id/savedSample_originDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="1dp"
+                android:text="Date"
+                android:textColor="@color/yellowFont"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+			android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/photo1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="image"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:src="@drawable/plantin" />
+
+            <TextView
+                android:id="@+id/firstLinep1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/photo1"
+                android:paddingBottom="10dp"
+                android:text="TitleP1"
+                android:textColor="@color/yellowFont"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/secondLinep1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstLinep1"
+                android:layout_toRightOf="@+id/photo1"
+                android:paddingLeft="10dp"
+                android:text="DescriptionP2"
+                android:textColor="@color/yellowFont"
+                android:textSize="14dp" />
+        </RelativeLayout>
+        <RelativeLayout
+			android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/photo2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="image"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                 />
+
+            <TextView
+                android:id="@+id/firstLinep2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/photo2"
+                android:paddingBottom="5dp"
+                
+                android:textColor="@color/yellowFont"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/secondLinep1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstLinep2"
+                android:layout_toRightOf="@+id/photo2"
+                android:paddingLeft="10dp"
+
+                android:textColor="@color/yellowFont"
+                android:textSize="14dp" />
+        </RelativeLayout>
+        <RelativeLayout
+			android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/photo3"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                 />
+
+            <TextView
+                android:id="@+id/firstLinep3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/photo3"
+                android:paddingBottom="5dp"
+
+                android:textColor="@color/yellowFont"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/secondLinep3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firstLinep3"
+                android:layout_toRightOf="@+id/photo3"
+                android:paddingLeft="10dp"
+
+                android:textColor="@color/yellowFont"
+                android:textSize="14dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

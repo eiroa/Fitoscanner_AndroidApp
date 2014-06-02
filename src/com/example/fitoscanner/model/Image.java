@@ -6,12 +6,14 @@ public class Image {
 	private String base64;
 	private String title;
 	private String Description;
+	private Long idSample;
 	
-	public Image(Long id,String base64, String title, String desc){
+	public Image(Long id,String base64, String title, String desc, Long idSample){
 		this.id = id;
 		this.base64 =base64;
 		this.title = title;
-		this.Description = desc;		
+		this.Description = desc;
+		this.idSample = idSample;
 	}
 
 	public String getTitle() {
@@ -44,6 +46,16 @@ public class Image {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	
+
+	public Long getIdSample() {
+		return idSample;
+	}
+
+	public void setIdSample(Long idSample) {
+		this.idSample = idSample;
 	}
 
 	@Override

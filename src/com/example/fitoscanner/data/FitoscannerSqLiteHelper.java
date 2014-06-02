@@ -14,13 +14,11 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	// define the script to create table
 
 	
-	private static final String DATABASE_CREATE_REGISTER = " create table "
-			+ SamplesSQLiteTable.TABLE + "( " 
-			+ SamplesSQLiteTable.COLUMN_CATEGORY_ID + " integer primary key, " 
-			+ SamplesSQLiteTable.COLUMN_CATEGORY_DESCRIPTION + " text not null, "
-			+ SamplesSQLiteTable.COLUMN_CATEGORY_ORDER + " integer, "
-			+ SamplesSQLiteTable.COLUMN_CATEGORY_IMAGE_ID + " integer, " 
-			+ SamplesSQLiteTable.COLUMN_CATEGORY_LOCATION_PORTAL_ID + " integer"
+	private static final String DATABASE_CREATE_SAMPLE = " create table "
+			+ SampleSQLiteTable.TABLE + "( " 
+			+ SampleSQLiteTable.COLUMN_SAMPLE_ID + " integer primary key, " 
+			+ SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE + " text, "
+			+ SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME + " text"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "
@@ -48,19 +46,18 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_REGISTER);
-//		database.execSQL(DATABASE_CREATE_CONTENT);
-//		database.execSQL(DATABASE_CREATE_CONTENT_INFO);
+		database.execSQL(DATABASE_CREATE_SAMPLE);
+
 		database.execSQL(DATABASE_CREATE_IMAGE);
 //		database.execSQL(DATABASE_CREATE_CONFIGURATION);		
-		Log.d("Database Fitscanners:", "OnCreate executed");		
+		Log.d("Database FitOscanner:", "OnCreate executed");		
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-//		database.execSQL("DROP TABLE IF EXISTS " + ContentSQLiteTable.TABLE);
-		database.execSQL("DROP TABLE IF EXISTS " + SamplesSQLiteTable.TABLE);
-//		database.execSQL("DROP TABLE IF EXISTS " + ContentInfoSQLiteTable.TABLE);
+
+		database.execSQL("DROP TABLE IF EXISTS " + SampleSQLiteTable.TABLE);
+
 		database.execSQL("DROP TABLE IF EXISTS " + ImageSQLiteTable.TABLE);
 //		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
 		onCreate(database);

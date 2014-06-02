@@ -192,7 +192,7 @@ public class MakePhotoActivity extends Activity {
 		            fos.close();
 		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(0L,Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath);
+	                Image newImage = new Image(0L,Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath,null);
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
