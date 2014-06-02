@@ -1,12 +1,14 @@
 package com.example.fitoscanner.model;
 
 public class Image {
-
+	
+	private Long id;
 	private String base64;
 	private String title;
 	private String Description;
 	
-	public Image(String base64, String title, String desc){
+	public Image(Long id,String base64, String title, String desc){
+		this.id = id;
 		this.base64 =base64;
 		this.title = title;
 		this.Description = desc;		
@@ -36,7 +38,14 @@ public class Image {
 		Description = description;
 	}
 	
-	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString(){
 		return this.title + "\n" + this.Description;

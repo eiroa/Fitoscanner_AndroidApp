@@ -7,12 +7,14 @@ public class ImageSQLiteTable {
 	
 	// Column names
 	public static final String COLUMN_IMAGE_ID = "_id";
-	public static final String COLUMN_IMAGE_NAME = "name";
+	public static final String COLUMN_IMAGE_TITLE = "name";
+	public static final String COLUMN_IMAGE_DESCRIPTION = "description";
 	public static final String COLUMN_IMAGE_BASE64= "base64";
 	
 	public static String[] ALL_COLUMNS = {
 			ImageSQLiteTable.COLUMN_IMAGE_ID,
-			ImageSQLiteTable.COLUMN_IMAGE_NAME,
+			ImageSQLiteTable.COLUMN_IMAGE_TITLE,
+			ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION,
 			ImageSQLiteTable.COLUMN_IMAGE_BASE64};
 		
 }

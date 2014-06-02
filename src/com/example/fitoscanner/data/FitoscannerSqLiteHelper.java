@@ -15,18 +15,19 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 
 	
 	private static final String DATABASE_CREATE_REGISTER = " create table "
-			+ RegistersSQLiteTable.TABLE + "( " 
-			+ RegistersSQLiteTable.COLUMN_CATEGORY_ID + " integer primary key, " 
-			+ RegistersSQLiteTable.COLUMN_CATEGORY_DESCRIPTION + " text not null, "
-			+ RegistersSQLiteTable.COLUMN_CATEGORY_ORDER + " integer, "
-			+ RegistersSQLiteTable.COLUMN_CATEGORY_IMAGE_ID + " integer, " 
-			+ RegistersSQLiteTable.COLUMN_CATEGORY_LOCATION_PORTAL_ID + " integer"
+			+ SamplesSQLiteTable.TABLE + "( " 
+			+ SamplesSQLiteTable.COLUMN_CATEGORY_ID + " integer primary key, " 
+			+ SamplesSQLiteTable.COLUMN_CATEGORY_DESCRIPTION + " text not null, "
+			+ SamplesSQLiteTable.COLUMN_CATEGORY_ORDER + " integer, "
+			+ SamplesSQLiteTable.COLUMN_CATEGORY_IMAGE_ID + " integer, " 
+			+ SamplesSQLiteTable.COLUMN_CATEGORY_LOCATION_PORTAL_ID + " integer"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "
 			+ ImageSQLiteTable.TABLE + "( " 
 			+ ImageSQLiteTable.COLUMN_IMAGE_ID + " integer primary key, " 
-			+ ImageSQLiteTable.COLUMN_IMAGE_NAME + " text not null, "
+			+ ImageSQLiteTable.COLUMN_IMAGE_TITLE+ " text , "
+			+ ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION+ " text , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_BASE64 + " text not null"
 			+ " );";
 
@@ -58,7 +59,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 //		database.execSQL("DROP TABLE IF EXISTS " + ContentSQLiteTable.TABLE);
-		database.execSQL("DROP TABLE IF EXISTS " + RegistersSQLiteTable.TABLE);
+		database.execSQL("DROP TABLE IF EXISTS " + SamplesSQLiteTable.TABLE);
 //		database.execSQL("DROP TABLE IF EXISTS " + ContentInfoSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + ImageSQLiteTable.TABLE);
 //		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
