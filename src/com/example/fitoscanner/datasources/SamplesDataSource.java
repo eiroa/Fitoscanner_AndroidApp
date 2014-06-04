@@ -52,7 +52,8 @@ public class SamplesDataSource {
 					this.saveImage(image);
 				}
 			} catch (Exception e) {
-				Log.e(TAG, e.getMessage());
+				Log.e(TAG, "Error saving sample!" );
+				e.printStackTrace();
 			}
 		} finally {
 			this.close();
@@ -70,8 +71,9 @@ public class SamplesDataSource {
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_ID, id);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
+			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
+			
 			if(imageExists(image))
 			{
 				database.update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
@@ -85,9 +87,12 @@ public class SamplesDataSource {
 	private void doSaveSample(Sample sample) {
 
 		Long id = sample.getId();
-
+		String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(sample.getOriginDate());
+		String fieldName = sample.getFieldName();
 		ContentValues values = new ContentValues();
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ID, id);
+		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
+		values.put(SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME, fieldName);
 
 		if (sampleExists(sample)) {
 			database.update(SampleSQLiteTable.TABLE, values,

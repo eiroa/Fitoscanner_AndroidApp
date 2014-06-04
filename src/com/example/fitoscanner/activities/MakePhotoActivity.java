@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
@@ -105,6 +106,7 @@ public class MakePhotoActivity extends Activity {
 	             @Override
 	             public void onClick(View v) {
 	                 setShotView();
+	                 
 	               }              
 	         }
 	     );
@@ -122,6 +124,24 @@ public class MakePhotoActivity extends Activity {
 	                 Log.i(TAG, "Layout changed to previews layout");
 	                 Log.i(TAG, "previews are... "+previews.toString());
 	                 setTakeOneMoreButton();
+	                 setSaveButton();
+	               }              
+	         }
+	     ); 
+	}
+	
+	private void setSaveButton(){
+		Button saveButton = (Button) findViewById(R.id.button_saveSample);
+	    saveButton.setOnClickListener(
+	         new View.OnClickListener() {
+	             @Override
+	             public void onClick(View v) {
+	                 // get an image from the camera
+	                 saveSample();
+	                 Toast.makeText(getApplicationContext(), "Se " +
+	                 		"ha guardado la muestra "+newSample.getFieldName()+ " con " +
+	                 				""+previews.size() + " imágenes", Toast.LENGTH_LONG).show();
+	                 finish();
 	               }              
 	         }
 	     ); 
@@ -168,7 +188,9 @@ public class MakePhotoActivity extends Activity {
 	   * Por seguridad, para evitar leaks de memoria, seteamos en null algunos valores
 	   * El Garbage Collector, se encargará de liberar la memoria consiguientemente
 	   */
+	  @Override
 	  protected void onDestroy(){
+		  super.onDestroy();
 		  previews = null;
 		  newSample = null;
 		  imageDatasource =null;
@@ -213,11 +235,16 @@ public class MakePhotoActivity extends Activity {
 		        try {
 	        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
+		            newSample = new Sample();
+		            newSample.setId(0L);
+		            newSample.setOriginDate(new Date());
+		            newSample.setFieldName("testing field");
+		            newSample.setImages(previews);
 		            fos.write(data);
 		            fos.close();
 		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(0L,Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath,null);
+	                Image newImage = new Image(0L,Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath,newSample.getId());
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
