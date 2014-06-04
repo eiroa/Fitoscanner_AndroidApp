@@ -1,7 +1,11 @@
-package com.example.fitoscanner;
+package com.example.fitoscanner.activities;
 
 
 
+import com.example.fitoscanner.R;
+import com.example.fitoscanner.R.id;
+import com.example.fitoscanner.R.layout;
+import com.example.fitoscanner.R.menu;
 import com.example.fitoscanner.helpers.TypefacesHelper;
 
 import android.support.v4.app.Fragment;

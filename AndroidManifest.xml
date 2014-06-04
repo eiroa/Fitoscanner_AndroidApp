@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.fitoscanner.LoginActivity"
+            android:name="com.example.fitoscanner.activities.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,22 +26,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.fitoscanner.MenuActivity"
+            android:name="com.example.fitoscanner.activities.MenuActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.example.fitoscanner.RecordsActivity"
+            android:name="com.example.fitoscanner.activities.RecordsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.example.fitoscanner.ImageActivity"
+            android:name="com.example.fitoscanner.activities.ImageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.example.fitoscanner.MakePhotoActivity"
+            android:name="com.example.fitoscanner.activities.MakePhotoActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>

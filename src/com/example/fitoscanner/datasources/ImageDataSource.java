@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
 import com.example.fitoscanner.data.ImageSQLiteTable;
 import com.example.fitoscanner.model.Image;
+import com.example.fitoscanner.model.Sample;
 
 public class ImageDataSource {
 	public final String TAG = "ImageDateSource";
@@ -202,6 +203,10 @@ public class ImageDataSource {
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}		
+	}
+	
+	public void saveImagesSample(Sample sample){
+		
 	}
 
 

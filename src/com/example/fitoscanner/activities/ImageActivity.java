@@ -1,8 +1,11 @@
-package com.example.fitoscanner;
+package com.example.fitoscanner.activities;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.example.fitoscanner.R;
+import com.example.fitoscanner.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

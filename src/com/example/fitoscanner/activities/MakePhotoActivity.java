@@ -1,4 +1,4 @@
-package com.example.fitoscanner;
+package com.example.fitoscanner.activities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,11 +10,18 @@ import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
 
+
+import com.example.fitoscanner.R;
+import com.example.fitoscanner.R.id;
+import com.example.fitoscanner.R.layout;
+import com.example.fitoscanner.datasources.ImageDataSource;
+import com.example.fitoscanner.datasources.SamplesDataSource;
 import com.example.fitoscanner.helpers.Base64Helper;
 import com.example.fitoscanner.helpers.CameraPreview;
 import com.example.fitoscanner.helpers.CustomListViewAdapter;
 import com.example.fitoscanner.helpers.PhotoHandler;
 import com.example.fitoscanner.model.Image;
+import com.example.fitoscanner.model.Sample;
 
 
 import android.annotation.SuppressLint;
@@ -56,34 +63,39 @@ public class MakePhotoActivity extends Activity {
 	  public static final int MEDIA_TYPE_VIDEO = 2;
 	  private Camera camera;
 	  private int cameraId = 0;
-	  public boolean hasCamera;
-	  Bitmap recentPhoto;
+	  private boolean hasCamera;
+	  private Bitmap recentPhoto;
 	  private ArrayList<Image> previews = new ArrayList<Image>();
-	  CameraPreview mPreview;
+	  private CameraPreview mPreview;
+	  private ImageDataSource imageDatasource;
+	  private SamplesDataSource samplesDataSource;
+	  private Sample newSample;
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 
 	   this.hasCamera = checkCameraHardware(this);
 	    if(this.hasCamera){
+	    	//Abrimos la camara trasera que este disponible
 	    	this.camera = Camera.open();
+	    	//Se inicia el layout para tomar una foto
 	    	this.setShotView();
+	    	
+	    	//Iniciamos los data source para poder guardar la nueva muestra con sus
+	    	//respectivas imagenes en la base de datos SQLite
+	    	setSamplesDataSource(new SamplesDataSource(this));
+	    	setImageDatasource(new ImageDataSource(this));
+	    	
 	    }
     
 	  }
-	  
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-	}
 	
 	private void setShotView(){
-		setContentView(R.layout.takepic_layout);
+		this.setContentView(R.layout.takepic_layout);
         Log.i(TAG, "Layout changed to previews layout");
         Log.i(TAG, "previews are... "+previews.toString());
-        startPreview();
-        setShotButton();
+        this.startPreview();
+        this.setShotButton();
 	}
 	  
 	private void setTakeOneMoreButton(){
@@ -115,23 +127,23 @@ public class MakePhotoActivity extends Activity {
 	     ); 
 	}
 	  
-	  private void startPreview(){
-		  if(hasCamera){
-		    	try {
+	 private void startPreview(){
+		 if(hasCamera){
+		    try {
 		    		
-		    		camera.setDisplayOrientation(90);
-		    		mPreview = new CameraPreview(this, camera);
-	    	        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-	    	        preview.addView(mPreview);
+		    	camera.setDisplayOrientation(90);
+		    	mPreview = new CameraPreview(this, camera);
+	    	    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+	    	    preview.addView(mPreview);
 	    	        
-	    	        Camera.Parameters p = camera.getParameters();
-	    	        p.setRotation(90);
-	    	        camera.setParameters(p);
-		    	} catch (Exception e) {
+	    	    Camera.Parameters p = camera.getParameters();
+	    	    p.setRotation(90);
+	    	    camera.setParameters(p);
+		    } catch (Exception e) {
 		 			Toast.makeText(getApplicationContext(), "Error opening camera", Toast.LENGTH_LONG).show();
-		 		} 
-		  }
-	  }
+		 	} 
+		 }
+	 }
 	  
 	  private boolean checkCameraHardware(Context context) {
 		    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
@@ -143,21 +155,6 @@ public class MakePhotoActivity extends Activity {
 		    }
 		}
 	  
-	  
-	  ShutterCallback myShutterCallback = new ShutterCallback(){
-
-		  @Override
-		  public void onShutter() {
-		  
-		  }};
-
-		 PictureCallback myPictureCallback_RAW = new PictureCallback(){
-
-		  @Override
-		  public void onPictureTaken(byte[] arg0, Camera arg1) {
-		  
-		  }};
-	  
 	  @Override
 	  protected void onPause() {
 	    if (camera != null) {
@@ -166,6 +163,34 @@ public class MakePhotoActivity extends Activity {
 	    }
 	    super.onPause();
 	  }
+	  
+	  /**
+	   * Por seguridad, para evitar leaks de memoria, seteamos en null algunos valores
+	   * El Garbage Collector, se encargará de liberar la memoria consiguientemente
+	   */
+	  protected void onDestroy(){
+		  previews = null;
+		  newSample = null;
+		  imageDatasource =null;
+		  samplesDataSource = null;
+	  };
+	  
+	  
+	  ShutterCallback myShutterCallback = new ShutterCallback(){
+	
+		  @Override
+		  public void onShutter() {
+		  
+		  }};
+	
+		 PictureCallback myPictureCallback_RAW = new PictureCallback(){
+	
+		  @Override
+		  public void onPictureTaken(byte[] arg0, Camera arg1) {
+		  
+		  }};
+	  
+	  
 	
 	  private PictureCallback mPicture = new PictureCallback() {
 
@@ -183,10 +208,10 @@ public class MakePhotoActivity extends Activity {
 		        
 		        Log.i(TAG, "Picture saved "+absPath);
 		        
+		        //Activar boton para obtener otra imagen
 		        setTakeOneMoreButton();
 		        try {
-				     
-		        	
+	        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            fos.write(data);
 		            fos.close();
@@ -260,6 +285,46 @@ public class MakePhotoActivity extends Activity {
 
 		    return mediaFile;
 		}
+	/**
+	 * Guarda la muestra que fue generada al tomar la primera foto
+	 */
+	public void saveSample(){
+		samplesDataSource.open();
+    	try
+    	{
+    		samplesDataSource.saveSample(this.newSample);								        		
+    	}
+    	finally{
+    		samplesDataSource.close();
+    	}
+	}
+	
+	public void saveImagesSamples(){
+		imageDatasource.open();
+    	try
+    	{
+    		imageDatasource.saveImagesSample(this.newSample);								        		
+    	}
+    	finally{
+    		imageDatasource.close();
+    	}
+	}
 
+	public ImageDataSource getImageDatasource() {
+		return imageDatasource;
+	}
+
+	public void setImageDatasource(ImageDataSource imageDatasource) {
+		this.imageDatasource = imageDatasource;
+	}
+
+	public SamplesDataSource getSamplesDataSource() {
+		return samplesDataSource;
+	}
+
+	public void setSamplesDataSource(SamplesDataSource samplesDataSource) {
+		this.samplesDataSource = samplesDataSource;
+	}
+	
 	
 }

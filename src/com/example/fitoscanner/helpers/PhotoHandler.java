@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.example.fitoscanner.MakePhotoActivity;
+import com.example.fitoscanner.activities.MakePhotoActivity;
 
 import android.content.Context;
 import android.hardware.Camera;
