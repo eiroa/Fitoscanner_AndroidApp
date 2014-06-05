@@ -29,7 +29,7 @@ public class PhotoHandler implements PictureCallback {
 
 	    if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
 
-	      Log.d(MakePhotoActivity.DEBUG_TAG, "Can't create directory to save image.");
+	      Log.d(MakePhotoActivity.TAG, "Can't create directory to save image.");
 	      Toast.makeText(context, "Can't create directory to save image.",
 	          Toast.LENGTH_LONG).show();
 	      return;
@@ -51,7 +51,7 @@ public class PhotoHandler implements PictureCallback {
 	      Toast.makeText(context, "New Image saved:" + photoFile,
 	          Toast.LENGTH_LONG).show();
 	    } catch (Exception error) {
-	      Log.d(MakePhotoActivity.DEBUG_TAG, "File" + filename + "not saved: "
+	      Log.d(MakePhotoActivity.TAG, "File" + filename + "not saved: "
 	          + error.getMessage());
 	      Toast.makeText(context, "Image could not be saved.",
 	          Toast.LENGTH_LONG).show();

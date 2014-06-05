@@ -80,7 +80,8 @@ public class SamplesDataSource {
 
 			// Guardamos cada imagen correspondiente de la muestra
 			for (Image image : sample.getImages()) {
-				image.setId(idResult);
+				image.setIdSample(idResult);
+				this.imageDataSource.setDatabase(getDatabase());
 				this.imageDataSource.doSaveImage(image);
 			}
 		} catch (Exception e) {
@@ -223,13 +224,25 @@ public class SamplesDataSource {
 			samples = cursorToListOfCategory(cursor);
 
 			for (Sample sample : samples) {
+				this.imageDataSource.setDatabase(getDatabase());
 				ArrayList<Image> images = this.imageDataSource.getImagesBySampleId(sample.getId());
 				sample.setImages(images);
 			}
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
+			Log.e(TAG, " Error al obtener muestras");
+			e.printStackTrace();
 		}
 		return samples;
 	}
+
+public SQLiteDatabase getDatabase() {
+	return database;
+}
+
+public void setDatabase(SQLiteDatabase database) {
+	this.database = database;
+}
+	
+	
 
 }

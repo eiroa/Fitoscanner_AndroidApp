@@ -58,7 +58,6 @@ import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class MakePhotoActivity extends Activity {
-	  public final static String DEBUG_TAG = "MakePhotoActivity";
 	  public final static String TAG = "MakePhotoActivity";
 	  public static final int MEDIA_TYPE_IMAGE = 1;
 	  public static final int MEDIA_TYPE_VIDEO = 2;
@@ -243,7 +242,7 @@ public class MakePhotoActivity extends Activity {
 		            fos.close();
 		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(0L,newSample.getId(),Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath);
+	                Image newImage = new Image(null,null, pictureFile.getName(), absPath,Base64Helper.encodeTobase64(recentPhoto));
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
@@ -297,7 +296,7 @@ public class MakePhotoActivity extends Activity {
 		        }
 		    }
 
-		    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		    String timeStamp = new SimpleDateFormat("yyyy-MM-dd__HH_mm_ss").format(new Date());
 		    File mediaFile;
 		    if (type == MEDIA_TYPE_IMAGE){
 		        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
@@ -318,7 +317,9 @@ public class MakePhotoActivity extends Activity {
 		samplesDataSource.open();
     	try
     	{
-    		samplesDataSource.saveSample(this.newSample);								        		
+    		
+    		samplesDataSource.saveSample(this.newSample);
+    		
     	}
     	finally{
     		samplesDataSource.close();

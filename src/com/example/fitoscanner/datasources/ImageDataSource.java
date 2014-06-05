@@ -241,6 +241,14 @@ public class ImageDataSource {
 		return images;			
 	}
 
+	public SQLiteDatabase getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(SQLiteDatabase database) {
+		this.database = database;
+	}
 
 
+	
 }
