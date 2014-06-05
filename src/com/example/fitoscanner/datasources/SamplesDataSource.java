@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.Locale;
 
 
-
-
 import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
 import com.example.fitoscanner.data.ImageSQLiteTable;
 import com.example.fitoscanner.data.SampleSQLiteTable;
@@ -34,14 +32,33 @@ public class SamplesDataSource {
 		dbHelper = new FitoscannerSqLiteHelper(context);
 		this.imageDataSource = new ImageDataSource(context);
 	}
-	
+
 	private Sample cursorToSample(Cursor cursor) {
 		Long id = cursor.getLong(0);
 		String date = cursor.getString(1);
 		String field = cursor.getString(2);
-		
-		Sample Sample = new Sample(id,date,null,field);
+		Sample Sample = new Sample(id, date, null, field);
 		return Sample;
+	}
+
+	private ArrayList<Sample> cursorToListOfCategory(Cursor cursor) {
+
+		ArrayList<Sample> samples = new ArrayList<Sample>();
+
+		if (cursor != null) {
+			try {
+				cursor.moveToFirst();
+				while (!cursor.isAfterLast()) {
+					Sample sample = cursorToSample(cursor);
+					samples.add(sample);
+					cursor.moveToNext();
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+
+		return samples;
 	}
 
 	public void open() throws SQLException {
@@ -52,68 +69,68 @@ public class SamplesDataSource {
 		dbHelper.close();
 	}
 
-	public void saveSample(Sample sample) {
-		this.open();
-		try {
-			try {
-				// Guardamos la muestra
-				 doSaveSample(sample);
+	public Long saveSample(Sample sample) {
+		Long idResult = 0L;
 
-				// Guardamos cada imagen correspondiente de la muestra
-				for (Image image : sample.getImages()) {
-					this.saveImage(image);
-				}
-			} catch (Exception e) {
-				Log.e(TAG, "Error saving sample!" );
-				e.printStackTrace();
+		try {
+			// Guardamos la muestra y al guardarse se devuelve el id con el que
+			// se guardo,
+			// dicho id se insertara en cada imagen que contenga la muestra
+			idResult = doSaveSample(sample);
+
+			// Guardamos cada imagen correspondiente de la muestra
+			for (Image image : sample.getImages()) {
+				image.setId(idResult);
+				this.imageDataSource.doSaveImage(image);
 			}
-		} finally {
-			this.close();
+		} catch (Exception e) {
+			Log.e(TAG, "Error saving sample!");
+			e.printStackTrace();
 		}
+		return idResult;
 	}
 
 	private void saveImage(Image image) {
-		if (image != null)
-		{
+		if (image != null) {
 			Long id = image.getId();
 			Long idSample = image.getIdSample();
 			String title = image.getTitle();
 			String description = image.getDescription();
 			String base64 = image.getBase64();
-			
+
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_ID, id);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
-			
-			if(imageExists(image))
-			{
-				database.update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
-			} else 
-			{
-				database.insert(ImageSQLiteTable.TABLE, null, values);	
-			}														
+
+			if (imageExists(image)) {
+				database.update(ImageSQLiteTable.TABLE, values,
+						ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
+			} else {
+				database.insert(ImageSQLiteTable.TABLE, null, values);
+			}
 		}
 	}
 
-	private void doSaveSample(Sample sample) {
-
+	private Long doSaveSample(Sample sample) {
+		Long idResult = 0L;
 		Long id = sample.getId();
 		String date = sample.getOriginDate();
 		String fieldName = sample.getFieldName();
 		ContentValues values = new ContentValues();
-		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ID, id);
+
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME, fieldName);
 
-		if (sampleExists(sample)) {
+		if (id != null && sampleExists(sample)) {
 			database.update(SampleSQLiteTable.TABLE, values,
 					SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id, null);
 		} else {
-			database.insert(SampleSQLiteTable.TABLE, null, values);
+			idResult = database.insert(SampleSQLiteTable.TABLE, null, values);
 		}
+		return idResult;
 	}
 
 	private boolean sampleExists(Sample sample) {
@@ -141,14 +158,16 @@ public class SamplesDataSource {
 
 		return exists;
 	}
-	
+
 	private boolean imageExists(Image image) {
 
 		boolean exists = false;
 		try {
 			String table = ImageSQLiteTable.TABLE;
-			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + image.getId();
-			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS, where, null, null, null, null);						
+			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = "
+					+ image.getId();
+			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS,
+					where, null, null, null, null);
 			if (cursor != null) {
 				try {
 					cursor.moveToFirst();
@@ -156,36 +175,61 @@ public class SamplesDataSource {
 					exists = count != 0;
 				} finally {
 					cursor.close();
-				}				
+				}
 			}
 		} catch (Exception e) {
 			Log.e(TAG, ("iMAGE NOT FOUND..." + image.getId().toString()));
-		}		
+		}
 
 		return exists;
 	}
-	
+
 	public Sample getSampleById(Long id) {
-        this.open();
-		Sample Sample = null;		
+		Sample Sample = null;
 		try {
 			String table = SampleSQLiteTable.TABLE;
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
-			Cursor cursor = database.query(table, SampleSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
+			Cursor cursor = database.query(table,
+					SampleSQLiteTable.ALL_COLUMNS, where, null, null, null,
+					null);
 			if (cursor != null) {
 				try {
 					if (cursor.moveToFirst()) {
 						Sample = cursorToSample(cursor);
-						Sample.setImages(this.imageDataSource.getImagesBySampleId(id));
+						Sample.setImages(this.imageDataSource
+								.getImagesBySampleId(id));
 					}
 				} finally {
 					cursor.close();
 				}
-			}				
+			}
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
-		this.close();
 		return Sample;
 	}
+
+/**
+ * Devuelve en una lista todas las muestras con sus respectivas imágenes<	
+ * @return
+ */
+	public ArrayList<Sample> getSamples() {
+		ArrayList<Sample> samples = new ArrayList<Sample>();
+		try {
+
+			Cursor cursor = database.query(SampleSQLiteTable.TABLE,
+					SampleSQLiteTable.ALL_COLUMNS, null, null, null, null,
+					null);
+			samples = cursorToListOfCategory(cursor);
+
+			for (Sample sample : samples) {
+				ArrayList<Image> images = this.imageDataSource.getImagesBySampleId(sample.getId());
+				sample.setImages(images);
+			}
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}
+		return samples;
+	}
+
 }

@@ -236,7 +236,6 @@ public class MakePhotoActivity extends Activity {
 	        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            newSample = new Sample();
-		            newSample.setId(0L);
 		            newSample.setOriginDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
 		            newSample.setFieldName("testing field");
 		            newSample.setImages(previews);

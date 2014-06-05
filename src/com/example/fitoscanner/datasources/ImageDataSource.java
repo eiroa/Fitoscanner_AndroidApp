@@ -111,12 +111,11 @@ public class ImageDataSource {
 			String base64 = image.getBase64();
 			
 			ContentValues values = new ContentValues();
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_ID, id);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
-			if(imageExists(image))
+			if(id!=null&&imageExists(image))
 			{
 				database.update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
 			} else 
