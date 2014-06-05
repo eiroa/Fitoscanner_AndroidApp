@@ -14,11 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
  
-public class CustomListViewAdapter extends ArrayAdapter<Image> {
+public class CustomImageListViewAdapter extends ArrayAdapter<Image> {
  
     Context context;
  
-    public CustomListViewAdapter(Context context, int resourceId,
+    public CustomImageListViewAdapter(Context context, int resourceId,
             List<Image> items) {
         super(context, resourceId, items);
         this.context = context;

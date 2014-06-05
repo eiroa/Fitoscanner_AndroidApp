@@ -19,7 +19,8 @@ import com.example.fitoscanner.datasources.ImageDataSource;
 import com.example.fitoscanner.datasources.SamplesDataSource;
 import com.example.fitoscanner.helpers.Base64Helper;
 import com.example.fitoscanner.helpers.CameraPreview;
-import com.example.fitoscanner.helpers.CustomListViewAdapter;
+import com.example.fitoscanner.helpers.CustomImageListViewAdapter;
+import com.example.fitoscanner.helpers.CustomSampleListViewAdapter;
 import com.example.fitoscanner.helpers.PhotoHandler;
 import com.example.fitoscanner.model.Image;
 import com.example.fitoscanner.model.Sample;
@@ -246,7 +247,7 @@ public class MakePhotoActivity extends Activity {
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
-	                final CustomListViewAdapter customAdapter = new CustomListViewAdapter(
+	                final CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
 	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
 	                
 	                 
