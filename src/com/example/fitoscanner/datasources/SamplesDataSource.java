@@ -8,6 +8,7 @@ import java.util.Locale;
 
 
 
+
 import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
 import com.example.fitoscanner.data.ImageSQLiteTable;
 import com.example.fitoscanner.data.SampleSQLiteTable;
@@ -26,10 +27,21 @@ public class SamplesDataSource {
 	private SQLiteDatabase database;
 	private FitoscannerSqLiteHelper dbHelper;
 	private Context mContext;
+	private ImageDataSource imageDataSource;
 
 	public SamplesDataSource(Context context) {
 		this.mContext = context;
 		dbHelper = new FitoscannerSqLiteHelper(context);
+		this.imageDataSource = new ImageDataSource(context);
+	}
+	
+	private Sample cursorToSample(Cursor cursor) {
+		Long id = cursor.getLong(0);
+		String date = cursor.getString(1);
+		String field = cursor.getString(2);
+		
+		Sample Sample = new Sample(id,date,null,field);
+		return Sample;
 	}
 
 	public void open() throws SQLException {
@@ -64,12 +76,14 @@ public class SamplesDataSource {
 		if (image != null)
 		{
 			Long id = image.getId();
+			Long idSample = image.getIdSample();
 			String title = image.getTitle();
-			String base64 = image.getBase64();
 			String description = image.getDescription();
+			String base64 = image.getBase64();
 			
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_ID, id);
+			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
@@ -87,7 +101,7 @@ public class SamplesDataSource {
 	private void doSaveSample(Sample sample) {
 
 		Long id = sample.getId();
-		String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(sample.getOriginDate());
+		String date = sample.getOriginDate();
 		String fieldName = sample.getFieldName();
 		ContentValues values = new ContentValues();
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ID, id);
@@ -149,5 +163,29 @@ public class SamplesDataSource {
 		}		
 
 		return exists;
+	}
+	
+	public Sample getSampleById(Long id) {
+        this.open();
+		Sample Sample = null;		
+		try {
+			String table = SampleSQLiteTable.TABLE;
+			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
+			Cursor cursor = database.query(table, SampleSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
+			if (cursor != null) {
+				try {
+					if (cursor.moveToFirst()) {
+						Sample = cursorToSample(cursor);
+						Sample.setImages(this.imageDataSource.getImagesBySampleId(id));
+					}
+				} finally {
+					cursor.close();
+				}
+			}				
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}
+		this.close();
+		return Sample;
 	}
 }

@@ -20,26 +20,36 @@ public class ImageDataSource {
 	public final String TAG = "ImageDateSource";
 	private SQLiteDatabase database;
 	private FitoscannerSqLiteHelper dbHelper;
-
+	
+/**
+ * Construye un objeto Image utilizando la informacion de la base
+ * @param cursor
+ * @return
+ */
 	private Image cursorToImage(Cursor cursor) {
 		Long id = cursor.getLong(0);
-		String name = cursor.getString(1);
-		String description = cursor.getString(2);
-		String base64 = cursor.getString(3);
-		Long idSample = cursor.getLong(4);
-		
-		Image image = new Image(id,base64,name,description,idSample);
+		Long idSample = cursor.getLong(1);
+		String title = cursor.getString(2);
+		String description = cursor.getString(3);
+		String base64 = cursor.getString(4);
+				
+		Image image = new Image(id,idSample,title,description,base64);
 		return image;
 	}
 	
+	/**
+	 * Construye una lista de images obtenidas de la base
+	 * @param cursor
+	 * @return
+	 */
 	private ArrayList<Image> cursorToListOfImages(Cursor cursor) {		
-		ArrayList<Image> contents = new ArrayList<Image>();
+		ArrayList<Image> images = new ArrayList<Image>();
 		if (cursor != null) {
 			try{
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast()) {
-					Image content = cursorToImage(cursor);
-					contents.add(content);
+					Image image = cursorToImage(cursor);
+					images.add(image);
 					cursor.moveToNext();
 				}				
 			}
@@ -47,18 +57,23 @@ public class ImageDataSource {
 				cursor.close();
 			}
 		}
-		return contents;
+		return images;
 	}	
 
 	public ImageDataSource(Context context) {
 		dbHelper = new FitoscannerSqLiteHelper(context);
 	}
 	
-
+/**
+ * Abre una conexion a la base
+ * @throws SQLException
+ */
 	public void open() throws SQLException {
 		database = dbHelper.getWritableDatabase();
 	}
-
+/**
+ * Cierra la conexion a la base
+ */
 	public void close() {
 		dbHelper.close();
 	}	
@@ -90,12 +105,14 @@ public class ImageDataSource {
 		if (image != null)
 		{
 			Long id = image.getId();
+			Long idSample = image.getIdSample();
 			String title = image.getTitle();
 			String description = image.getDescription();
 			String base64 = image.getBase64();
 			
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_ID, id);
+			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
@@ -207,6 +224,22 @@ public class ImageDataSource {
 	
 	public void saveImagesSample(Sample sample){
 		
+	}
+	
+	public ArrayList<Image> getImagesBySampleId(Long id) {
+		
+		ArrayList<Image> images = new ArrayList<Image>();		
+		try {
+			String where = ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID + " = " + id;
+			Cursor cursor = database.query(ImageSQLiteTable.TABLE, ImageSQLiteTable.ALL_COLUMNS, where,null,null,null,null);				
+			images = cursorToListOfImages(cursor);
+	
+		}
+		catch (Exception e){
+			Log.e(TAG, e.getMessage());
+		}
+				
+		return images;			
 	}
 
 

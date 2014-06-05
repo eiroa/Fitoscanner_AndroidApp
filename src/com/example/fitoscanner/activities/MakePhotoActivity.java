@@ -237,14 +237,14 @@ public class MakePhotoActivity extends Activity {
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            newSample = new Sample();
 		            newSample.setId(0L);
-		            newSample.setOriginDate(new Date());
+		            newSample.setOriginDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
 		            newSample.setFieldName("testing field");
 		            newSample.setImages(previews);
 		            fos.write(data);
 		            fos.close();
 		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(0L,Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath,newSample.getId());
+	                Image newImage = new Image(0L,newSample.getId(),Base64Helper.encodeTobase64(recentPhoto), pictureFile.getName(), absPath);
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);

@@ -3,17 +3,19 @@ package com.example.fitoscanner.model;
 public class Image {
 	
 	private Long id;
-	private String base64;
+	private Long idSample;	
 	private String title;
-	private String Description;
-	private Long idSample;
+	private String description;
+	private String base64;
 	
-	public Image(Long id,String base64, String title, String desc, Long idSample){
+	
+	public Image(Long id, Long idSample, String title, String desc,String base64){
 		this.id = id;
-		this.base64 =base64;
+		this.idSample = idSample;		
 		this.title = title;
-		this.Description = desc;
-		this.idSample = idSample;
+		this.description = desc;
+		this.base64 =base64;
+		
 	}
 
 	public String getTitle() {
@@ -33,11 +35,11 @@ public class Image {
 	}
 	
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		description = description;
 	}
 	
 	public Long getId() {
@@ -60,7 +62,7 @@ public class Image {
 
 	@Override
 	public String toString(){
-		return this.title + "\n" + this.Description;
+		return this.title + "\n" + this.description;
 	}
 
 }
