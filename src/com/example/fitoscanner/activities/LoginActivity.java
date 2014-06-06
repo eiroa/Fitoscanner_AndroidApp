@@ -47,13 +47,12 @@ public class LoginActivity extends Activity implements OnClickListener{
         Button bt = (Button) findViewById(R.id.loginButton);
         bt.setTypeface(font);
         
+        
         bt.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
             	//Toast.makeText(activity,"heyyy",Toast.LENGTH_SHORT).show();
-        		if(logged){
-        			startMenu();
-        		}else{
+
         			EditText userField = (EditText) findViewById(R.id.userField);
             		EditText passField = (EditText) findViewById(R.id.passField);
             		String user = (userField.getText()).toString();
@@ -64,7 +63,7 @@ public class LoginActivity extends Activity implements OnClickListener{
             		}else{
             			Toast.makeText(activity.getApplicationContext(),"Usuario y/o clave incorrecta",Toast.LENGTH_LONG).show();
             		}
-        		}
+        		
         		
 
             }
@@ -78,6 +77,16 @@ public class LoginActivity extends Activity implements OnClickListener{
     	// TODO Auto-generated method stub
     	super.onDestroy();
     	logged=false;
+    }
+    
+    @Override
+    protected void onStart() {
+    	// TODO Auto-generated method stub
+    	super.onStart();
+    	if(logged){
+    		startMenu();
+    	}
+    	
     }
     
     private void startMenu(){

@@ -140,6 +140,7 @@ public class MakePhotoActivity extends Activity {
 	            	 if(previews.size()<3){
 	            		 Toast.makeText(getApplicationContext(), "Atencion, de momento, la muestra debe contener al menos 3 imagenes", Toast.LENGTH_LONG).show();
 	            	 }else{
+	            		 makeNewSample();
 	            		 saveSample();
 		                 Toast.makeText(getApplicationContext(), "Se " +
 		                 		"ha guardado la muestra "+newSample.getFieldName()+ " con " +
@@ -179,6 +180,17 @@ public class MakePhotoActivity extends Activity {
 		 	} 
 		 }
 	 }
+	 
+	 private void makeNewSample(){
+		 EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
+ 		 String sampleName = (sampleNameField.getText()).toString();
+ 		 newSample = new Sample();
+ 		 newSample.setSampleName(sampleName);
+         newSample.setOriginDate(new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(new Date()));
+         newSample.setFieldName("testing field");
+         newSample.setImages(previews);
+         
+	 }
 	  
 	  private boolean checkCameraHardware(Context context) {
 		    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
@@ -216,6 +228,7 @@ public class MakePhotoActivity extends Activity {
 	  @Override
 	  protected void onDestroy(){
 		  super.onDestroy();
+		  
 		  previews = null;
 		  newSample = null;
 		  imageDatasource =null;
@@ -244,34 +257,36 @@ public class MakePhotoActivity extends Activity {
 		    @Override
 		    public void onPictureTaken(byte[] data, Camera camera) {
 		    	
-		        File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-		        if (pictureFile == null){
-		        	Toast.makeText(getApplicationContext(), "Failed to create File " +pictureFile.getPath(), Toast.LENGTH_LONG).show();
-		            return;
-		        }else if(pictureFile.exists()){
-		        	pictureFile.delete();
-		        }
-		       String absPath = pictureFile.getAbsolutePath();
-		        
-		        Log.i(TAG, "Picture saved "+absPath);
+//		        File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+//		        if (pictureFile == null){
+//		        	Toast.makeText(getApplicationContext(), "Failed to create File " +pictureFile.getPath(), Toast.LENGTH_LONG).show();
+//		            return;
+//		        }else if(pictureFile.exists()){
+//		        	pictureFile.delete();
+//		        }
+//		       String absPath = pictureFile.getAbsolutePath();
+//		        
+//		        Log.i(TAG, "Picture saved "+absPath);
 		        
 		        //Activar boton para obtener otra imagen
 		        setTakeOneMoreButton();
 		        try {
 		        	
-		            FileOutputStream fos = new FileOutputStream(pictureFile);
-		            newSample = new Sample();
-		            newSample.setOriginDate(new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(new Date()));
-		            newSample.setFieldName("testing field");
-		            newSample.setImages(previews);
-		            
-		            fos.write(data);
-		            fos.close();
-		            Toast.makeText(getApplicationContext(), "Image saved! as "+newSample.getSampleName()+" - Picture "+previews.size() + " in "+absPath, Toast.LENGTH_LONG).show();
-		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(null,null, newSample.getSampleName()+" - Picture "+previews.size(), absPath,Base64Helper.encodeTobase64(recentPhoto));
+//		            FileOutputStream fos = new FileOutputStream(pictureFile);
+//		            
+//		            
+//		            fos.write(data);
+//		            fos.close();
+		           
+		           
+//		            Toast.makeText(getApplicationContext(), "Image saved! as "+"Picture "+previews.size() + " in "+absPath, Toast.LENGTH_LONG).show();
+		            recentPhoto = BitmapFactory.decodeByteArray(data , 0, data.length);
+	                Image newImage = new Image(null,null,"Picture "+(previews.size()+1), new Date().toLocaleString(),Base64Helper.encodeTobase64(recentPhoto));
 	                previews.add(newImage);
-	                setTakeOneMoreButton();
+//	                if(pictureFile.delete()){
+//		            	Log.i(TAG, "Foto borrada del file system, solo se mantiene en la base");
+//		            }
+	                
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
 	                final CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
 	                		 getApplicationContext(), R.layout.samplepreview_fragment, previews);
@@ -295,13 +310,10 @@ public class MakePhotoActivity extends Activity {
 	                 });
 	                Log.i(TAG, "Recent photo loaded");
 	                Log.i(TAG,previews.toString());
-		        } catch (FileNotFoundException e) {
+		        } catch (Exception e) {
 		            Log.d(TAG, "File not found: " + e.getMessage());
-		        } catch (IOException e) {
-		            Log.d(TAG, "Error accessing file: " + e.getMessage());
-		        }
+		        } 
 		    }
-
 			
 		};
 		
@@ -344,9 +356,7 @@ public class MakePhotoActivity extends Activity {
 		samplesDataSource.open();
     	try
     	{	
-    		EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
-    		String sampleName = (sampleNameField.getText()).toString();
-    		newSample.setSampleName(sampleName);
+    		
     		samplesDataSource.saveSample(this.newSample);
     		
     	}
