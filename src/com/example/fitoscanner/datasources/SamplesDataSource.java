@@ -37,11 +37,12 @@ public class SamplesDataSource {
 		Long id = cursor.getLong(0);
 		String date = cursor.getString(1);
 		String field = cursor.getString(2);
-		Sample Sample = new Sample(id, date, null, field);
+		String sampleName = cursor.getString(3);
+		Sample Sample = new Sample(id, date, null,field,sampleName);
 		return Sample;
 	}
 
-	private ArrayList<Sample> cursorToListOfCategory(Cursor cursor) {
+	private ArrayList<Sample> cursorToListOfSamples(Cursor cursor) {
 
 		ArrayList<Sample> samples = new ArrayList<Sample>();
 
@@ -120,10 +121,12 @@ public class SamplesDataSource {
 		Long id = sample.getId();
 		String date = sample.getOriginDate();
 		String fieldName = sample.getFieldName();
+		String sampleName = sample.getSampleName();
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME, fieldName);
+		values.put(SampleSQLiteTable.COLUMN_SAMPLE_NAME, sampleName);
 
 		if (id != null && sampleExists(sample)) {
 			database.update(SampleSQLiteTable.TABLE, values,
@@ -221,7 +224,7 @@ public class SamplesDataSource {
 			Cursor cursor = database.query(SampleSQLiteTable.TABLE,
 					SampleSQLiteTable.ALL_COLUMNS, null, null, null, null,
 					null);
-			samples = cursorToListOfCategory(cursor);
+			samples = cursorToListOfSamples(cursor);
 
 			for (Sample sample : samples) {
 				this.imageDataSource.setDatabase(getDatabase());

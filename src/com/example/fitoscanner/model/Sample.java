@@ -8,13 +8,15 @@ public class Sample {
 	private String originDate;
 	private ArrayList<Image>images;
 	private String fieldName;
+	private String sampleName;
 	
 	public Sample(Long id, String originDate, ArrayList<Image> images,
-			String fieldName) {
+			String fieldName,String sampleName) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
 		this.fieldName = fieldName;
+		this.sampleName = sampleName;
 	}
 
 
@@ -48,6 +50,19 @@ public class Sample {
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
+
+
+
+	public String getSampleName() {
+		return sampleName;
+	}
+
+
+
+	public void setSampleName(String sampleName) {
+		this.sampleName = sampleName;
+	}
+	
 	
 	
 	

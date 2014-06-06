@@ -28,6 +28,7 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
     /*private view holder class*/
     private class ViewHolder {
     	TextView txtDate;
+    	TextView txtSample;
         ImageView imagep1;
         ImageView imagep2;
         ImageView imagep3;
@@ -53,7 +54,7 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
             holder = new ViewHolder();
 
             holder.txtDate = (TextView) convertView.findViewById(R.id.savedSample_originDate);
-
+            holder.txtSample = (TextView) convertView.findViewById(R.id.savedSample_sampleNameField);
             
             holder.txtDescp1 = (TextView) convertView.findViewById(R.id.secondLinep1);
             holder.txtTitlep1 = (TextView) convertView.findViewById(R.id.firstLinep1);
@@ -71,6 +72,7 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
             holder = (ViewHolder) convertView.getTag();
         
         holder.txtDate.setText(sample.getOriginDate());
+        holder.txtSample.setText(sample.getSampleName());
         
         holder.txtDescp1.setText(p1.getDescription());
         holder.txtTitlep1.setText(p1.getTitle());

@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import android.os.Build;
 
 public class LoginActivity extends Activity implements OnClickListener{
 	LoginActivity activity;
+	public static boolean logged = false;
 	
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,7 @@ public class LoginActivity extends Activity implements OnClickListener{
         this.activity = this;
         TextView txtView1 = (TextView) findViewById(R.id.loginUserText);
         TextView txtView2 = (TextView) findViewById(R.id.loginPassText);
+        
         
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         txtView1.setTypeface(font);
@@ -48,33 +51,46 @@ public class LoginActivity extends Activity implements OnClickListener{
 
             public void onClick(View arg0) {
             	//Toast.makeText(activity,"heyyy",Toast.LENGTH_SHORT).show();
-        		
-        		EditText txtView1 = (EditText) findViewById(R.id.userField);
-        		EditText txtView2 = (EditText) findViewById(R.id.passField);
-        		String user = (txtView1.getText()).toString();
-                String pass = (txtView2.getText()).toString();
-        		if(user.equals("admin")&&pass.equals("1234")){
-        			Toast.makeText(activity.getApplicationContext(),"Se ha logueado correctamente",Toast.LENGTH_LONG).show();
-        			Intent intent = new Intent(activity, MenuActivity.class);
-        	        //intent.putExtra(GenericNames.CATEGORY_ID, categoryId);
-        	        activity.startActivity(intent);
+        		if(logged){
+        			startMenu();
         		}else{
-        			Toast.makeText(activity.getApplicationContext(),"Usuario y/o clave incorrecta",Toast.LENGTH_LONG).show();
+        			EditText userField = (EditText) findViewById(R.id.userField);
+            		EditText passField = (EditText) findViewById(R.id.passField);
+            		String user = (userField.getText()).toString();
+                    String pass = (passField.getText()).toString();
+            		if(user.equals("admin")&&pass.equals("1234")){
+            			logged=true;       			
+            	        startMenu();      	        
+            		}else{
+            			Toast.makeText(activity.getApplicationContext(),"Usuario y/o clave incorrecta",Toast.LENGTH_LONG).show();
+            		}
         		}
+        		
 
             }
         });
         //
       
     }
-
+    
+    @Override
+    protected void onDestroy() {
+    	// TODO Auto-generated method stub
+    	super.onDestroy();
+    	logged=false;
+    }
+    
+    private void startMenu(){
+    	Toast.makeText(activity.getApplicationContext(),"Se ha logueado correctamente",Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(activity, MenuActivity.class);
+		activity.startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.login, menu);
-        TextView txtView2 = (TextView) findViewById(R.id.loginPassText);
         return true;
     }
 
@@ -92,9 +108,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 
 
 	public void onClick(View v) {
-		
-		
-		
+
 	}
 
 

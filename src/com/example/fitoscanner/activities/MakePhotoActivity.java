@@ -51,6 +51,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,12 +137,15 @@ public class MakePhotoActivity extends Activity {
 	         new View.OnClickListener() {
 	             @Override
 	             public void onClick(View v) {
-	                 // get an image from the camera
-	                 saveSample();
-	                 Toast.makeText(getApplicationContext(), "Se " +
-	                 		"ha guardado la muestra "+newSample.getFieldName()+ " con " +
-	                 				""+previews.size() + " imágenes", Toast.LENGTH_LONG).show();
-	                 finish();
+	            	 if(previews.size()<3){
+	            		 Toast.makeText(getApplicationContext(), "Atencion, de momento, la muestra debe contener al menos 3 imagenes", Toast.LENGTH_LONG).show();
+	            	 }else{
+	            		 saveSample();
+		                 Toast.makeText(getApplicationContext(), "Se " +
+		                 		"ha guardado la muestra "+newSample.getFieldName()+ " con " +
+		                 				""+previews.size() + " imágenes", Toast.LENGTH_LONG).show();
+		                 finish();
+	            	 }	                 
 	               }              
 	         }
 	     ); 
@@ -149,13 +153,24 @@ public class MakePhotoActivity extends Activity {
 	  
 	 private void startPreview(){
 		 if(hasCamera){
+			 Toast.makeText(getApplicationContext(), "Toque la pantalla para tomar una foto", Toast.LENGTH_LONG).show();
 		    try {
 		    		
 		    	camera.setDisplayOrientation(90);
 		    	mPreview = new CameraPreview(this, camera);
 	    	    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 	    	    preview.addView(mPreview);
-	    	        
+	    	    preview.setOnClickListener(new View.OnClickListener() {         
+	                @Override
+	                public void onClick(View v) {
+	                	camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
+		                 setContentView(R.layout.previews_layout);
+		                 Log.i(TAG, "Layout changed to previews layout");
+		                 Log.i(TAG, "previews are... "+previews.toString());
+		                 setTakeOneMoreButton();
+		                 setSaveButton();
+	                }
+	            });    
 	    	    Camera.Parameters p = camera.getParameters();
 	    	    p.setRotation(90);
 	    	    camera.setParameters(p);
@@ -183,6 +198,16 @@ public class MakePhotoActivity extends Activity {
 	    }
 	    super.onPause();
 	  }
+	  
+	  @Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		  if (camera != null) {
+		      camera.release();
+		      camera = null;
+		    }
+		super.onBackPressed();
+	}
 	  
 	  /**
 	   * Por seguridad, para evitar leaks de memoria, seteamos en null algunos valores
@@ -233,17 +258,18 @@ public class MakePhotoActivity extends Activity {
 		        //Activar boton para obtener otra imagen
 		        setTakeOneMoreButton();
 		        try {
-	        	
+		        	
 		            FileOutputStream fos = new FileOutputStream(pictureFile);
 		            newSample = new Sample();
-		            newSample.setOriginDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+		            newSample.setOriginDate(new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(new Date()));
 		            newSample.setFieldName("testing field");
 		            newSample.setImages(previews);
+		            
 		            fos.write(data);
 		            fos.close();
-		            Toast.makeText(getApplicationContext(), "Image saved! as "+pictureFile.getName() + " in "+absPath, Toast.LENGTH_LONG).show();
+		            Toast.makeText(getApplicationContext(), "Image saved! as "+newSample.getSampleName()+" - Picture "+previews.size() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeFile(absPath);
-	                Image newImage = new Image(null,null, pictureFile.getName(), absPath,Base64Helper.encodeTobase64(recentPhoto));
+	                Image newImage = new Image(null,null, newSample.getSampleName()+" - Picture "+previews.size(), absPath,Base64Helper.encodeTobase64(recentPhoto));
 	                previews.add(newImage);
 	                setTakeOneMoreButton();
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
@@ -317,8 +343,10 @@ public class MakePhotoActivity extends Activity {
 	public void saveSample(){
 		samplesDataSource.open();
     	try
-    	{
-    		
+    	{	
+    		EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
+    		String sampleName = (sampleNameField.getText()).toString();
+    		newSample.setSampleName(sampleName);
     		samplesDataSource.saveSample(this.newSample);
     		
     	}

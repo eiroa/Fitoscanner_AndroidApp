@@ -6,28 +6,57 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:padding="3dp" >
+        android:padding="1dp" >
+		<LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" 
+                android:gravity="center"
+                android:layout_gravity="center_horizontal">
 
+                <TextView
+                    android:id="@+id/savedSample_sampleNameLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de Muestra:"
+                    android:textColor="@color/yellowFont"
+                    android:padding="5dp" 
+                    />
+
+                <TextView
+                    android:id="@+id/savedSample_sampleNameField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text" 
+                    />
+            </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:padding="3dp" >
-
+            android:layout_gravity="center_horizontal"
+            android:padding="2dp" >
+			<TextView
+                    android:id="@+id/savedSample_dateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha:"
+                    android:textColor="@color/yellowFont"
+                    android:padding="5dp" 
+                    />
             <TextView
                 android:id="@+id/savedSample_originDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="1dp"
                 android:text="Date"
-                android:textColor="@color/yellowFont"
-                android:textSize="16dp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <RelativeLayout
 			android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
             <ImageView
                 android:id="@+id/photo1"
                 android:layout_width="80dp"
@@ -60,7 +89,8 @@
         </RelativeLayout>
         <RelativeLayout
 			android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
             <ImageView
                 android:id="@+id/photo2"
                 android:layout_width="80dp"
@@ -93,7 +123,8 @@
         </RelativeLayout>
         <RelativeLayout
 			android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
             <ImageView
                 android:id="@+id/photo3"
                 android:layout_width="80dp"
