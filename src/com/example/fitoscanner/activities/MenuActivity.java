@@ -33,6 +33,7 @@ public class MenuActivity extends Activity {
 
             public void onClick(View arg0) {       		
         		activity.finish();
+        		LoginActivity.logged = false;
             	Toast.makeText(activity.getApplicationContext(),"Se ha desconectado",Toast.LENGTH_LONG).show();       		
             }
         });

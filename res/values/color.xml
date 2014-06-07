@@ -4,6 +4,8 @@
     <color name="yellowFont">#F8E62A</color>
     <color name="greyBorder">#CCC3C3</color>
     <color name="white">#FFFFFF</color>
+    <color name="lightGray">#E8E8E8</color>
+    
     
 
 </resources>

@@ -49,33 +49,47 @@
                     style="?android:attr/buttonStyleToggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button_shape_1"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:text="Agregar otra imagen" />
+                    android:padding="5dp"
+                    android:shadowColor="#BFBFBF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="5"
+                    android:text="Agregar otra imagen"
+                    android:textColor="#BDFFC8"
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/button_saveSample"
                     style="?android:attr/buttonStyleToggle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button_shape_1"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Guardar Muestra" />
+                    android:shadowColor="#BFBFBF"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="5"
+                    android:text="Guardar Muestra"
+                    android:textColor="#BDFFC8"
+                    android:textSize="15sp" />
             </LinearLayout>
-			<LinearLayout
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
-                android:gravity="center"
-                android:layout_gravity="center_horizontal">
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" >
 
                 <TextView
                     android:id="@+id/preview_sampleNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="5dp"
                     android:text="Nombre de Muestra:"
-                    android:textColor="@color/yellowFont"
-                    android:padding="10dp" 
-                    />
+                    android:textColor="@color/yellowFont" />
 
                 <EditText
                     android:id="@+id/preview_sampleNameField"
@@ -83,17 +97,17 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" 
-                    />
+                    android:inputType="text" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center" 
-                android:padding="5dp">
+                android:gravity="center"
+                android:padding="5dp" >
 
-                <ListView                   
+                <ListView
                     android:id="@+id/previewSamplesList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

@@ -29,6 +29,7 @@ public class RecordsActivity extends Activity{
 	public final static String TAG = "RecordsActivity";
 	ImageDataSource imageDataSource;
 	SamplesDataSource samplesDataSource;
+	int samplePositionSelected = -1;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.records_layout);
@@ -47,11 +48,11 @@ public class RecordsActivity extends Activity{
            @Override
            public void onItemClick(AdapterView<?> parent, final View view,
                int position, long id) {
-        	   Toast toast = Toast.makeText(getApplicationContext(),
+        	   Toast.makeText(getApplicationContext(),
         	            "Item " + (position + 1) + ": " + samples.get(position),
-        	            Toast.LENGTH_SHORT);
-        	        toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-        	        toast.show();
+        	            Toast.LENGTH_SHORT).show();
+        	        
+        	        
              
            }
 

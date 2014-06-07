@@ -97,7 +97,6 @@ public class MakePhotoActivity extends Activity {
         Log.i(TAG, "Layout changed to previews layout");
         Log.i(TAG, "previews are... "+previews.toString());
         this.startPreview();
-        this.setShotButton();
 	}
 	  
 	private void setTakeOneMoreButton(){
@@ -106,29 +105,24 @@ public class MakePhotoActivity extends Activity {
 	         new View.OnClickListener() {
 	             @Override
 	             public void onClick(View v) {
-	                 setShotView();
-	                 
+	                 setShotView();	                 
 	               }              
 	         }
 	     );
 	}
 	
-	private void setShotButton(){
-		Button captureButton = (Button) findViewById(R.id.button_capture);
-	    captureButton.setOnClickListener(
-	         new View.OnClickListener() {
-	             @Override
-	             public void onClick(View v) {
-	                 // get an image from the camera
-	                 camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
-	                 setContentView(R.layout.previews_layout);
-	                 Log.i(TAG, "Layout changed to previews layout");
-	                 Log.i(TAG, "previews are... "+previews.toString());
-	                 setTakeOneMoreButton();
-	                 setSaveButton();
-	               }              
-	         }
-	     ); 
+	private void setShotButton(FrameLayout previewFrame){
+		previewFrame.setOnClickListener(new View.OnClickListener() {         
+            @Override
+            public void onClick(View v) {
+            	camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
+                 setContentView(R.layout.previews_layout);
+                 Log.i(TAG, "Layout changed to previews layout");
+                 Log.i(TAG, "previews are... "+previews.toString());
+                 setTakeOneMoreButton();
+                 setSaveButton();
+            }
+        }); 
 	}
 	
 	private void setSaveButton(){
@@ -161,17 +155,9 @@ public class MakePhotoActivity extends Activity {
 		    	mPreview = new CameraPreview(this, camera);
 	    	    FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 	    	    preview.addView(mPreview);
-	    	    preview.setOnClickListener(new View.OnClickListener() {         
-	                @Override
-	                public void onClick(View v) {
-	                	camera.takePicture(myShutterCallback, myPictureCallback_RAW, mPicture);
-		                 setContentView(R.layout.previews_layout);
-		                 Log.i(TAG, "Layout changed to previews layout");
-		                 Log.i(TAG, "previews are... "+previews.toString());
-		                 setTakeOneMoreButton();
-		                 setSaveButton();
-	                }
-	            });    
+	    	    this.setShotButton(preview);
+	    	    //Directamente asignamos la funcion de tomar la foto al tocar la pantalla
+	    	       
 	    	    Camera.Parameters p = camera.getParameters();
 	    	    p.setRotation(90);
 	    	    camera.setParameters(p);
@@ -255,37 +241,13 @@ public class MakePhotoActivity extends Activity {
 	  private PictureCallback mPicture = new PictureCallback() {
 
 		    @Override
-		    public void onPictureTaken(byte[] data, Camera camera) {
-		    	
-//		        File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-//		        if (pictureFile == null){
-//		        	Toast.makeText(getApplicationContext(), "Failed to create File " +pictureFile.getPath(), Toast.LENGTH_LONG).show();
-//		            return;
-//		        }else if(pictureFile.exists()){
-//		        	pictureFile.delete();
-//		        }
-//		       String absPath = pictureFile.getAbsolutePath();
-//		        
-//		        Log.i(TAG, "Picture saved "+absPath);
-		        
-		        //Activar boton para obtener otra imagen
+		    public void onPictureTaken(byte[] data, Camera camera) {		    	
 		        setTakeOneMoreButton();
 		        try {
-		        	
-//		            FileOutputStream fos = new FileOutputStream(pictureFile);
-//		            
-//		            
-//		            fos.write(data);
-//		            fos.close();
-		           
-		           
-//		            Toast.makeText(getApplicationContext(), "Image saved! as "+"Picture "+previews.size() + " in "+absPath, Toast.LENGTH_LONG).show();
 		            recentPhoto = BitmapFactory.decodeByteArray(data , 0, data.length);
 	                Image newImage = new Image(null,null,"Picture "+(previews.size()+1), new Date().toLocaleString(),Base64Helper.encodeTobase64(recentPhoto));
 	                previews.add(newImage);
-//	                if(pictureFile.delete()){
-//		            	Log.i(TAG, "Foto borrada del file system, solo se mantiene en la base");
-//		            }
+
 	                
 	                final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
 	                final CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
