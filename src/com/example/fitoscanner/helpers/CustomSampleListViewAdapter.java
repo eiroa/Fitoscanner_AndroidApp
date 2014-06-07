@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
  
 public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
  
@@ -88,5 +89,9 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
         
          
         return convertView;
+    }
+    public void onClick(View arg0) {
+    	Toast.makeText(context,"Item clicked",Toast.LENGTH_SHORT).show();      
+        
     }
 }

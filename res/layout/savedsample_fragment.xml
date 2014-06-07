@@ -19,7 +19,8 @@
                     android:layout_height="wrap_content"
                     android:text="Nombre de Muestra:"
                     android:textColor="@color/yellowFont"
-                    android:padding="5dp" 
+                    android:padding="5dp"
+                    android:focusable="false" 
                     />
 
                 <TextView
@@ -28,7 +29,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" 
+                    android:inputType="text"
+                    android:focusable="false" 
                     />
             </LinearLayout>
         <LinearLayout
@@ -42,7 +44,8 @@
                     android:layout_height="wrap_content"
                     android:text="Fecha:"
                     android:textColor="@color/yellowFont"
-                    android:padding="5dp" 
+                    android:padding="5dp"
+                    android:focusable="false" 
                     />
             <TextView
                 android:id="@+id/savedSample_originDate"
@@ -50,7 +53,8 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="1dp"
                 android:text="Date"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:focusable="false" />
         </LinearLayout>
 
         <RelativeLayout
@@ -64,7 +68,8 @@
                 android:contentDescription="image"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:src="@drawable/plantin" />
+                android:src="@drawable/plantin"
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/firstLinep1"
@@ -74,7 +79,8 @@
                 android:paddingBottom="10dp"
                 android:text="TitleP1"
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp" />
+                android:textSize="16dp" 
+                android:focusable="false"/>
 
             <TextView
                 android:id="@+id/secondLinep1"
@@ -85,7 +91,8 @@
                 android:paddingLeft="10dp"
                 android:text="DescriptionP2"
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp" />
+                android:textSize="14dp" 
+                android:focusable="false"/>
         </RelativeLayout>
         <RelativeLayout
 			android:layout_width="wrap_content"
@@ -98,7 +105,7 @@
                 android:contentDescription="image"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                 />
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/firstLinep2"
@@ -108,7 +115,8 @@
                 android:paddingBottom="5dp"
                 
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/secondLinep2"
@@ -119,7 +127,8 @@
                 android:paddingLeft="10dp"
 
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:focusable="false" />
         </RelativeLayout>
         <RelativeLayout
 			android:layout_width="wrap_content"
@@ -132,7 +141,7 @@
 
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                 />
+                 android:focusable="false"/>
 
             <TextView
                 android:id="@+id/firstLinep3"
@@ -142,7 +151,8 @@
                 android:paddingBottom="5dp"
 
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/secondLinep3"
@@ -153,7 +163,8 @@
                 android:paddingLeft="10dp"
 
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp" />
+                android:textSize="14dp" 
+                android:focusable="false"/>
         </RelativeLayout>
     </LinearLayout>
 

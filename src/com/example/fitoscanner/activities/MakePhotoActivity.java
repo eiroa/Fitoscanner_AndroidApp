@@ -137,7 +137,7 @@ public class MakePhotoActivity extends Activity {
 	            		 makeNewSample();
 	            		 saveSample();
 		                 Toast.makeText(getApplicationContext(), "Se " +
-		                 		"ha guardado la muestra "+newSample.getFieldName()+ " con " +
+		                 		"ha guardado la muestra "+newSample.getSampleName()+ " con " +
 		                 				""+previews.size() + " imágenes", Toast.LENGTH_LONG).show();
 		                 finish();
 	            	 }	                 
@@ -167,6 +167,9 @@ public class MakePhotoActivity extends Activity {
 		 }
 	 }
 	 
+	 /**
+	  * Construye una nueva muestra
+	  */
 	 private void makeNewSample(){
 		 EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
  		 String sampleName = (sampleNameField.getText()).toString();
@@ -178,9 +181,15 @@ public class MakePhotoActivity extends Activity {
          
 	 }
 	  
+	 /**
+	  * Verifica que el dispositivo tenga una camara disponible
+	  * 
+	  * @param context
+	  * @return
+	  */
 	  private boolean checkCameraHardware(Context context) {
 		    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-		    	Toast.makeText(this, "Camera detected", Toast.LENGTH_SHORT).show();
+		    	Toast.makeText(this, "Se ha podido detectar una cámara en el dispositivo", Toast.LENGTH_SHORT).show();
 		        return true;
 		    } else {
 		    	Toast.makeText(this, "No camera on this device", Toast.LENGTH_LONG).show();
@@ -237,7 +246,9 @@ public class MakePhotoActivity extends Activity {
 		  }};
 	  
 	  
-	
+	   /**
+	    * Devuelve un PictureCallback que define el comportamiento que tendrá ejecutar la camara
+	    */
 	  private PictureCallback mPicture = new PictureCallback() {
 
 		    @Override
@@ -326,17 +337,7 @@ public class MakePhotoActivity extends Activity {
     		samplesDataSource.close();
     	}
 	}
-	
-	public void saveImagesSamples(){
-		imageDatasource.open();
-    	try
-    	{
-    		imageDatasource.saveImagesSample(this.newSample);								        		
-    	}
-    	finally{
-    		imageDatasource.close();
-    	}
-	}
+
 
 	public ImageDataSource getImageDatasource() {
 		return imageDatasource;

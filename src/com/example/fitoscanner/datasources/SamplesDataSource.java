@@ -38,7 +38,7 @@ public class SamplesDataSource {
 		String date = cursor.getString(1);
 		String field = cursor.getString(2);
 		String sampleName = cursor.getString(3);
-		Sample Sample = new Sample(id, date, null,field,sampleName);
+		Sample Sample = new Sample(id, date, null, field, sampleName);
 		return Sample;
 	}
 
@@ -213,22 +213,26 @@ public class SamplesDataSource {
 		return Sample;
 	}
 
-/**
- * Devuelve en una lista todas las muestras con sus respectivas imágenes<	
- * @return
- */
+	/**
+	 * Devuelve en una lista todas las muestras con sus respectivas imágenes
+	 * 
+	 * @return
+	 */
 	public ArrayList<Sample> getSamples() {
 		ArrayList<Sample> samples = new ArrayList<Sample>();
 		try {
 
-			Cursor cursor = database.query(SampleSQLiteTable.TABLE,
-					SampleSQLiteTable.ALL_COLUMNS, null, null, null, null,
-					null);
+			Cursor cursor = database
+					.query(SampleSQLiteTable.TABLE,
+							SampleSQLiteTable.ALL_COLUMNS, null, null, null,
+							null, null);
 			samples = cursorToListOfSamples(cursor);
 
 			for (Sample sample : samples) {
+				// Se le pasa al imageDatasource la conexion a la base de datos
 				this.imageDataSource.setDatabase(getDatabase());
-				ArrayList<Image> images = this.imageDataSource.getImagesBySampleId(sample.getId());
+				ArrayList<Image> images = this.imageDataSource
+						.getImagesBySampleId(sample.getId());
 				sample.setImages(images);
 			}
 		} catch (Exception e) {
@@ -237,15 +241,22 @@ public class SamplesDataSource {
 		}
 		return samples;
 	}
-
-public SQLiteDatabase getDatabase() {
-	return database;
-}
-
-public void setDatabase(SQLiteDatabase database) {
-	this.database = database;
-}
 	
-	
+	public void deleteById(Long id) {
+		try {
+			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
+			database.delete(SampleSQLiteTable.TABLE, where, null);				
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}		
+	}
+
+	public SQLiteDatabase getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(SQLiteDatabase database) {
+		this.database = database;
+	}
 
 }

@@ -12,6 +12,9 @@ import com.example.fitoscanner.model.Image;
 import com.example.fitoscanner.model.Sample;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,12 +33,14 @@ public class RecordsActivity extends Activity{
 	ImageDataSource imageDataSource;
 	SamplesDataSource samplesDataSource;
 	int samplePositionSelected = -1;
+	private ArrayList<Sample> samples = new ArrayList<Sample>();
+	private final Context context = this;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.records_layout);
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
-        final ArrayList<Sample> samples = this.getSamples();
+         samples = this.getSamples();
         final ListView listview = (ListView) findViewById(R.id.savedSamplesList);
         final CustomSampleListViewAdapter customAdapter = new CustomSampleListViewAdapter(
         		 getApplicationContext(), R.layout.savedsample_fragment, samples);
@@ -48,10 +53,10 @@ public class RecordsActivity extends Activity{
            @Override
            public void onItemClick(AdapterView<?> parent, final View view,
                int position, long id) {
-        	   Toast.makeText(getApplicationContext(),
-        	            "Item " + (position + 1) + ": " + samples.get(position),
-        	            Toast.LENGTH_SHORT).show();
-        	        
+        	   //El tostadoooorrrrrrrrrr
+        	  
+        	   Toast.makeText(getApplicationContext(),"Item "+ (position + 1),Toast.LENGTH_SHORT).show();
+        	   samplePositionSelected = position;     
         	        
              
            }
@@ -60,20 +65,56 @@ public class RecordsActivity extends Activity{
         
     }
 	
+	private void setDeleteSampleButton(){
+		Button deleteButton = (Button) findViewById(R.id.button_deleteSample);
+	     deleteButton.setOnClickListener(
+	         new View.OnClickListener() {
+	             @Override
+	             public void onClick(View v) {
+	            	 if(samplePositionSelected<0 || samplePositionSelected > samples.size()){
+	            		 Toast.makeText(getApplicationContext(),"Seleccione una muestra primero",Toast.LENGTH_SHORT).show();
+	            	 }else{
+	            		 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+	 	         				context);
+	 	          
+	 	         			// set title
+	 	         			alertDialogBuilder.setTitle("¿Eliminar muestra "+
+	 	         			samples.get(samplePositionSelected).getSampleName()+ "  de fecha " +
+	 	         			samples.get(samplePositionSelected).getOriginDate());
+	 	          
+	 	         			// set dialog message
+	 	         			alertDialogBuilder
+	 	         				.setMessage("Click en aceptar ")
+	 	         				.setCancelable(false)
+	 	         				.setPositiveButton("Si",new DialogInterface.OnClickListener() {
+	 	         					public void onClick(DialogInterface dialog,int id) {
+	 	         						deleteSampleById(samples.get(samplePositionSelected).getId());
+	 	         						
+	 	         					}
+	 	         				  })
+	 	         				.setNegativeButton("No",new DialogInterface.OnClickListener() {
+	 	         					public void onClick(DialogInterface dialog,int id) {
+	 	         						// if this button is clicked, just close
+	 	         						// the dialog box and do nothing
+	 	         						dialog.cancel();
+	 	         					}
+	 	         				});
+	 	          
+	 	         				// create alert dialog
+	 	         				AlertDialog alertDialog = alertDialogBuilder.create();
+	 	          
+	 	         				// show it
+	 	         				alertDialog.show();
+	            	 }	            		         			            
+	               }              
+	         }
+	     );
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
-//		ArrayList<Sample>samples = this.getSamples();
-//		Log.i(TAG, "Se han obtenido las muestras = "+samples.toString() + " son un total de "+samples.size()+ " muestras");
-//		
-//		for (Sample sample : samples) {
-//			
-//			for (Image image : sample.getImages()) {
-//				Log.i(TAG, "Muestra con Id:"+sample.getId()+ " de fecha "+sample.getOriginDate()+ 
-//						" tiene imagen "+image.getId()+ " con nombre "+image.getTitle());
-//			}
-//			
-//		}
+		setDeleteSampleButton();
 	}
 	
 	/**
@@ -85,6 +126,19 @@ public class RecordsActivity extends Activity{
     	{
     		
     		return samplesDataSource.getSamples();
+    		
+    	}
+    	finally{
+    		samplesDataSource.close();
+    	}
+	}
+	
+	public void deleteSampleById(Long id){
+		samplesDataSource.open();
+    	try
+    	{
+    		
+    		samplesDataSource.deleteById(id);
     		
     	}
     	finally{
