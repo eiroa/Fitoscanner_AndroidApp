@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
 import com.example.fitoscanner.data.ImageSQLiteTable;
+import com.example.fitoscanner.data.SampleSQLiteTable;
 import com.example.fitoscanner.model.Image;
 import com.example.fitoscanner.model.Sample;
 
@@ -239,6 +240,15 @@ public class ImageDataSource {
 		}
 				
 		return images;			
+	}
+	
+	public void deleteById(Long id) {
+		try {
+			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id;
+			database.delete(ImageSQLiteTable.TABLE, where, null);			
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}		
 	}
 
 	public SQLiteDatabase getDatabase() {

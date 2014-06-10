@@ -250,6 +250,23 @@ public class SamplesDataSource {
 			Log.e(TAG, e.getMessage());
 		}		
 	}
+	
+	public void deleteSample(Sample sample) {
+		this.imageDataSource.setDatabase(this.getDatabase());
+		try {
+
+			for (Image image: sample.getImages()) {
+				this.imageDataSource.deleteById(image.getId());
+			}
+			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + sample.getId();
+			database.delete(SampleSQLiteTable.TABLE, where, null);
+			Log.i(TAG,"Se ha eliminado la muestra "+sample.getId()+ " de nombre "+
+			sample.getSampleName() + " de fecha "+sample.getOriginDate() + " junto con sus "+
+					sample.getImages().size() + " imagenes ");
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}		
+	}
 
 	public SQLiteDatabase getDatabase() {
 		return database;

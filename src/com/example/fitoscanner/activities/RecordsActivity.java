@@ -37,10 +37,16 @@ public class RecordsActivity extends Activity{
 	private final Context context = this;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.records_layout);
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
-         samples = this.getSamples();
+        
+        
+    }
+	
+	private void generateSamplesView(){
+		setContentView(R.layout.records_layout);
+
+        samples = this.getSamples();
         final ListView listview = (ListView) findViewById(R.id.savedSamplesList);
         final CustomSampleListViewAdapter customAdapter = new CustomSampleListViewAdapter(
         		 getApplicationContext(), R.layout.savedsample_fragment, samples);
@@ -48,6 +54,7 @@ public class RecordsActivity extends Activity{
          
          listview.setAdapter(customAdapter);
          Log.i(TAG, "Adapter for samples set...");
+         setDeleteSampleButton();
          listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
            @Override
@@ -56,14 +63,12 @@ public class RecordsActivity extends Activity{
         	   //El tostadoooorrrrrrrrrr
         	  
         	   Toast.makeText(getApplicationContext(),"Item "+ (position + 1),Toast.LENGTH_SHORT).show();
-        	   samplePositionSelected = position;     
-        	        
+        	   samplePositionSelected = position;           	        
              
            }
 
          });
-        
-    }
+	}
 	
 	private void setDeleteSampleButton(){
 		Button deleteButton = (Button) findViewById(R.id.button_deleteSample);
@@ -79,20 +84,21 @@ public class RecordsActivity extends Activity{
 	 	          
 	 	         			// set title
 	 	         			alertDialogBuilder.setTitle("¿Eliminar muestra "+
-	 	         			samples.get(samplePositionSelected).getSampleName()+ "  de fecha " +
-	 	         			samples.get(samplePositionSelected).getOriginDate());
+	 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
+	 	         			samples.get(samplePositionSelected).getOriginDate()+ " ?");
 	 	          
 	 	         			// set dialog message
 	 	         			alertDialogBuilder
-	 	         				.setMessage("Click en aceptar ")
+	 	         				.setMessage("Elija una opción ")
 	 	         				.setCancelable(false)
-	 	         				.setPositiveButton("Si",new DialogInterface.OnClickListener() {
+	 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
 	 	         					public void onClick(DialogInterface dialog,int id) {
-	 	         						deleteSampleById(samples.get(samplePositionSelected).getId());
+	 	         						deleteSample(samples.get(samplePositionSelected));
+	 	         						generateSamplesView();
 	 	         						
 	 	         					}
 	 	         				  })
-	 	         				.setNegativeButton("No",new DialogInterface.OnClickListener() {
+	 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
 	 	         					public void onClick(DialogInterface dialog,int id) {
 	 	         						// if this button is clicked, just close
 	 	         						// the dialog box and do nothing
@@ -114,7 +120,7 @@ public class RecordsActivity extends Activity{
 	@Override
 	protected void onStart() {
 		super.onStart();
-		setDeleteSampleButton();
+		generateSamplesView();
 	}
 	
 	/**
@@ -133,12 +139,12 @@ public class RecordsActivity extends Activity{
     	}
 	}
 	
-	public void deleteSampleById(Long id){
+	public void deleteSample(Sample sample){
 		samplesDataSource.open();
     	try
     	{
     		
-    		samplesDataSource.deleteById(id);
+    		samplesDataSource.deleteSample(sample);
     		
     	}
     	finally{
