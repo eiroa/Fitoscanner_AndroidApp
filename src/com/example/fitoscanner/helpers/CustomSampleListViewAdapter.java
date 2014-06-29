@@ -8,6 +8,7 @@ import com.example.fitoscanner.model.Sample;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,33 +16,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
- 
+
 public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
- 
-    Context context;
- 
-    public CustomSampleListViewAdapter(Context context, int resourceId,
-            List<Sample> items) {
-        super(context, resourceId, items);
-        this.context = context;
-    }
-     
-    /*private view holder class*/
-    private class ViewHolder {
-    	TextView txtDate;
-    	TextView txtSample;
-        ImageView imagep1;
-        ImageView imagep2;
-        ImageView imagep3;
-        TextView txtTitlep1;
-        TextView txtDescp1;
-        TextView txtTitlep2;
-        TextView txtDescp2;
-        TextView txtTitlep3;
-        TextView txtDescp3;
-    }
-     
-    public View getView(int position, View convertView, ViewGroup parent) {
+
+	Context context;
+
+	public CustomSampleListViewAdapter(Context context, int resourceId,
+			List<Sample> items) {
+		super(context, resourceId, items);
+		this.context = context;
+	}
+
+	/* private view holder class */
+	private class ViewHolder {
+		TextView txtDate;
+		TextView txtSample;
+		ImageView imagep1;
+		ImageView imagep2;
+		ImageView imagep3;
+		TextView txtTitlep1;
+		TextView txtDescp1;
+		TextView txtTitlep2;
+		TextView txtDescp2;
+		TextView txtTitlep3;
+		TextView txtDescp3;
+	}
+
+	public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         Sample sample = getItem(position);
         Image p1 = sample.getImages().get(0);
@@ -69,7 +70,11 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
             holder.txtTitlep3 = (TextView) convertView.findViewById(R.id.firstLinep3);
             holder.imagep3 = (ImageView) convertView.findViewById(R.id.photo3);
             convertView.setTag(holder);
-        } else
+        } else{
+        	
+        	Bitmap bm1 =Base64Helper.decodeBase64(p1.getBase64());
+            Bitmap bm2 =Base64Helper.decodeBase64(p2.getBase64());
+            Bitmap bm3 =Base64Helper.decodeBase64(p3.getBase64());
             holder = (ViewHolder) convertView.getTag();
         
         holder.txtDate.setText(sample.getOriginDate());
@@ -77,21 +82,26 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
         
         holder.txtDescp1.setText(p1.getDescription());
         holder.txtTitlep1.setText(p1.getTitle());
-        holder.imagep1.setImageBitmap(Base64Helper.decodeBase64(p1.getBase64()));
+        holder.imagep1.setImageBitmap(Bitmap.createScaledBitmap(bm1, 120, 120, false));
+//        bm1.recycle(); 
         
         holder.txtDescp2.setText(p2.getDescription());
         holder.txtTitlep2.setText(p2.getTitle());
-        holder.imagep2.setImageBitmap(Base64Helper.decodeBase64(p2.getBase64()));
-        
+        holder.imagep2.setImageBitmap(Bitmap.createScaledBitmap(bm2, 120, 120, false));
+//        bm2.recycle();
         holder.txtDescp3.setText(p3.getDescription());
         holder.txtTitlep3.setText(p3.getTitle());
-        holder.imagep3.setImageBitmap(Base64Helper.decodeBase64(p3.getBase64()));
+        holder.imagep3.setImageBitmap(Bitmap.createScaledBitmap(bm3, 120, 120, false));
+//        bm3.recycle();
+       
+     
+        System.gc();
         
-         
+       }
         return convertView;
-    }
-    public void onClick(View arg0) {
-    	Toast.makeText(context,"Item clicked",Toast.LENGTH_SHORT).show();      
-        
-    }
+	}
+	public void onClick(View arg0) {
+		Toast.makeText(context, "Item clicked", Toast.LENGTH_SHORT).show();
+
+	}
 }

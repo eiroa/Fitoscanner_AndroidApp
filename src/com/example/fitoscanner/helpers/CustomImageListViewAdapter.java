@@ -7,6 +7,7 @@ import com.example.fitoscanner.model.Image;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,10 @@ public class CustomImageListViewAdapter extends ArrayAdapter<Image> {
                  
         holder.txtDesc.setText(image.getDescription());
         holder.txtTitle.setText(image.getTitle());
-        holder.imageView.setImageBitmap(Base64Helper.decodeBase64(image.getBase64()));
-         
+        Bitmap bm =Base64Helper.decodeBase64(image.getBase64());
+
+        holder.imageView.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120, false));
+        System.gc();
         return convertView;
     }
 }

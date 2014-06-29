@@ -97,6 +97,7 @@ public class MakePhotoActivity extends Activity {
 		Log.i(TAG, "Layout changed to previews layout");
 		Log.i(TAG, "previews are... " + previews.toString());
 		this.startPreview();
+		System.gc();
 	}
 
 	private void setTakeOneMoreButton() {
@@ -286,8 +287,10 @@ public class MakePhotoActivity extends Activity {
 				Image newImage = new Image(null, null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
 						Base64Helper.encodeTobase64(recentPhoto));
+				recentPhoto=null;
+				System.gc();
 				previews.add(newImage);
-
+				newImage = null;
 				final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
 				final CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
 						getApplicationContext(),

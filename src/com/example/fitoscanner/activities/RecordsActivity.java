@@ -61,11 +61,14 @@ public class RecordsActivity extends Activity{
            public void onItemClick(AdapterView<?> parent, final View view,
                int position, long id) {
         	   //El tostadoooorrrrrrrrrr
-        	  
-        	   Toast.makeText(getApplicationContext(),"Item "+ (position + 1),Toast.LENGTH_SHORT).show();
+        	   Sample s = (Sample)listview.getAdapter().getItem(position);
+        	   Toast.makeText(getApplicationContext(),"Muestra "+s.getSampleName()+ " de "+ s.getOriginDate() + 
+        			   " seleccionada",Toast.LENGTH_SHORT).show();
         	   samplePositionSelected = position;           	        
              
            }
+           
+           
 
          });
 	}
