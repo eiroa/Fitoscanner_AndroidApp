@@ -72,7 +72,7 @@
                     android:shadowDx="0"
                     android:shadowDy="0"
                     android:shadowRadius="5"
-                    android:text="Guardar Muestra"
+                    android:text="Guardar"
                     android:textColor="#BDFFC8"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Nombre de Muestra:"
+                    android:text="Nombre:"
                     android:textColor="@color/yellowFont" />
 
                 <EditText

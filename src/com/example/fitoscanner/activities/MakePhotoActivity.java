@@ -21,6 +21,7 @@ import com.example.fitoscanner.helpers.CameraPreview;
 import com.example.fitoscanner.helpers.CustomImageListViewAdapter;
 import com.example.fitoscanner.helpers.CustomSampleListViewAdapter;
 import com.example.fitoscanner.helpers.PhotoHandler;
+import com.example.fitoscanner.helpers.TypefacesHelper;
 import com.example.fitoscanner.model.Image;
 import com.example.fitoscanner.model.Sample;
 
@@ -31,6 +32,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -70,10 +72,12 @@ public class MakePhotoActivity extends Activity {
 	private ImageDataSource imageDatasource;
 	private SamplesDataSource samplesDataSource;
 	private Sample newSample;
+	private Typeface font;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		 font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
 
 		this.hasCamera = checkCameraHardware(this);
 		if (this.hasCamera) {
@@ -102,6 +106,7 @@ public class MakePhotoActivity extends Activity {
 
 	private void setTakeOneMoreButton() {
 		Button takeOneMoreButton = (Button) findViewById(R.id.button_takePicAgain);
+		takeOneMoreButton.setTypeface(font);
 		takeOneMoreButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -127,6 +132,7 @@ public class MakePhotoActivity extends Activity {
 
 	private void setSaveButton() {
 		Button saveButton = (Button) findViewById(R.id.button_saveSample);
+		saveButton.setTypeface(font);
 		final EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
         
 		saveButton.setOnClickListener(new View.OnClickListener() {

@@ -42,7 +42,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		txtView1.setTypeface(font);
 		txtView2.setTypeface(font);
 		Button bt = (Button) findViewById(R.id.loginButton);
+		Button btNoAuth = (Button) findViewById(R.id.loginNoAuthButton);
 		bt.setTypeface(font);
+		btNoAuth.setTypeface(font);
 
 		bt.setOnClickListener(new View.OnClickListener() {
 
@@ -56,13 +58,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 					logged = true;
 					startMenu();
 					Toast.makeText(activity.getApplicationContext(),
-							"Se ha logueado correctamente", Toast.LENGTH_LONG)
+							"Se ha logueado correctamente", Toast.LENGTH_SHORT)
 							.show();
 				} else {
 					Toast.makeText(activity.getApplicationContext(),
-							"Usuario y/o clave incorrecta", Toast.LENGTH_LONG)
+							"Usuario y/o clave incorrecta", Toast.LENGTH_SHORT)
 							.show();
 				}
+
+			}
+		});
+		btNoAuth.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+
+				startMenu();
+				Toast.makeText(activity.getApplicationContext(),
+						"Ha ingresado en modo prueba", Toast.LENGTH_SHORT)
+						.show();
 
 			}
 		});

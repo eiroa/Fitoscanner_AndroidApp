@@ -45,28 +45,22 @@
                 android:gravity="center"
                 android:padding="10dp" >
 
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Ver muestras"
-                    android:textColor="@color/yellowFont"
-                    android:textSize="16dp" />
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <ImageView
-                        android:id="@+id/imMenuArrowRegisters"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="false"
-                        android:padding="3dp"
-                        android:scaleType="center"
-                        android:src="@drawable/flechitader" />
-                </FrameLayout>
+                <Button
+                android:id="@+id/buttonOpenRecords"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                
+                android:padding="15dp"
+                android:text="Ver Muestras"
+                android:background="@drawable/button_shape_1"
+                android:shadowColor="#BFBFBF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#BDFFC8"
+                android:textSize="15sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -75,28 +69,22 @@
                 android:gravity="center"
                 android:padding="10dp" >
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Tomar muestra"
-                    android:textColor="@color/yellowFont"
-                    android:textSize="16dp" />
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <ImageView
-                        android:id="@+id/imMenuArrowTakePic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="false"
-                        android:padding="3dp"
-                        android:scaleType="center"
-                        android:src="@drawable/flechitader" />
-                </FrameLayout>
+                <Button
+                android:id="@+id/buttonOpenTakePic"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                
+                android:padding="15dp"
+                android:text="Tomar Muestra"
+                android:background="@drawable/button_shape_1"
+                android:shadowColor="#BFBFBF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#BDFFC8"
+                android:textSize="15sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -115,7 +103,7 @@
                 android:gravity="center"
                 
                 android:padding="15dp"
-                android:text="Logout"
+                android:text="Salir"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"

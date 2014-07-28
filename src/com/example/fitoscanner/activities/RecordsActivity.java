@@ -35,8 +35,10 @@ public class RecordsActivity extends Activity{
 	int samplePositionSelected = -1;
 	private ArrayList<Sample> samples = new ArrayList<Sample>();
 	private final Context context = this;
+	private Typeface font;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
         
@@ -45,7 +47,8 @@ public class RecordsActivity extends Activity{
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.records_layout);
-
+		Button buttonSend = (Button) findViewById(R.id.button_send);
+        buttonSend.setTypeface(font);
         samples = this.getSamples();
         final ListView listview = (ListView) findViewById(R.id.savedSamplesList);
         final CustomSampleListViewAdapter customAdapter = new CustomSampleListViewAdapter(
@@ -75,6 +78,7 @@ public class RecordsActivity extends Activity{
 	
 	private void setDeleteSampleButton(){
 		Button deleteButton = (Button) findViewById(R.id.button_deleteSample);
+		deleteButton.setTypeface(font);
 	     deleteButton.setOnClickListener(
 	         new View.OnClickListener() {
 	             @Override

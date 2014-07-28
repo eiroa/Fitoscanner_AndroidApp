@@ -17,17 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MenuActivity extends Activity {
+	//
 	MenuActivity activity;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_layout);
         this.activity = this;
-        TextView txtView1 = (TextView) findViewById(R.id.textView1);
-        TextView txtView2 = (TextView) findViewById(R.id.textView2);
+        
         Button bt = (Button) findViewById(R.id.buttonMenuLogout);
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
-        txtView1.setTypeface(font);
-        txtView2.setTypeface(font);
+
         bt.setTypeface(font);
         bt.setOnClickListener(new View.OnClickListener() {
 
@@ -38,21 +37,25 @@ public class MenuActivity extends Activity {
             }
         });
         
-        ImageView arrowRegisters = (ImageView)findViewById(R.id.imMenuArrowRegisters);
-        arrowRegisters.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View arg0) {
-            	Intent intent = new Intent(activity, RecordsActivity.class);
-        		activity.startActivity(intent);      		
-            }
-        });
-        ImageView arrowTakePic = (ImageView)findViewById(R.id.imMenuArrowTakePic);
-        arrowTakePic.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View arg0) {
+        Button goTakePic = (Button)findViewById(R.id.buttonOpenTakePic);
+        goTakePic.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View arg0) {
             	Intent intent = new Intent(activity, MakePhotoActivity.class);
         		activity.startActivity(intent);      		
             }
+            
         });
+        goTakePic.setTypeface(font);
+        Button goRecords = (Button)findViewById(R.id.buttonOpenRecords);
+        goRecords.setOnClickListener(new View.OnClickListener() {
+        	
+        	public void onClick(View arg0) {
+            	Intent intent = new Intent(activity, RecordsActivity.class);
+        		activity.startActivity(intent);      		
+            }
+        	
+            
+        });
+        goRecords.setTypeface(font);
     }
 }
