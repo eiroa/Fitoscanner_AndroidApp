@@ -1,5 +1,6 @@
 package com.example.fitoscanner.helpers;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import com.example.fitoscanner.R;
@@ -50,9 +51,8 @@ public class CustomImageListViewAdapter extends ArrayAdapter<Image> {
                  
         holder.txtDesc.setText(image.getDescription());
         holder.txtTitle.setText(image.getTitle());
-        Bitmap bm =Base64Helper.decodeBase64(image.getBase64());
-
-        holder.imageView.setImageBitmap(Bitmap.createScaledBitmap(bm, 120, 120, false));
+        Bitmap bmp =Base64Helper.decodeBase64(image.getBase64());
+        holder.imageView.setImageBitmap(bmp);
         System.gc();
         return convertView;
     }

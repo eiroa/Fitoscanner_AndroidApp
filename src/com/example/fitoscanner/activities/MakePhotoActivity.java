@@ -17,6 +17,7 @@ import com.example.fitoscanner.R.layout;
 import com.example.fitoscanner.datasources.ImageDataSource;
 import com.example.fitoscanner.datasources.SamplesDataSource;
 import com.example.fitoscanner.helpers.Base64Helper;
+import com.example.fitoscanner.helpers.BitmapResizer;
 import com.example.fitoscanner.helpers.CameraPreview;
 import com.example.fitoscanner.helpers.CustomImageListViewAdapter;
 import com.example.fitoscanner.helpers.CustomSampleListViewAdapter;
@@ -67,6 +68,7 @@ public class MakePhotoActivity extends Activity {
 	private int cameraId = 0;
 	private boolean hasCamera;
 	private Bitmap recentPhoto;
+	private Bitmap compressed;
 	private ArrayList<Image> previews = new ArrayList<Image>();
 	private CameraPreview mPreview;
 	private ImageDataSource imageDatasource;
@@ -288,12 +290,24 @@ public class MakePhotoActivity extends Activity {
 		public void onPictureTaken(byte[] data, Camera camera) {
 			setTakeOneMoreButton();
 			try {
+				
 				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
 						data.length);
+				System.out.println("Photo encoded from camera with size "+ recentPhoto.getByteCount()+", attempting resize");
+				byte[] compressedBytes =  BitmapResizer.resizeImage(
+						data, 
+						recentPhoto.getWidth(), 
+						recentPhoto.getHeight(), 4);
+				recentPhoto=null;
+				System.out.println("bytes obtained with size:"+compressedBytes.length);
+				compressed = BitmapFactory.decodeByteArray(compressedBytes, 0, compressedBytes.length);
+				System.out.println("Bitmap compressed with size: " + compressed.getByteCount());
 				Image newImage = new Image(null, null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
-						Base64Helper.encodeTobase64(recentPhoto));
-				recentPhoto=null;
+						Base64Helper.encodeTobase64(compressed));
+				compressed=null;
+				
+				compressedBytes = null;
 				System.gc();
 				previews.add(newImage);
 				newImage = null;
