@@ -1,4 +1,4 @@
-package com.example.fitoscanner.data;
+package ar.edu.unq.fitoscanner.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

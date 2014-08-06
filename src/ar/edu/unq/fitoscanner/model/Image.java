@@ -1,4 +1,4 @@
-package com.example.fitoscanner.model;
+package ar.edu.unq.fitoscanner.model;
 
 public class Image {
 	

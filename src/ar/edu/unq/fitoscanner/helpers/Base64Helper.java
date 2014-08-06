@@ -1,4 +1,4 @@
-package com.example.fitoscanner.helpers;
+package ar.edu.unq.fitoscanner.helpers;
 
 import java.io.ByteArrayOutputStream;
 

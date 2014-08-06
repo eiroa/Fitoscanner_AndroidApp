@@ -1,4 +1,4 @@
-package com.example.fitoscanner.datasources;
+package ar.edu.unq.fitoscanner.datasources;
 
 import java.util.ArrayList;
 
@@ -11,11 +11,11 @@ import android.util.Log;
 
 
 
-import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
-import com.example.fitoscanner.data.ImageSQLiteTable;
-import com.example.fitoscanner.data.SampleSQLiteTable;
-import com.example.fitoscanner.model.Image;
-import com.example.fitoscanner.model.Sample;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
+import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
+import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
+import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 public class ImageDataSource {
 	public final String TAG = "ImageDateSource";

@@ -1,9 +1,6 @@
-package com.example.fitoscanner.activities;
+package ar.edu.unq.fitoscanner.activities;
 
-import com.example.fitoscanner.R;
-import com.example.fitoscanner.R.id;
-import com.example.fitoscanner.R.layout;
-import com.example.fitoscanner.helpers.TypefacesHelper;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,10 +8,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
+import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 
 public class MenuActivity extends Activity {
 	//

@@ -1,4 +1,4 @@
-package com.example.fitoscanner.model;
+package ar.edu.unq.fitoscanner.model;
 
 import java.util.ArrayList;
 import java.util.Date;

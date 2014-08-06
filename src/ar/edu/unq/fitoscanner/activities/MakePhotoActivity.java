@@ -1,63 +1,41 @@
-package com.example.fitoscanner.activities;
+package ar.edu.unq.fitoscanner.activities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Date;
-import java.util.HashMap;
-
-import com.example.fitoscanner.R;
-import com.example.fitoscanner.R.id;
-import com.example.fitoscanner.R.layout;
-import com.example.fitoscanner.datasources.ImageDataSource;
-import com.example.fitoscanner.datasources.SamplesDataSource;
-import com.example.fitoscanner.helpers.Base64Helper;
-import com.example.fitoscanner.helpers.BitmapResizer;
-import com.example.fitoscanner.helpers.CameraPreview;
-import com.example.fitoscanner.helpers.CustomImageListViewAdapter;
-import com.example.fitoscanner.helpers.CustomSampleListViewAdapter;
-import com.example.fitoscanner.helpers.PhotoHandler;
-import com.example.fitoscanner.helpers.TypefacesHelper;
-import com.example.fitoscanner.model.Image;
-import com.example.fitoscanner.model.Sample;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Surface;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
+import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
+import ar.edu.unq.fitoscanner.helpers.Base64Helper;
+import ar.edu.unq.fitoscanner.helpers.CameraPreview;
+import ar.edu.unq.fitoscanner.helpers.CustomImageListViewAdapter;
+import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
+import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 @SuppressLint("NewApi")
 public class MakePhotoActivity extends Activity {
@@ -289,25 +267,31 @@ public class MakePhotoActivity extends Activity {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 			setTakeOneMoreButton();
-			try {
-				
+			try {				
+				final BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = 8;
+				options.inPurgeable = true;
 				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
-						data.length);
+						data.length,options);
+				
 				System.out.println("Photo encoded from camera with size "+ recentPhoto.getByteCount()+", attempting resize");
-				byte[] compressedBytes =  BitmapResizer.resizeImage(
-						data, 
-						recentPhoto.getWidth(), 
-						recentPhoto.getHeight(), 4);
-				recentPhoto=null;
-				System.out.println("bytes obtained with size:"+compressedBytes.length);
-				compressed = BitmapFactory.decodeByteArray(compressedBytes, 0, compressedBytes.length);
-				System.out.println("Bitmap compressed with size: " + compressed.getByteCount());
+//				byte[] compressedBytes =  BitmapResizer.resizeImage(
+//						data, 
+//						recentPhoto.getWidth(), 
+//						recentPhoto.getHeight(), 1);
+//				recentPhoto.recycle();
+//				recentPhoto=null;
+//				System.out.println("bytes obtained with size:"+compressedBytes.length);
+//				compressed = BitmapFactory.decodeByteArray(compressedBytes, 0, compressedBytes.length);
+//				System.out.println("Bitmap compressed with size: " + compressed.getByteCount());
 				Image newImage = new Image(null, null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
-						Base64Helper.encodeTobase64(compressed));
-				compressed=null;
-				
-				compressedBytes = null;
+						Base64Helper.encodeTobase64(recentPhoto));
+//				
+//				compressed=null;
+//				
+				recentPhoto.recycle();
+//				compressedBytes = null;
 				System.gc();
 				previews.add(newImage);
 				newImage = null;

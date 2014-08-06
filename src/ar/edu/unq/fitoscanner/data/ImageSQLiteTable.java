@@ -1,4 +1,4 @@
-package com.example.fitoscanner.data;
+package ar.edu.unq.fitoscanner.data;
 
 public class ImageSQLiteTable {
 

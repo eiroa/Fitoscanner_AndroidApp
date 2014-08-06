@@ -1,32 +1,25 @@
-package com.example.fitoscanner.activities;
+package ar.edu.unq.fitoscanner.activities;
 
 import java.util.ArrayList;
-
-import com.example.fitoscanner.R;
-import com.example.fitoscanner.R.layout;
-import com.example.fitoscanner.datasources.ImageDataSource;
-import com.example.fitoscanner.datasources.SamplesDataSource;
-import com.example.fitoscanner.helpers.CustomSampleListViewAdapter;
-import com.example.fitoscanner.helpers.TypefacesHelper;
-import com.example.fitoscanner.model.Image;
-import com.example.fitoscanner.model.Sample;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
+import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
+import ar.edu.unq.fitoscanner.helpers.CustomSampleListViewAdapter;
+import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 public class RecordsActivity extends Activity{
 	public final static String TAG = "RecordsActivity";

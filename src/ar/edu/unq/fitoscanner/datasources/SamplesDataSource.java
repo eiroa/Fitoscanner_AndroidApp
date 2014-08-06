@@ -1,4 +1,4 @@
-package com.example.fitoscanner.datasources;
+package ar.edu.unq.fitoscanner.datasources;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,11 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-import com.example.fitoscanner.data.FitoscannerSqLiteHelper;
-import com.example.fitoscanner.data.ImageSQLiteTable;
-import com.example.fitoscanner.data.SampleSQLiteTable;
-import com.example.fitoscanner.model.Image;
-import com.example.fitoscanner.model.Sample;
+
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +15,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
+import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
+import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
+import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 public class SamplesDataSource {
 	public final static String TAG = "SamplesDataSource";

@@ -1,10 +1,6 @@
-package com.example.fitoscanner.helpers;
+package ar.edu.unq.fitoscanner.helpers;
 
 import java.util.List;
-
-import com.example.fitoscanner.R;
-import com.example.fitoscanner.model.Image;
-import com.example.fitoscanner.model.Sample;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
 

@@ -1,10 +1,8 @@
-package com.example.fitoscanner.helpers;
+package ar.edu.unq.fitoscanner.helpers;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.example.fitoscanner.activities.MakePhotoActivity;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -12,6 +10,7 @@ import android.hardware.Camera.PictureCallback;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+import ar.edu.unq.fitoscanner.activities.MakePhotoActivity;
 
 public class PhotoHandler implements PictureCallback {
 

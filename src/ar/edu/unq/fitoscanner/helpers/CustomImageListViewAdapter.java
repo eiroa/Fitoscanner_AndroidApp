@@ -1,10 +1,6 @@
-package com.example.fitoscanner.helpers;
+package ar.edu.unq.fitoscanner.helpers;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
-
-import com.example.fitoscanner.R;
-import com.example.fitoscanner.model.Image;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.model.Image;
  
 public class CustomImageListViewAdapter extends ArrayAdapter<Image> {
  
