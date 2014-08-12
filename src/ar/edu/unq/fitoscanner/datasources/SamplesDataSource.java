@@ -39,7 +39,13 @@ public class SamplesDataSource {
 		String date = cursor.getString(1);
 		String field = cursor.getString(2);
 		String sampleName = cursor.getString(3);
-		Sample Sample = new Sample(id, date, null, field, sampleName);
+		String latitude = cursor.getString(4);
+		String longitude = cursor.getString(5);
+		String city = cursor.getString(6);
+		String state = cursor.getString(7);
+		String country = cursor.getString(8);
+		Sample Sample = new Sample(id, date, null, field, sampleName,
+				latitude,longitude,city,state,country);
 		return Sample;
 	}
 
@@ -123,11 +129,22 @@ public class SamplesDataSource {
 		String date = sample.getOriginDate();
 		String fieldName = sample.getFieldName();
 		String sampleName = sample.getSampleName();
+		String latitude = sample.getLocationData().getLatitude();
+		String longitude = sample.getLocationData().getLongitude();
+		String city = sample.getLocationData().getCity();
+		String state = sample.getLocationData().getState();
+		String country = sample.getLocationData().getCountry();
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME, fieldName);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_NAME, sampleName);
+		values.put(SampleSQLiteTable.COLUMN_LATITUDE, latitude);
+		values.put(SampleSQLiteTable.COLUMN_LONGITUDE, longitude);
+		values.put(SampleSQLiteTable.COLUMN_CITY, city);
+		values.put(SampleSQLiteTable.COLUMN_STATE, state);
+		values.put(SampleSQLiteTable.COLUMN_COUNTRY, country);
+		
 
 		if (id != null && sampleExists(sample)) {
 			database.update(SampleSQLiteTable.TABLE, values,

@@ -9,7 +9,16 @@ public class Sample {
 	private ArrayList<Image>images;
 	private String fieldName;
 	private String sampleName;
+	private LocationData locationData = new LocationData();
 	
+	/**
+	 * Constructor que deja Location data en null
+	 * @param id
+	 * @param originDate
+	 * @param images
+	 * @param fieldName
+	 * @param sampleName
+	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName,String sampleName) {
 		this.id = id;
@@ -17,6 +26,30 @@ public class Sample {
 		this.images = images;
 		this.fieldName = fieldName;
 		this.sampleName = sampleName;
+	}
+	
+	/**
+	 * Constructor que genera internamente el LocationData
+	 * @param id
+	 * @param originDate
+	 * @param images
+	 * @param fieldName
+	 * @param sampleName
+	 * @param lat
+	 * @param lon
+	 * @param city
+	 * @param state
+	 * @param country
+	 */
+	public Sample(Long id, String originDate, ArrayList<Image> images,
+			String fieldName,String sampleName,String lat, String lon,
+			String city, String state, String country) {
+		this.id = id;
+		this.originDate = originDate;
+		this.images = images;
+		this.fieldName = fieldName;
+		this.sampleName = sampleName;
+		this.locationData = new LocationData(lat,lon,city,state,country);
 	}
 
 
@@ -61,6 +94,18 @@ public class Sample {
 
 	public void setSampleName(String sampleName) {
 		this.sampleName = sampleName;
+	}
+
+	public LocationData getLocationData() {
+		return locationData;
+	}
+
+	public void setLocationData(LocationData locationData) {
+		this.locationData = locationData;
+	}
+	public void setLocationData(String lat, String lon, String city,
+			String state, String country) {
+		this.locationData = new LocationData(lat, lon, city, state, country);
 	}
 	
 	

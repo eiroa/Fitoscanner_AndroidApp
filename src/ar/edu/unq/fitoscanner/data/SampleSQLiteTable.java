@@ -10,13 +10,24 @@ public class SampleSQLiteTable {
 	public static final String COLUMN_SAMPLE_ORIGIN_DATE = "originDate";
 	public static final String COLUMN_SAMPLE_FIELD_NAME = "fieldName";
 	public static final String COLUMN_SAMPLE_NAME = "sampleName";
+	public static final String COLUMN_LATITUDE = "latitude";
+	public static final String COLUMN_LONGITUDE = "longitude";
+	public static final String COLUMN_CITY = "city";
+	public static final String COLUMN_STATE = "state";
+	public static final String COLUMN_COUNTRY = "country";
+	
 
 	
 	public static String[] ALL_COLUMNS = {
 			SampleSQLiteTable.COLUMN_SAMPLE_ID,
 			SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE,
 			SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME,
-			SampleSQLiteTable.COLUMN_SAMPLE_NAME};
+			SampleSQLiteTable.COLUMN_SAMPLE_NAME,
+			SampleSQLiteTable.COLUMN_LATITUDE,
+			SampleSQLiteTable.COLUMN_LONGITUDE,
+			SampleSQLiteTable.COLUMN_CITY,
+			SampleSQLiteTable.COLUMN_STATE,
+			SampleSQLiteTable.COLUMN_COUNTRY};
 	
 
 }
