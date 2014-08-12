@@ -18,6 +18,7 @@ import ar.edu.unq.fitoscanner.model.Sample;
 
 public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
 
+	
 	Context context;
 
 	public CustomSampleListViewAdapter(Context context, int resourceId,
