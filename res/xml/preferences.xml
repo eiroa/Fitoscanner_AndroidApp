@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference
+        android:key="pref_sync"
+        android:title="Activar gps"
+        android:summary="opcion1"
+        android:defaultValue="true" />
+    <ListPreference
+        android:dependency="pref_sync"
+        android:key="pref_syncConnectionType"
+        android:title="calidad imagenes"
+        android:dialogTitle="imagenes"
+        android:entries="@array/array_test_2"
+        android:entryValues="@array/array_test_1"
+        android:defaultValue="Sarasa2" />
+
+</PreferenceScreen>

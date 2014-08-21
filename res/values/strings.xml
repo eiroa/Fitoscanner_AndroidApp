@@ -4,5 +4,16 @@
     <string name="app_name">FitoScanner</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+	<string-array name="array_test_1">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+    </string-array>
+    <string-array name="array_test_2">
+        <item>Sarasa1</item>
+        <item>Sarasa2</item>
+        <item>Sarasa3</item>
+        <item>Sarasa4</item>
+    </string-array>
 </resources>
