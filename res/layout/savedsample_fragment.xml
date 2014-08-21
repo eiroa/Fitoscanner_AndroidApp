@@ -7,80 +7,182 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:padding="1dp" >
-		<LinearLayout
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_sampleNameLabel"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" 
-                android:gravity="center"
-                android:layout_gravity="center_horizontal">
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Nombre de Muestra:"
+                android:textColor="@color/yellowFont" />
 
-                <TextView
-                    android:id="@+id/savedSample_sampleNameLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre de Muestra:"
-                    android:textColor="@color/yellowFont"
-                    android:padding="5dp"
-                    android:focusable="false" 
-                    />
+            <TextView
+                android:id="@+id/savedSample_sampleNameField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/savedSample_sampleNameField"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:focusable="false" 
-                    />
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_latAndLonLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Latitud y longitud:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_latAndLon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_cityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Localidad: "
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_stateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Región: "
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_countryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="País:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="2dp" >
-			<TextView
-                    android:id="@+id/savedSample_dateLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fecha:"
-                    android:textColor="@color/yellowFont"
-                    android:padding="5dp"
-                    android:focusable="false" 
-                    />
+
+            <TextView
+                android:id="@+id/savedSample_dateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Fecha:"
+                android:textColor="@color/yellowFont" />
+
             <TextView
                 android:id="@+id/savedSample_originDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:paddingBottom="1dp"
                 android:text="Date"
-                android:textSize="14dp"
-                android:focusable="false" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <RelativeLayout
-			android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp" >
+
             <ImageView
                 android:id="@+id/photo1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:contentDescription="image"
+                android:focusable="false"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
-                android:src="@drawable/plantin"
-                android:focusable="false" />
+                android:src="@drawable/plantin" />
 
             <TextView
                 android:id="@+id/firstLinep1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/photo1"
+                android:focusable="false"
                 android:paddingBottom="10dp"
                 android:text="TitleP1"
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp" 
-                android:focusable="false"/>
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/secondLinep1"
@@ -88,35 +190,36 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/firstLinep1"
                 android:layout_toRightOf="@+id/photo1"
+                android:focusable="false"
                 android:paddingLeft="10dp"
                 android:text="DescriptionP2"
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp" 
-                android:focusable="false"/>
+                android:textSize="14dp" />
         </RelativeLayout>
+
         <RelativeLayout
-			android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp" >
+
             <ImageView
                 android:id="@+id/photo2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:contentDescription="image"
+                android:focusable="false"
                 android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:focusable="false" />
+                android:paddingRight="3dp" />
 
             <TextView
                 android:id="@+id/firstLinep2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/photo2"
+                android:focusable="false"
                 android:paddingBottom="5dp"
-                
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp"
-                android:focusable="false" />
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/secondLinep2"
@@ -124,35 +227,34 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/firstLinep2"
                 android:layout_toRightOf="@+id/photo2"
+                android:focusable="false"
                 android:paddingLeft="10dp"
-
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp"
-                android:focusable="false" />
+                android:textSize="14dp" />
         </RelativeLayout>
+
         <RelativeLayout
-			android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="5dp" >
+
             <ImageView
                 android:id="@+id/photo3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-
+                android:focusable="false"
                 android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                 android:focusable="false"/>
+                android:paddingRight="3dp" />
 
             <TextView
                 android:id="@+id/firstLinep3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/photo3"
+                android:focusable="false"
                 android:paddingBottom="5dp"
-
                 android:textColor="@color/yellowFont"
-                android:textSize="16dp"
-                android:focusable="false" />
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/secondLinep3"
@@ -160,11 +262,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/firstLinep3"
                 android:layout_toRightOf="@+id/photo3"
+                android:focusable="false"
                 android:paddingLeft="10dp"
-
                 android:textColor="@color/yellowFont"
-                android:textSize="14dp" 
-                android:focusable="false"/>
+                android:textSize="14dp" />
         </RelativeLayout>
     </LinearLayout>
 

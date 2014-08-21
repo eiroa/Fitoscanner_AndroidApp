@@ -19,7 +19,12 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ SampleSQLiteTable.COLUMN_SAMPLE_ID + " integer primary key autoincrement, " 
 			+ SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE + " text, "
 			+ SampleSQLiteTable.COLUMN_SAMPLE_FIELD_NAME + " text, "
-			+ SampleSQLiteTable.COLUMN_SAMPLE_NAME + " text"
+			+ SampleSQLiteTable.COLUMN_SAMPLE_NAME + " text, "
+			+ SampleSQLiteTable.COLUMN_LATITUDE + " text, "
+			+ SampleSQLiteTable.COLUMN_LONGITUDE + " text, "
+			+ SampleSQLiteTable.COLUMN_CITY + " text, "
+			+ SampleSQLiteTable.COLUMN_STATE + " text, "
+			+ SampleSQLiteTable.COLUMN_COUNTRY + " text"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "

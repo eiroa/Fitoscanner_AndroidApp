@@ -72,7 +72,8 @@ public class MenuActivity extends Activity {
         goTakePic.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View arg0) {
             	Intent intent = new Intent(activity, MakePhotoActivity.class);
-        		activity.startActivity(intent);      		
+            	intent.putExtra("usesLocation", usesLocation);
+        		activity.startActivity(intent);
             }
             
         });

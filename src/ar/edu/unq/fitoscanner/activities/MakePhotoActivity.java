@@ -1,9 +1,11 @@
 package ar.edu.unq.fitoscanner.activities;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,6 +17,8 @@ import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,6 +37,7 @@ import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
 import ar.edu.unq.fitoscanner.helpers.Base64Helper;
 import ar.edu.unq.fitoscanner.helpers.CameraPreview;
 import ar.edu.unq.fitoscanner.helpers.CustomImageListViewAdapter;
+import ar.edu.unq.fitoscanner.helpers.GPSHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
@@ -53,10 +58,12 @@ public class MakePhotoActivity extends Activity {
 	private SamplesDataSource samplesDataSource;
 	private Sample newSample;
 	private Typeface font;
+	private boolean usesLocation;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.usesLocation =getIntent().getBooleanExtra("usesLocation", false);
 		 font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
 
 		this.hasCamera = checkCameraHardware(this);
@@ -185,7 +192,49 @@ public class MakePhotoActivity extends Activity {
 				.format(new Date()));
 		newSample.setFieldName("testing field");
 		newSample.setImages(previews);
+		if(this.usesLocation){
+			Log.d(TAG, "Attempting to obtain location for sample " + sampleName); 
+			addLocation();
+		}
+		
 
+	}
+	
+	private void addLocation(){
+		GPSHelper gps = new GPSHelper(MakePhotoActivity.this);
+		Geocoder gcd = new Geocoder(this);
+		List<Address> addresses = null;
+        // check if GPS enabled     
+        if(gps.canGetLocation()){
+             
+            String latitude = Double.toString(gps.getLatitude());
+            String longitude = Double.toString(gps.getLongitude());
+             
+            try {
+    			addresses = gcd.getFromLocation(gps.getLocation().getLatitude(), gps.getLocation().getLongitude(), 1);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    		String city = "-";
+    		String state = "-";
+    		String country = "-";
+    		try {
+    			city = addresses.get(0).getLocality();
+    			state = addresses.get(0).getAdminArea();
+    			country = addresses.get(0).getCountryName();
+    		} catch (NullPointerException e) {
+    			Log.e(TAG, "Error! No data obtained from geocoder");
+    		}
+        	newSample.setLocationData(latitude, longitude, city, state, country);
+            Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
+            longitude + "\n  Closest city: "+gps.getAddress());
+            gps.stopSelf();
+        }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
 	}
 
 	/**

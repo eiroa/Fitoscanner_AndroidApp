@@ -219,34 +219,8 @@ public class GPSHelper extends Service implements LocationListener {
     }
  
     @Override
-    public void onLocationChanged(Location location) {
-    	
-    	
-		try {
-			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String city = "Desconocido";
-		String state = "";
-		String country = "";
-		try {
-			city = addresses.get(0).getLocality();
-			state = addresses.get(0).getAdminArea();
-			country = addresses.get(0).getCountryName();
-		} catch (NullPointerException e) {
-			// TODO: handle exception
-		}
-    	if (addresses != null && addresses.size() > 0) {
-    		Log.d("Location updated", "Latitude:" +location.getLatitude() + "--- Longitude: \n"+location.getLongitude());
-        	Toast.makeText(mContext, "Location updated..   \n"+"Latitude:" +location.getLatitude() + 
-        			"--- Longitude: "+location.getLongitude() + "\n Closest City: "+
-        			city + "\n "+"state: "+state+  "\n country:"+country , Toast.LENGTH_SHORT).show();
-    	}
-    	Toast.makeText(mContext, "Location updated..   \n"+"Latitude:" +location.getLatitude() + 
-    			"\n Longitude: "+location.getLongitude(), Toast.LENGTH_SHORT).show();
-    	
+    public void onLocationChanged(Location location) { 	
+		
     }
  
     @Override

@@ -31,6 +31,10 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
 	private class ViewHolder {
 		TextView txtDate;
 		TextView txtSample;
+		TextView txtLatAndLond;
+		TextView txtCity;
+		TextView txtState;
+		TextView txtCountry;
 		ImageView imagep1;
 		ImageView imagep2;
 		ImageView imagep3;
@@ -57,6 +61,10 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
 
             holder.txtDate = (TextView) convertView.findViewById(R.id.savedSample_originDate);
             holder.txtSample = (TextView) convertView.findViewById(R.id.savedSample_sampleNameField);
+            holder.txtLatAndLond = (TextView) convertView.findViewById(R.id.savedSample_latAndLon);
+            holder.txtCity = (TextView) convertView.findViewById(R.id.savedSample_city);
+            holder.txtState = (TextView) convertView.findViewById(R.id.savedSample_state);
+            holder.txtCountry = (TextView) convertView.findViewById(R.id.savedSample_country);
             
             holder.txtDescp1 = (TextView) convertView.findViewById(R.id.secondLinep1);
             holder.txtTitlep1 = (TextView) convertView.findViewById(R.id.firstLinep1);
@@ -79,6 +87,11 @@ public class CustomSampleListViewAdapter extends ArrayAdapter<Sample> {
         
         holder.txtDate.setText(sample.getOriginDate());
         holder.txtSample.setText(sample.getSampleName());
+        holder.txtLatAndLond.setText(sample.getLocationData().getLatitude() + " / " 
+        + sample.getLocationData().getLongitude());
+        holder.txtCity.setText(sample.getLocationData().getCity());
+        holder.txtState.setText(sample.getLocationData().getState());
+        holder.txtCountry.setText(sample.getLocationData().getCountry());
         
         holder.txtDescp1.setText(p1.getDescription());
         holder.txtTitlep1.setText(p1.getTitle());
