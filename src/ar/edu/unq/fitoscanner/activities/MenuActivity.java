@@ -31,7 +31,7 @@ public class MenuActivity extends Activity {
         Button bt = (Button) findViewById(R.id.buttonMenuLogout);
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
-        
+        btnShowLocation.setTypeface(font);
         // show location button click event
         btnShowLocation.setOnClickListener(new View.OnClickListener() {
              
@@ -47,8 +47,8 @@ public class MenuActivity extends Activity {
                     double longitude = gps.getLongitude();
                      
                     // \n is for new line
-                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + 
-                    longitude + "\n  Closest city: "+gps.getAddress(), Toast.LENGTH_SHORT).show();    
+                    Toast.makeText(getApplicationContext(), "Tu ubicación es - \nLat: " + latitude + "\nLong: " + 
+                    longitude + "\n  Lugar geográfico: "+gps.getAddress(), Toast.LENGTH_SHORT).show();    
                 }else{
                     // can't get location
                     // GPS or Network is not enabled
@@ -133,6 +133,26 @@ public class MenuActivity extends Activity {
         invalidateOptionsMenu();
         return true;
         
+    }
+    
+    @Override
+    protected void onStop() {
+    	try {
+    		gps.stopSelf();
+		} catch (Exception e) {
+		}
+    	
+    	super.onStop();
+    }
+    
+    @Override
+    protected void onPause() {
+    	try {		
+    		gps.stopSelf();
+		} catch (Exception e) {
+		}
+    	
+    	super.onPause();
     }
     
 

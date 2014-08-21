@@ -100,7 +100,7 @@
                 android:gravity="center"
                 
                 android:padding="15dp"
-                android:text="Mostrar Ubicacion"
+                android:text="Mostrar Ubicación"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
