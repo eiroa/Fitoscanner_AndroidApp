@@ -2,12 +2,14 @@ package ar.edu.unq.fitoscanner.activities;
 
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 
+@SuppressLint("NewApi")
 public class LoginActivity extends Activity implements OnClickListener {
 	LoginActivity activity;
 	public static boolean logged = false;
@@ -26,6 +29,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		this.activity = this;
+		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        
 		TextView txtView1 = (TextView) findViewById(R.id.loginUserText);
 		TextView txtView2 = (TextView) findViewById(R.id.loginPassText);
 

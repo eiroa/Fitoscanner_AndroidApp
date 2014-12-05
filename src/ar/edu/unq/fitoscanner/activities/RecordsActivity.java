@@ -1,6 +1,16 @@
 package ar.edu.unq.fitoscanner.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +29,8 @@ import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
 import ar.edu.unq.fitoscanner.helpers.CustomSampleListViewAdapter;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
+import ar.edu.unq.fitoscanner.helpers.URLHelper;
+import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
 
 public class RecordsActivity extends Activity{
@@ -40,8 +52,6 @@ public class RecordsActivity extends Activity{
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.records_layout);
-		Button buttonSend = (Button) findViewById(R.id.button_send);
-        buttonSend.setTypeface(font);
         samples = this.getSamples();
         final ListView listview = (ListView) findViewById(R.id.savedSamplesList);
         final CustomSampleListViewAdapter customAdapter = new CustomSampleListViewAdapter(
@@ -51,6 +61,7 @@ public class RecordsActivity extends Activity{
          listview.setAdapter(customAdapter);
          Log.i(TAG, "Adapter for samples set...");
          setDeleteSampleButton();
+         setSendSampleButton();
          listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
            @Override
@@ -117,6 +128,46 @@ public class RecordsActivity extends Activity{
 	     );
 	}
 	
+	private void setSendSampleButton(){
+		Button sendButton = (Button) findViewById(R.id.button_send);
+		sendButton.setTypeface(font);
+		sendButton.setOnClickListener(
+	         new View.OnClickListener() {
+	             @Override
+	             public void onClick(View v) {
+	            	 if(samplePositionSelected<0 || samplePositionSelected > samples.size()){
+	            		 Toast.makeText(getApplicationContext(),"Seleccione una muestra primero",Toast.LENGTH_SHORT).show();
+	            	 }else{
+	            		 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+	 	         				context);
+	 	          
+	 	         			alertDialogBuilder.setTitle("¿Enviar muestra "+
+	 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
+	 	         			samples.get(samplePositionSelected).getOriginDate()+ " al servidor para determinar tratamiento?");
+	 	          
+	 	         			alertDialogBuilder
+	 	         				.setMessage("Elija una opción ")
+	 	         				.setCancelable(false)
+	 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
+	 	         					public void onClick(DialogInterface dialog,int id) {
+	 	         						sendSample(samples.get(samplePositionSelected));
+	 	         						generateSamplesView();
+	 	         						
+	 	         					}
+	 	         				  })
+	 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
+	 	         					public void onClick(DialogInterface dialog,int id) {
+	 	         						dialog.cancel();
+	 	         					}
+	 	         				});
+	 	         				AlertDialog alertDialog = alertDialogBuilder.create();
+	 	         				alertDialog.show();
+	            	 }	            		         			            
+	               }              
+	         }
+	     );
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -130,9 +181,7 @@ public class RecordsActivity extends Activity{
 		samplesDataSource.open();
     	try
     	{
-    		
     		return samplesDataSource.getSamples();
-    		
     	}
     	finally{
     		samplesDataSource.close();
@@ -143,12 +192,35 @@ public class RecordsActivity extends Activity{
 		samplesDataSource.open();
     	try
     	{
-    		
     		samplesDataSource.deleteSample(sample);
-    		
     	}
     	finally{
     		samplesDataSource.close();
     	}
+	}
+	
+	
+	public void sendSample(Sample sample){
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(URLHelper.SERVER_ADDRESS+"/sample/save/3");
+		
+		try {
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(7);
+			int i = 1;
+			for (Image img : sample.getImages()) {
+				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_title", img.getTitle()));
+				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_base64", img.getBase64()));
+				i++;
+			}
+		       nameValuePairs.add(new BasicNameValuePair("sample_name", sample.getSampleName()));
+		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		   	   httpclient.execute(httppost);
+				Toast.makeText(getBaseContext(),"Muestra enviada al servidor, "
+						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
