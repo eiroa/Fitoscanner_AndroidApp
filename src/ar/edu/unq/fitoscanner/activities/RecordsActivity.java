@@ -1,8 +1,12 @@
 package ar.edu.unq.fitoscanner.activities;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -11,6 +15,10 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -201,18 +210,45 @@ public class RecordsActivity extends Activity{
 	
 	
 	public void sendSample(Sample sample){
-		HttpClient httpclient = new DefaultHttpClient();
+		HttpParams httpParameters = new BasicHttpParams();
+		HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
+		HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);
+		HttpClient httpclient = new DefaultHttpClient(httpParameters);
+		
 		HttpPost httppost = new HttpPost(URLHelper.SERVER_ADDRESS+"/sample/save/3");
+		httppost.setHeader("Content-Type",
+                "application/x-www-form-urlencoded;charset=UTF-8");
 		
 		try {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(7);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(sample.getImages().size()*2+6 );
 			int i = 1;
 			for (Image img : sample.getImages()) {
 				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_title", img.getTitle()));
 				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_base64", img.getBase64()));
 				i++;
 			}
+			//date, name, lat, lon, isAnon, imei
 		       nameValuePairs.add(new BasicNameValuePair("sample_name", sample.getSampleName()));
+		       
+		       SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+		       timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		       String time = timeFormat.format(new Date());
+		       TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+		       String lon  = "No data"; 
+		       String lat = "No data";
+		       if(sample.getLocationData() != null){
+		    	   lon = sample.getLocationData().getLongitude();
+		       }
+		       if(sample.getLocationData() != null){
+		    	   lat = sample.getLocationData().getLatitude();
+		       }
+		       
+		       nameValuePairs.add(new BasicNameValuePair("date", time));
+		       nameValuePairs.add(new BasicNameValuePair("imei", mngr.getDeviceId()));
+		       nameValuePairs.add(new BasicNameValuePair("isAnon", Boolean.toString(!LoginActivity.logged)));
+		       nameValuePairs.add(new BasicNameValuePair("lon", lon));
+		       nameValuePairs.add(new BasicNameValuePair("lat",lat));
+		       
 		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		   	   httpclient.execute(httppost);
 				Toast.makeText(getBaseContext(),"Muestra enviada al servidor, "

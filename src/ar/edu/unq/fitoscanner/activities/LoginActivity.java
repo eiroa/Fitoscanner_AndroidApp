@@ -103,6 +103,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(activity, MenuActivity.class);
 		activity.startActivity(intent);
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
