@@ -255,8 +255,13 @@ public class RecordsActivity extends Activity{
 						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			Toast.makeText(getBaseContext(),"Error al enviar la muestra, "
+					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}catch (Exception e) {
+			Toast.makeText(getBaseContext(),"Error al enviar la muestra, "
+					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
 		}
 	}
 }
