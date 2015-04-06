@@ -44,8 +44,9 @@ public class SamplesDataSource {
 		String city = cursor.getString(6);
 		String state = cursor.getString(7);
 		String country = cursor.getString(8);
+		String hash = cursor.getString(9);
 		Sample Sample = new Sample(id, date, null, field, sampleName,
-				latitude,longitude,city,state,country);
+				latitude,longitude,city,state,country, hash);
 		return Sample;
 	}
 
@@ -134,6 +135,7 @@ public class SamplesDataSource {
 		String city = sample.getLocationData().getCity();
 		String state = sample.getLocationData().getState();
 		String country = sample.getLocationData().getCountry();
+		String hash = sample.getHash();
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
@@ -144,6 +146,7 @@ public class SamplesDataSource {
 		values.put(SampleSQLiteTable.COLUMN_CITY, city);
 		values.put(SampleSQLiteTable.COLUMN_STATE, state);
 		values.put(SampleSQLiteTable.COLUMN_COUNTRY, country);
+		values.put(SampleSQLiteTable.COLUMN_HASH, hash);
 		
 
 		if (id != null && sampleExists(sample)) {

@@ -18,18 +18,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
+import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
+import ar.edu.unq.fitoscanner.helpers.URLHelper;
+import ar.edu.unq.fitoscanner.model.Configuration;
+import ar.edu.unq.fitoscanner.model.Sample;
 
 @SuppressLint("NewApi")
 public class LoginActivity extends Activity implements OnClickListener {
 	LoginActivity activity;
 	public static boolean logged = false;
-
+	ConfigurationDataSource configurationDataSource;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		this.activity = this;
-		
+		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         
@@ -43,7 +48,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		Button btNoAuth = (Button) findViewById(R.id.loginNoAuthButton);
 		bt.setTypeface(font);
 		btNoAuth.setTypeface(font);
-
+		
 		bt.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View arg0) {
@@ -78,7 +83,30 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		});
 		//
-
+		setDefaultIP();
+	}
+	public void setDefaultIP(){
+		configurationDataSource.open();
+    	try
+    	{	
+    		configurationDataSource.doSaveConfiguration(new Configuration(1, URLHelper.SERVER_ADDRESS));
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+	}
+	
+	public void showIP(){
+		configurationDataSource.open();
+    	try
+    	{
+    		Configuration conf =configurationDataSource.getConfigurationById(1);
+    		Toast.makeText(getApplicationContext(), "Ip is " + conf.getIp(), 
+    				Toast.LENGTH_SHORT).show();
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
 	}
 
 	@Override

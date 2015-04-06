@@ -24,7 +24,8 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ SampleSQLiteTable.COLUMN_LONGITUDE + " text, "
 			+ SampleSQLiteTable.COLUMN_CITY + " text, "
 			+ SampleSQLiteTable.COLUMN_STATE + " text, "
-			+ SampleSQLiteTable.COLUMN_COUNTRY + " text"
+			+ SampleSQLiteTable.COLUMN_COUNTRY + " text, "
+			+ SampleSQLiteTable.COLUMN_HASH + " text"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "
@@ -38,12 +39,11 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 
 
 	
-//	private static final String DATABASE_CREATE_CONFIGURATION = " create table "
-//			+ ConfigurationSQLiteTable.TABLE + "( " 
-//			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " integer primary key autoincrement, " 
-//			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_LAST_SEARCH + " text not null, "
-//			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_PUBLICITY_ENABLED + " integer not null "
-//			+ " );";
+	private static final String DATABASE_CREATE_CONFIGURATION = " create table "
+			+ ConfigurationSQLiteTable.TABLE + "( " 
+			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " integer primary key, " 
+			+ ConfigurationSQLiteTable.COLUMN_SERVER_IP + " text "
+			+ " );";
 	
 	
 	public FitoscannerSqLiteHelper(Context context)
@@ -56,7 +56,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 		database.execSQL(DATABASE_CREATE_SAMPLE);
 
 		database.execSQL(DATABASE_CREATE_IMAGE);
-//		database.execSQL(DATABASE_CREATE_CONFIGURATION);		
+		database.execSQL(DATABASE_CREATE_CONFIGURATION);		
 		Log.d("Database FitOscanner:", "OnCreate executed");		
 	}
 
@@ -66,7 +66,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 		database.execSQL("DROP TABLE IF EXISTS " + SampleSQLiteTable.TABLE);
 
 		database.execSQL("DROP TABLE IF EXISTS " + ImageSQLiteTable.TABLE);
-//		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
+		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
 		onCreate(database);
 		Log.d("Database Fitoscanner:", "OnUpgrade executed");		
 	}

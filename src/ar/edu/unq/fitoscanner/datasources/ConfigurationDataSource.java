@@ -1,0 +1,150 @@
+package ar.edu.unq.fitoscanner.datasources;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+
+
+
+
+
+
+
+
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import ar.edu.unq.fitoscanner.data.ConfigurationSQLiteTable;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
+import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
+import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
+import ar.edu.unq.fitoscanner.model.Configuration;
+import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.Sample;
+
+public class ConfigurationDataSource {
+	public final static String TAG = "ConfigurationDataSource";
+	private SQLiteDatabase database;
+	private FitoscannerSqLiteHelper dbHelper;
+	private Context mContext;
+
+	public ConfigurationDataSource(Context context) {
+		this.mContext = context;
+		dbHelper = new FitoscannerSqLiteHelper(context);
+	}
+
+
+	public void open() throws SQLException {
+		database = dbHelper.getWritableDatabase();
+	}
+
+	public void close() {
+		dbHelper.close();
+	}
+	
+	/**
+	 * Construye un objeto Configuration 
+	 * @param cursor
+	 * @return
+	 */
+		private Configuration cursorToConfiguration(Cursor cursor) {
+			Integer id = cursor.getInt(0);
+			String ip= cursor.getString(1);
+					
+			Configuration conf = new Configuration(id,ip);
+			return conf;
+		}
+
+	public Long doSaveIp(String ip) {
+		Long idResult = 0L;
+		ContentValues values = new ContentValues();
+		values.put(ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID, 1);
+		values.put(ConfigurationSQLiteTable.COLUMN_SERVER_IP, ip);
+		database.update(ConfigurationSQLiteTable.TABLE, values,
+				ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);
+		
+		return idResult;
+	}
+	
+	public void doSaveConfiguration(Configuration conf) {		
+		if (conf != null)
+		{
+			String ip = conf.getIp();
+			
+			ContentValues values = new ContentValues();
+			values.put(ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID, 1);
+			values.put(ConfigurationSQLiteTable.COLUMN_SERVER_IP, ip);
+			
+			if(this.configurationExists(conf))
+			{
+				database.update(ConfigurationSQLiteTable.TABLE, values, ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);			} else 
+			{
+				database.insert(ConfigurationSQLiteTable.TABLE, null, values);	
+			}	
+		}		
+	}
+	
+	public Configuration getConfigurationById(Integer id) {
+		Configuration conf = null;		
+		try {
+			String table = ConfigurationSQLiteTable.TABLE;
+			String where = ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + id;
+			Cursor cursor = database.query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
+			if (cursor != null) {
+				try {
+					if (cursor.moveToFirst()) {
+						conf = cursorToConfiguration(cursor);
+					}
+				} finally {
+					cursor.close();
+				}
+			}				
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
+		}
+		
+		return conf;
+	}
+	
+	public boolean configurationExists(Configuration conf) {
+
+		boolean exists = false;
+		try {
+			String table = ConfigurationSQLiteTable.TABLE;
+			String where = ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + conf.getId();
+			Cursor cursor = database.query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);						
+			if (cursor != null) {
+				try {
+					cursor.moveToFirst();
+					int count = cursor.getCount();
+					exists = count != 0;
+				} finally {
+					cursor.close();
+				}				
+			}
+		} catch (Exception e) {
+			Log.e(TAG, ("configuration not found" + conf.getId().toString()));
+		}		
+
+		return exists;
+	}
+
+	
+	
+
+	public SQLiteDatabase getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(SQLiteDatabase database) {
+		this.database = database;
+	}
+
+}

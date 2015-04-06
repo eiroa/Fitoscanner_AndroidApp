@@ -1,6 +1,7 @@
 package ar.edu.unq.fitoscanner.activities;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -34,9 +36,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
 import ar.edu.unq.fitoscanner.helpers.CustomSampleListViewAdapter;
+import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Image;
@@ -46,6 +50,7 @@ public class RecordsActivity extends Activity{
 	public final static String TAG = "RecordsActivity";
 	ImageDataSource imageDataSource;
 	SamplesDataSource samplesDataSource;
+	ConfigurationDataSource configurationDataSource;
 	int samplePositionSelected = -1;
 	private ArrayList<Sample> samples = new ArrayList<Sample>();
 	private final Context context = this;
@@ -55,6 +60,7 @@ public class RecordsActivity extends Activity{
         font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
+        configurationDataSource = new ConfigurationDataSource(this);
         
         
     }
@@ -209,59 +215,104 @@ public class RecordsActivity extends Activity{
 	}
 	
 	
-	public void sendSample(Sample sample){
-		HttpParams httpParameters = new BasicHttpParams();
+	public String getUrl(){
+		configurationDataSource.open();
+		try{
+			return configurationDataSource.getConfigurationById(1).getIp();
+		}
+		finally{
+        	configurationDataSource.close();
+        }
+	}
+	
+	
+	public void sendSample(final Sample sample){
+		final HttpParams httpParameters = new BasicHttpParams();
 		HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
 		HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);
-		HttpClient httpclient = new DefaultHttpClient(httpParameters);
 		
-		HttpPost httppost = new HttpPost(URLHelper.SERVER_ADDRESS+"/sample/save/3");
-		httppost.setHeader("Content-Type",
-                "application/x-www-form-urlencoded;charset=UTF-8");
 		
-		try {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(sample.getImages().size()*2+6 );
-			int i = 1;
-			for (Image img : sample.getImages()) {
-				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_title", img.getTitle()));
-				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_base64", img.getBase64()));
-				i++;
-			}
-			//date, name, lat, lon, isAnon, imei
-		       nameValuePairs.add(new BasicNameValuePair("sample_name", sample.getSampleName()));
-		       
-		       SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
-		       timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		       String time = timeFormat.format(new Date());
-		       TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-		       String lon  = "No data"; 
-		       String lat = "No data";
-		       if(sample.getLocationData() != null){
-		    	   lon = sample.getLocationData().getLongitude();
-		       }
-		       if(sample.getLocationData() != null){
-		    	   lat = sample.getLocationData().getLatitude();
-		       }
-		       
-		       nameValuePairs.add(new BasicNameValuePair("date", time));
-		       nameValuePairs.add(new BasicNameValuePair("imei", mngr.getDeviceId()));
-		       nameValuePairs.add(new BasicNameValuePair("isAnon", Boolean.toString(!LoginActivity.logged)));
-		       nameValuePairs.add(new BasicNameValuePair("lon", lon));
-		       nameValuePairs.add(new BasicNameValuePair("lat",lat));
-		       
-		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		   	   httpclient.execute(httppost);
-				Toast.makeText(getBaseContext(),"Muestra enviada al servidor, "
-						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			Toast.makeText(getBaseContext(),"Error al enviar la muestra, "
-					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch (Exception e) {
-			Toast.makeText(getBaseContext(),"Error al enviar la muestra, "
-					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
-		}
+		
+		Thread send = new Thread() {
+		    public void run() {
+		        	HttpClient httpclient = new DefaultHttpClient(httpParameters);
+		    		
+		    		HttpPost httppost = null;
+		    		
+		    		String detailUrl ="";
+		        	try {
+		    			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(sample.getImages().size()*2+6 );
+		    			int i = 0;
+		    			for (Image img : sample.getImages()) {
+		    				i++;
+		    				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_title", img.getTitle()));
+		    				nameValuePairs.add(new BasicNameValuePair("sample_image_"+i+"_base64", img.getBase64()));
+		    			}
+		    			//date, name, lat, lon, isAnon, imei
+		    		       nameValuePairs.add(new BasicNameValuePair("sample_name", sample.getSampleName()));
+		    		       
+		    		       SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+		    		       timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		    		       String time = timeFormat.format(new Date());
+		    		       TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+		    		       String lon  = "No data"; 
+		    		       String lat = "No data";
+		    		       if(sample.getLocationData() != null){
+		    		    	   lon = sample.getLocationData().getLongitude();
+		    		       }
+		    		       if(sample.getLocationData() != null){
+		    		    	   lat = sample.getLocationData().getLatitude();
+		    		       }
+		    		       
+		    		       nameValuePairs.add(new BasicNameValuePair("date", time));
+		    		       nameValuePairs.add(new BasicNameValuePair("imei", mngr.getDeviceId()));
+		    		       nameValuePairs.add(new BasicNameValuePair("isAnon", Boolean.toString(!LoginActivity.logged)));
+		    		       nameValuePairs.add(new BasicNameValuePair("lon", lon));
+		    		       nameValuePairs.add(new BasicNameValuePair("lat",lat));
+		    		       nameValuePairs.add(new BasicNameValuePair("images_hash", sample.getHash()));
+		    		       String url; 
+		    		       try{
+		    		    	   url = getUrl();
+		    		       }catch(NullPointerException ne){
+		    		    	   Log.d("Records Activity", "WARNING: No configuration present, using default server address");
+		    		    	   url = URLHelper.SERVER_ADDRESS;
+		    		       }
+		    		       detailUrl="/sample/save/"+i;
+		    		       httppost = new HttpPost(url+detailUrl);
+		    				httppost.setHeader("Content-Type",
+		    		                "application/x-www-form-urlencoded;charset=UTF-8");
+		    		       
+		    		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		    		   	   httpclient.execute(httppost);
+		    				Toast.makeText(context,"Muestra enviada al servidor, "
+		    						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
+		    		}catch (HttpHostConnectException e) {
+		    			Log.d("Records Activity", "WARNING: Server address from databse unreacheable, using default address");
+		    			try {
+		    				httppost = new HttpPost(URLHelper.SERVER_ADDRESS+detailUrl);
+		    				httpclient.execute(httppost);
+		    				Toast.makeText(context,"Muestra enviada al servidor, "
+		    						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
+		    			} catch (Exception ex) {
+		    				Toast.makeText(context,"Error al enviar la muestra, "
+			    					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
+		    				ex.printStackTrace();
+		    			}
+		    		} catch (ClientProtocolException e) {
+		    			e.printStackTrace();
+		    			Toast.makeText(context,"Error al enviar la muestra, "
+		    					+ "verifique su conexión a internet",Toast.LENGTH_SHORT).show();
+		    		} catch (IOException e) {
+		    			e.printStackTrace();
+		    		}catch (Exception e) {
+		    			e.printStackTrace();
+		    			Toast.makeText(context,"Error grave y desconocido al enviar la muestra... "
+		    					+ " se recomiendo reinstalar aplicación con última versión",Toast.LENGTH_SHORT).show();
+		    		}
+		        } 
+		};
+		this.runOnUiThread(send);
+		
+		
 	}
 }

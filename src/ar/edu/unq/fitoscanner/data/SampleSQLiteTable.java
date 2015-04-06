@@ -15,6 +15,7 @@ public class SampleSQLiteTable {
 	public static final String COLUMN_CITY = "city";
 	public static final String COLUMN_STATE = "state";
 	public static final String COLUMN_COUNTRY = "country";
+	public static final String COLUMN_HASH = "hash";
 	
 
 	
@@ -27,7 +28,8 @@ public class SampleSQLiteTable {
 			SampleSQLiteTable.COLUMN_LONGITUDE,
 			SampleSQLiteTable.COLUMN_CITY,
 			SampleSQLiteTable.COLUMN_STATE,
-			SampleSQLiteTable.COLUMN_COUNTRY};
+			SampleSQLiteTable.COLUMN_COUNTRY,
+			SampleSQLiteTable.COLUMN_HASH};
 	
 
 }

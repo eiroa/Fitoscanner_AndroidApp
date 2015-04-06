@@ -38,6 +38,7 @@ import ar.edu.unq.fitoscanner.helpers.Base64Helper;
 import ar.edu.unq.fitoscanner.helpers.CameraPreview;
 import ar.edu.unq.fitoscanner.helpers.CustomImageListViewAdapter;
 import ar.edu.unq.fitoscanner.helpers.GPSHelper;
+import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
@@ -192,6 +193,16 @@ public class MakePhotoActivity extends Activity {
 				.format(new Date()));
 		newSample.setFieldName("testing field");
 		newSample.setImages(previews);
+		String base64full = "";
+		String hash = "";
+		
+		// calcular hash de cada imagen, concatenerlos y luego obtener hash de los hashes concatenados
+		// tener en cuenta que cada base 64 tiene un salto de linea al final
+		for (Image img : newSample.getImages()) {
+			base64full = img.getBase64();
+			hash = hash+SecurityHelper.toSHA256(base64full);
+		}
+		newSample.setHash(SecurityHelper.toSHA256(hash));
 		if(this.usesLocation){
 			Log.d(TAG, "Attempting to obtain location for sample " + sampleName); 
 			addLocation();
@@ -323,7 +334,7 @@ public class MakePhotoActivity extends Activity {
 				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
 						data.length,options);
 				
-				System.out.println("Photo encoded from camera with size "+ recentPhoto.getByteCount()+", attempting resize");
+				//System.out.println("Photo encoded from camera with size "+ recentPhoto.getByteCount()+", attempting resize");
 //				byte[] compressedBytes =  BitmapResizer.resizeImage(
 //						data, 
 //						recentPhoto.getWidth(), 
