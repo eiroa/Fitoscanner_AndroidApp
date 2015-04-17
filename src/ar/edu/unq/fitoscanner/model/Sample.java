@@ -11,10 +11,11 @@ public class Sample {
 	private String fieldName;
 	private String sampleName;
 	private String hash;
+	private Boolean sent;
 	private LocationData locationData = new LocationData();
 
 	/**
-	 * Constructor que deja Location data en null
+	 * Constructor que deja Location data en null, 
 	 * 
 	 * @param id
 	 * @param originDate
@@ -23,13 +24,14 @@ public class Sample {
 	 * @param sampleName
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
-			String fieldName, String sampleName, String hash) {
+			String fieldName, String sampleName, String hash,Boolean sent) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
 		this.fieldName = fieldName;
 		this.sampleName = sampleName;
 		this.hash = hash;
+		this.sent = sent;
 	}
 
 	/**
@@ -48,7 +50,7 @@ public class Sample {
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName, String sampleName, String lat, String lon,
-			String city, String state, String country,String hash) {
+			String city, String state, String country,String hash,Boolean sent) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -56,6 +58,7 @@ public class Sample {
 		this.sampleName = sampleName;
 		this.locationData = new LocationData(lat, lon, city, state, country);
 		this.hash = hash;
+		this.sent = sent;
 	}
 
 	public Sample() {
@@ -115,6 +118,16 @@ public class Sample {
 
 	public void setLocationData(LocationData locationData) {
 		this.locationData = locationData;
+	}
+	
+	
+
+	public Boolean getSent() {
+		return sent;
+	}
+
+	public void setSent(Boolean sent) {
+		this.sent = sent;
 	}
 
 	public void setLocationData(String lat, String lon, String city,

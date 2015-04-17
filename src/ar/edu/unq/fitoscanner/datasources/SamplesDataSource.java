@@ -45,11 +45,38 @@ public class SamplesDataSource {
 		String state = cursor.getString(7);
 		String country = cursor.getString(8);
 		String hash = cursor.getString(9);
+		Boolean sent = ( 1 == cursor.getInt(10)?true:false);
 		Sample Sample = new Sample(id, date, null, field, sampleName,
-				latitude,longitude,city,state,country, hash);
+				latitude,longitude,city,state,country, hash,sent);
 		return Sample;
 	}
 
+	private ArrayList<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent) {
+
+		ArrayList<Sample> samples = new ArrayList<Sample>();
+
+		if (cursor != null) {
+			try {
+				cursor.moveToFirst();
+				while (!cursor.isAfterLast()) {
+					Sample sample = cursorToSample(cursor);
+					if(getSent){
+						if(sample.getSent())samples.add(sample);
+					}else{
+						if(!sample.getSent())samples.add(sample);
+					}
+					
+					cursor.moveToNext();
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+
+		return samples;
+	}
+	
+	
 	private ArrayList<Sample> cursorToListOfSamples(Cursor cursor) {
 
 		ArrayList<Sample> samples = new ArrayList<Sample>();
@@ -136,6 +163,7 @@ public class SamplesDataSource {
 		String state = sample.getLocationData().getState();
 		String country = sample.getLocationData().getCountry();
 		String hash = sample.getHash();
+		Integer sent = sample.getSent()?1:0;
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
@@ -147,6 +175,7 @@ public class SamplesDataSource {
 		values.put(SampleSQLiteTable.COLUMN_STATE, state);
 		values.put(SampleSQLiteTable.COLUMN_COUNTRY, country);
 		values.put(SampleSQLiteTable.COLUMN_HASH, hash);
+		values.put(SampleSQLiteTable.COLUMN_SENT, sent);
 		
 
 		if (id != null && sampleExists(sample)) {
@@ -239,7 +268,7 @@ public class SamplesDataSource {
 	 * 
 	 * @return
 	 */
-	public ArrayList<Sample> getSamples() {
+	public ArrayList<Sample> getSamples(Boolean getSent) {
 		ArrayList<Sample> samples = new ArrayList<Sample>();
 		try {
 
@@ -247,7 +276,7 @@ public class SamplesDataSource {
 					.query(SampleSQLiteTable.TABLE,
 							SampleSQLiteTable.ALL_COLUMNS, null, null, null,
 							null, null);
-			samples = cursorToListOfSamples(cursor);
+			samples = cursorToListOfSamples(cursor,getSent);
 
 			for (Sample sample : samples) {
 				// Se le pasa al imageDatasource la conexion a la base de datos

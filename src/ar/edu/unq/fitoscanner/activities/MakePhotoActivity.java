@@ -193,6 +193,7 @@ public class MakePhotoActivity extends Activity {
 				.format(new Date()));
 		newSample.setFieldName("testing field");
 		newSample.setImages(previews);
+		newSample.setSent(false);
 		String base64full = "";
 		String hash = "";
 		

@@ -196,7 +196,7 @@ public class RecordsActivity extends Activity{
 		samplesDataSource.open();
     	try
     	{
-    		return samplesDataSource.getSamples();
+    		return samplesDataSource.getSamples(false);
     	}
     	finally{
     		samplesDataSource.close();
@@ -223,6 +223,17 @@ public class RecordsActivity extends Activity{
 		finally{
         	configurationDataSource.close();
         }
+	}
+	
+	public void saveSample(Sample sample) {
+		samplesDataSource.open();
+		try {
+
+			samplesDataSource.saveSample(sample);
+
+		} finally {
+			samplesDataSource.close();
+		}
 	}
 	
 	
@@ -286,6 +297,8 @@ public class RecordsActivity extends Activity{
 		    		   	   httpclient.execute(httppost);
 		    				Toast.makeText(context,"Muestra enviada al servidor, "
 		    						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
+		    				sample.setSent(true);
+		    				saveSample(sample);
 		    		}catch (HttpHostConnectException e) {
 		    			Log.d("Records Activity", "WARNING: Server address from databse unreacheable, using default address");
 		    			try {

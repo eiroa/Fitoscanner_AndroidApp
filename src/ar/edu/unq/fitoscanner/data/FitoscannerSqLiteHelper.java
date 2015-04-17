@@ -25,7 +25,8 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ SampleSQLiteTable.COLUMN_CITY + " text, "
 			+ SampleSQLiteTable.COLUMN_STATE + " text, "
 			+ SampleSQLiteTable.COLUMN_COUNTRY + " text, "
-			+ SampleSQLiteTable.COLUMN_HASH + " text"
+			+ SampleSQLiteTable.COLUMN_HASH + " text, "
+			+ SampleSQLiteTable.COLUMN_SENT + " integer"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "
@@ -64,7 +65,6 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 
 		database.execSQL("DROP TABLE IF EXISTS " + SampleSQLiteTable.TABLE);
-
 		database.execSQL("DROP TABLE IF EXISTS " + ImageSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
 		onCreate(database);
