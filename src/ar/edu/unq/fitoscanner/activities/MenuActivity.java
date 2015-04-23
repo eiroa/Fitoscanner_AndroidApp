@@ -88,9 +88,9 @@ public class MenuActivity extends Activity {
         bt.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {       		
-        		activity.finish();
         		LoginActivity.logged = false;
-            	Toast.makeText(activity.getApplicationContext(),"Se ha desconectado",Toast.LENGTH_LONG).show();       		
+            	Toast.makeText(activity.getApplicationContext(),"Se ha desconectado",Toast.LENGTH_LONG).show();
+            	activity.finish();
             }
         });
         

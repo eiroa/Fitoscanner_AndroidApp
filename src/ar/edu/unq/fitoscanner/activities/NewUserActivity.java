@@ -145,6 +145,8 @@ public class NewUserActivity extends Activity {
 	    				conf.setPass(SecurityHelper.toSHA256(userPassField.getText().toString()));
 	    				conf.setSurname(userSurnameField.getText().toString());
 	    				saveConfiguration(conf);
+	    				LoginActivity.logged = true;
+	    				
 //	    				Toast.makeText(context,"Usuario registrado, para ingresar deberá utilizar nick y clave",Toast.LENGTH_LONG).show();
 	    			} catch (Exception ex) {
 	    				Toast.makeText(context,"Error al intentar registrarse en el servidor, verifique su conexión",Toast.LENGTH_SHORT).show();
@@ -192,6 +194,15 @@ public class NewUserActivity extends Activity {
     		configurationDataSource.close();
     	}
     	this.finish();
+	}
+	
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		View v =findViewById(R.layout.activity_login);
+		v.invalidate();
+		v.requestLayout();
 	}
 	@Override
 	protected void onStart() {

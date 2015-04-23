@@ -34,23 +34,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 	Configuration conf;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
 		this.activity = this;
 		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        setConfiguration();
-		describeView();
+//		describeView();
 //		setDefaultIP();
 	}
 	
 	private void describeView(){
+		setContentView(R.layout.activity_login);
 		TextView loginUserTxt = (TextView) findViewById(R.id.loginUserText);
 		TextView loginPassTxt = (TextView) findViewById(R.id.loginPassText);
 		
 		final EditText loginUserField = (EditText) findViewById(R.id.loginUserField);
 		final EditText loginPassField = (EditText) findViewById(R.id.loginPassField);
-
+		loginUserField.setText("");
 		Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
 		loginUserTxt.setTypeface(font);
 		loginPassTxt.setTypeface(font);
@@ -174,10 +173,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
+		setConfiguration();
 		if (logged) {
 			startMenu();
+		}else{
+			describeView();
 		}
-
+		
 	}
 
 	private void startMenu() {
