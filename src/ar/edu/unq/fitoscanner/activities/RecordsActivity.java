@@ -55,12 +55,14 @@ public class RecordsActivity extends Activity{
 	private ArrayList<Sample> samples = new ArrayList<Sample>();
 	private final Context context = this;
 	private Typeface font;
+	private Boolean getSent;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
         configurationDataSource = new ConfigurationDataSource(this);
+        this.getSent =getIntent().getBooleanExtra("getSent", true);
         
         
     }
@@ -146,41 +148,44 @@ public class RecordsActivity extends Activity{
 	private void setSendSampleButton(){
 		Button sendButton = (Button) findViewById(R.id.button_send);
 		sendButton.setTypeface(font);
-		sendButton.setOnClickListener(
-	         new View.OnClickListener() {
-	             @Override
-	             public void onClick(View v) {
-	            	 if(samplePositionSelected<0 || samplePositionSelected > samples.size()){
-	            		 Toast.makeText(getApplicationContext(),"Seleccione una muestra primero",Toast.LENGTH_SHORT).show();
-	            	 }else{
-	            		 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-	 	         				context);
-	 	          
-	 	         			alertDialogBuilder.setTitle("¿Enviar muestra "+
-	 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
-	 	         			samples.get(samplePositionSelected).getOriginDate()+ " al servidor para determinar tratamiento?");
-	 	          
-	 	         			alertDialogBuilder
-	 	         				.setMessage("Elija una opción ")
-	 	         				.setCancelable(false)
-	 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
-	 	         					public void onClick(DialogInterface dialog,int id) {
-	 	         						sendSample(samples.get(samplePositionSelected));
-	 	         						generateSamplesView();
-	 	         						
-	 	         					}
-	 	         				  })
-	 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
-	 	         					public void onClick(DialogInterface dialog,int id) {
-	 	         						dialog.cancel();
-	 	         					}
-	 	         				});
-	 	         				AlertDialog alertDialog = alertDialogBuilder.create();
-	 	         				alertDialog.show();
-	            	 }	            		         			            
-	               }              
-	         }
-	     );
+		if(!getSent){
+			sendButton.setOnClickListener(
+			         new View.OnClickListener() {
+			             @Override
+			             public void onClick(View v) {
+			            	 if(samplePositionSelected<0 || samplePositionSelected > samples.size()){
+			            		 Toast.makeText(getApplicationContext(),"Seleccione una muestra primero",Toast.LENGTH_SHORT).show();
+			            	 }else{
+			            		 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+			 	         				context);
+			 	          
+			 	         			alertDialogBuilder.setTitle("¿Enviar muestra "+
+			 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
+			 	         			samples.get(samplePositionSelected).getOriginDate()+ " al servidor para determinar tratamiento?");
+			 	          
+			 	         			alertDialogBuilder
+			 	         				.setMessage("Elija una opción ")
+			 	         				.setCancelable(false)
+			 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
+			 	         					public void onClick(DialogInterface dialog,int id) {
+			 	         						sendSample(samples.get(samplePositionSelected));
+			 	         						generateSamplesView();
+			 	         						
+			 	         					}
+			 	         				  })
+			 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
+			 	         					public void onClick(DialogInterface dialog,int id) {
+			 	         						dialog.cancel();
+			 	         					}
+			 	         				});
+			 	         				AlertDialog alertDialog = alertDialogBuilder.create();
+			 	         				alertDialog.show();
+			            	 }	            		         			            
+			               }              
+			         }
+			     );
+		}
+		
 	}
 	
 	@Override
@@ -196,7 +201,7 @@ public class RecordsActivity extends Activity{
 		samplesDataSource.open();
     	try
     	{
-    		return samplesDataSource.getSamples(false);
+    		return samplesDataSource.getSamples(getSent);
     	}
     	finally{
     		samplesDataSource.close();
@@ -252,6 +257,7 @@ public class RecordsActivity extends Activity{
 		    		
 		    		String detailUrl ="";
 		        	try {
+		        		//La cantidad de imagenes por dos ( imagen =base 64 + titulo) + 6 campos fijos
 		    			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(sample.getImages().size()*2+6 );
 		    			int i = 0;
 		    			for (Image img : sample.getImages()) {

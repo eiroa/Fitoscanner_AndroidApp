@@ -77,25 +77,6 @@ public class SamplesDataSource {
 	}
 	
 	
-	private ArrayList<Sample> cursorToListOfSamples(Cursor cursor) {
-
-		ArrayList<Sample> samples = new ArrayList<Sample>();
-
-		if (cursor != null) {
-			try {
-				cursor.moveToFirst();
-				while (!cursor.isAfterLast()) {
-					Sample sample = cursorToSample(cursor);
-					samples.add(sample);
-					cursor.moveToNext();
-				}
-			} finally {
-				cursor.close();
-			}
-		}
-
-		return samples;
-	}
 
 	public void open() throws SQLException {
 		database = dbHelper.getWritableDatabase();
@@ -112,7 +93,13 @@ public class SamplesDataSource {
 			// Guardamos la muestra y al guardarse se devuelve el id con el que
 			// se guardo,
 			// dicho id se insertara en cada imagen que contenga la muestra
-			idResult = doSaveSample(sample);
+			if(this.sampleExists(sample)){
+				idResult = sample.getId();
+				doSaveSample(sample);
+			}else{
+				idResult = doSaveSample(sample);
+			}
+			
 
 			// Guardamos cada imagen correspondiente de la muestra
 			for (Image image : sample.getImages()) {

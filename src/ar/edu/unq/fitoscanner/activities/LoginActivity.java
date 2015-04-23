@@ -20,6 +20,7 @@ import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
+import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Configuration;
@@ -30,6 +31,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	LoginActivity activity;
 	public static boolean logged = false;
 	ConfigurationDataSource configurationDataSource;
+	Configuration conf;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
@@ -37,27 +39,34 @@ public class LoginActivity extends Activity implements OnClickListener {
 		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        
-		TextView txtView1 = (TextView) findViewById(R.id.loginUserText);
-		TextView txtView2 = (TextView) findViewById(R.id.loginPassText);
+        setConfiguration();
+		describeView();
+//		setDefaultIP();
+	}
+	
+	private void describeView(){
+		TextView loginUserTxt = (TextView) findViewById(R.id.loginUserText);
+		TextView loginPassTxt = (TextView) findViewById(R.id.loginPassText);
+		
+		final EditText loginUserField = (EditText) findViewById(R.id.loginUserField);
+		final EditText loginPassField = (EditText) findViewById(R.id.loginPassField);
 
 		Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
-		txtView1.setTypeface(font);
-		txtView2.setTypeface(font);
-		Button bt = (Button) findViewById(R.id.loginButton);
+		loginUserTxt.setTypeface(font);
+		loginPassTxt.setTypeface(font);
+		Button btLogin = (Button) findViewById(R.id.loginButton);
 		Button btNoAuth = (Button) findViewById(R.id.loginNoAuthButton);
-		bt.setTypeface(font);
+		Button btCreateUser = (Button)findViewById(R.id.createUserButton);
+		btLogin.setTypeface(font);
 		btNoAuth.setTypeface(font);
-		
-		bt.setOnClickListener(new View.OnClickListener() {
+		btCreateUser.setTypeface(font);
+		btLogin.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View arg0) {
 
-				EditText userField = (EditText) findViewById(R.id.userField);
-				EditText passField = (EditText) findViewById(R.id.passField);
-				String user = (userField.getText()).toString();
-				String pass = (passField.getText()).toString();
-				if (user.equals("admin") && pass.equals("1234")) {
+				String user = (loginUserField.getText()).toString();
+				String pass = (loginPassField.getText()).toString();
+				if (user.equals(conf.getNick()) &&  SecurityHelper.toSHA256(pass).equals(conf.getPass())) {
 					logged = true;
 					startMenu();
 					Toast.makeText(activity.getApplicationContext(),
@@ -71,36 +80,81 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			}
 		});
+		
 		btNoAuth.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View arg0) {
-
 				startMenu();
 				Toast.makeText(activity.getApplicationContext(),
-						"Ha ingresado en modo prueba", Toast.LENGTH_SHORT)
+						"Ha ingresado sin registrarse", Toast.LENGTH_SHORT)
 						.show();
 
 			}
 		});
-		//
-		setDefaultIP();
+		
+		btCreateUser.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				startUserCreation();
+			}
+		});
+		
+		if(checkIfUserRegistered()){
+			btNoAuth.setVisibility(View.GONE);
+			btCreateUser.setVisibility(View.GONE);
+		}else{
+			btLogin.setVisibility(View.GONE);
+			loginPassTxt.setVisibility(View.GONE);
+			loginUserTxt.setVisibility(View.GONE);
+			loginPassField.setVisibility(View.GONE);
+			loginUserField.setVisibility(View.GONE);
+		}
 	}
+	
 	public void setDefaultIP(){
 		configurationDataSource.open();
     	try
     	{	
-    		configurationDataSource.doSaveConfiguration(new Configuration(1, URLHelper.SERVER_ADDRESS));
+			if(conf != null){
+				conf.setIp(URLHelper.SERVER_ADDRESS);
+			}else{
+				conf = new Configuration(1, URLHelper.SERVER_ADDRESS,null,null,null,null);
+			}
+			configurationDataSource.doSaveConfiguration(conf);
     	}
     	finally{
     		configurationDataSource.close();
     	}
 	}
 	
+	private void setConfiguration(){
+		configurationDataSource.open();
+    	try
+    	{	
+			conf = configurationDataSource.getConfigurationById(1);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+	}
+	
+	public boolean checkIfUserRegistered(){
+		boolean result = false;
+		configurationDataSource.open();
+    	try
+    	{	
+			if(conf != null && ( !(conf.getNick().isEmpty()) || conf.getNick()!= null)){
+				result= true;
+			}
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+    	return result;
+	}
+	
 	public void showIP(){
 		configurationDataSource.open();
     	try
     	{
-    		Configuration conf =configurationDataSource.getConfigurationById(1);
     		Toast.makeText(getApplicationContext(), "Ip is " + conf.getIp(), 
     				Toast.LENGTH_SHORT).show();
     	}
@@ -132,6 +186,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 		activity.startActivity(intent);
 	}
 	
+	private void startUserCreation(){
+		Intent intent = new Intent(activity, NewUserActivity.class);
+		activity.startActivity(intent);
+	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -154,7 +214,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-
 	}
 
 	@Override

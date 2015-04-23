@@ -49,6 +49,12 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
+         <activity
+            android:name="ar.edu.unq.fitoscanner.activities.NewUserActivity"
+            android:largeHeap="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
+        </activity>
 
     </application>
 

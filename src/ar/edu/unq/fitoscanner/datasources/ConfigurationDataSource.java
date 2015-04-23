@@ -57,8 +57,11 @@ public class ConfigurationDataSource {
 		private Configuration cursorToConfiguration(Cursor cursor) {
 			Integer id = cursor.getInt(0);
 			String ip= cursor.getString(1);
-					
-			Configuration conf = new Configuration(id,ip);
+			String nick = cursor.getString(2);
+			String passHash= cursor.getString(3);
+			String name = cursor.getString(4);
+			String surname = cursor.getString(5);
+			Configuration conf = new Configuration(id,ip,nick,passHash,name,surname);
 			return conf;
 		}
 
@@ -77,10 +80,18 @@ public class ConfigurationDataSource {
 		if (conf != null)
 		{
 			String ip = conf.getIp();
+			String nick = conf.getNick();
+			String passHash= conf.getPass();
+			String name = conf.getName();
+			String surname = conf.getSurname();
 			
 			ContentValues values = new ContentValues();
 			values.put(ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID, 1);
 			values.put(ConfigurationSQLiteTable.COLUMN_SERVER_IP, ip);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_NICK, nick);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_PASS, passHash);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_NAME, name);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_SURNAME, surname);
 			
 			if(this.configurationExists(conf))
 			{
@@ -136,8 +147,6 @@ public class ConfigurationDataSource {
 		return exists;
 	}
 
-	
-	
 
 	public SQLiteDatabase getDatabase() {
 		return database;

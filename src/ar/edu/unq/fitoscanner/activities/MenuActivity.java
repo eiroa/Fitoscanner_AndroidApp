@@ -109,12 +109,25 @@ public class MenuActivity extends Activity {
         	
         	public void onClick(View arg0) {
             	Intent intent = new Intent(activity, RecordsActivity.class);
+            	intent.putExtra("getSent", false);
+        		activity.startActivity(intent);      		
+            }
+        	
+            
+        });
+        Button goSentRecords = (Button)findViewById(R.id.buttonOpenSentRecords);
+        goSentRecords.setOnClickListener(new View.OnClickListener() {
+        	
+        	public void onClick(View arg0) {
+            	Intent intent = new Intent(activity, RecordsActivity.class);
+            	intent.putExtra("getSent", true);
         		activity.startActivity(intent);      		
             }
         	
             
         });
         goRecords.setTypeface(font);
+        goSentRecords.setTypeface(font);
     }
 	
 	
@@ -208,7 +221,13 @@ public class MenuActivity extends Activity {
 				result =userInput.getText().toString();
 				configurationDataSource.open();
 				try {
-					configurationDataSource.doSaveConfiguration(new Configuration(1, result));
+					Configuration conf = configurationDataSource.getConfigurationById(1);
+					if(conf != null){
+						conf.setIp(result);
+					}else{
+						conf = new Configuration(1, result,null,null,null,null);
+					}
+					configurationDataSource.doSaveConfiguration(conf);
 				}finally{
 		    		configurationDataSource.close();
 		    	}

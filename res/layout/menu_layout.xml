@@ -52,8 +52,25 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="Ver Muestras"
+                android:background="@drawable/button_shape_1"
+                android:shadowColor="#BFBFBF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#BDFFC8"
+                android:textSize="15sp"/>
+                
+                <Button
+                android:id="@+id/buttonOpenSentRecords"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                
+                android:padding="10dp"
+                android:text="Ver Muestras enviadas"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
