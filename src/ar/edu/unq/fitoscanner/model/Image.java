@@ -3,15 +3,17 @@ package ar.edu.unq.fitoscanner.model;
 public class Image {
 	
 	private Long id;
-	private Long idSample;	
+	private Long idSample;
+	private Long idTreatment;
 	private String title;
 	private String description;
 	private String base64;
 	
 	
-	public Image(Long id, Long idSample, String title, String desc,String base64){
+	public Image(Long id, Long idSample, Long idTreatment,String title, String desc,String base64){
 		this.id = id;
-		this.idSample = idSample;		
+		this.idSample = idSample;	
+		this.idTreatment = idTreatment;
 		this.title = title;
 		this.description = desc;
 		this.base64 =base64;
@@ -50,14 +52,20 @@ public class Image {
 		this.id = id;
 	}
 	
-	
-
 	public Long getIdSample() {
 		return idSample;
 	}
 
 	public void setIdSample(Long idSample) {
 		this.idSample = idSample;
+	}
+
+	public Long getIdTreatment() {
+		return idTreatment;
+	}
+
+	public void setIdTreatment(Long idTreatment) {
+		this.idTreatment = idTreatment;
 	}
 
 	@Override

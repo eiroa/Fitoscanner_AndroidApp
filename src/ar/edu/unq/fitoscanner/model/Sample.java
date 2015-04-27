@@ -2,16 +2,18 @@ package ar.edu.unq.fitoscanner.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Sample {
 
 	private Long id;
 	private String originDate;
-	private ArrayList<Image> images;
+	private List<Image> images;
 	private String fieldName;
 	private String sampleName;
 	private String hash;
 	private Boolean sent;
+	private TreatmentResolution treatmentResolution;
 	private LocationData locationData = new LocationData();
 
 	/**
@@ -24,7 +26,7 @@ public class Sample {
 	 * @param sampleName
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
-			String fieldName, String sampleName, String hash,Boolean sent) {
+			String fieldName, String sampleName, String hash,Boolean sent,TreatmentResolution treatmentResolution) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -32,6 +34,7 @@ public class Sample {
 		this.sampleName = sampleName;
 		this.hash = hash;
 		this.sent = sent;
+		this.treatmentResolution = treatmentResolution;
 	}
 
 	/**
@@ -50,7 +53,7 @@ public class Sample {
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName, String sampleName, String lat, String lon,
-			String city, String state, String country,String hash,Boolean sent) {
+			String city, String state, String country,String hash,Boolean sent,TreatmentResolution treatmentResolution) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -59,6 +62,7 @@ public class Sample {
 		this.locationData = new LocationData(lat, lon, city, state, country);
 		this.hash = hash;
 		this.sent = sent;
+		this.treatmentResolution = treatmentResolution;
 	}
 
 	public Sample() {
@@ -80,11 +84,11 @@ public class Sample {
 		this.originDate = originDate;
 	}
 
-	public ArrayList<Image> getImages() {
+	public List<Image> getImages() {
 		return images;
 	}
 
-	public void setImages(ArrayList<Image> images) {
+	public void setImages(List<Image> images) {
 		this.images = images;
 	}
 
@@ -120,14 +124,21 @@ public class Sample {
 		this.locationData = locationData;
 	}
 	
-	
-
 	public Boolean getSent() {
 		return sent;
 	}
 
 	public void setSent(Boolean sent) {
 		this.sent = sent;
+	}
+	
+
+	public TreatmentResolution getTreatmentResolution() {
+		return treatmentResolution;
+	}
+
+	public void setTreatmentResolution(TreatmentResolution treatmentResolution) {
+		this.treatmentResolution = treatmentResolution;
 	}
 
 	public void setLocationData(String lat, String lon, String city,

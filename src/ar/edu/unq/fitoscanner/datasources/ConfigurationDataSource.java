@@ -1,19 +1,5 @@
 package ar.edu.unq.fitoscanner.datasources;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-
-
-
-
-
-
-
-
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,11 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import ar.edu.unq.fitoscanner.data.ConfigurationSQLiteTable;
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
-import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
-import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
 import ar.edu.unq.fitoscanner.model.Configuration;
-import ar.edu.unq.fitoscanner.model.Image;
-import ar.edu.unq.fitoscanner.model.Sample;
 
 public class ConfigurationDataSource {
 	public final static String TAG = "ConfigurationDataSource";

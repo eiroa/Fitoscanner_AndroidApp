@@ -17,6 +17,7 @@ public class SampleSQLiteTable {
 	public static final String COLUMN_COUNTRY = "country";
 	public static final String COLUMN_HASH = "hash";
 	public static final String COLUMN_SENT = "sent";
+	public static final String COLUMN_TREATMENT_RESOLUTION_ID= "treatmentResolutionId";
 	
 
 	
@@ -31,7 +32,8 @@ public class SampleSQLiteTable {
 			SampleSQLiteTable.COLUMN_STATE,
 			SampleSQLiteTable.COLUMN_COUNTRY,
 			SampleSQLiteTable.COLUMN_HASH,
-			SampleSQLiteTable.COLUMN_SENT};
+			SampleSQLiteTable.COLUMN_SENT,
+			SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID};
 	
 
 }

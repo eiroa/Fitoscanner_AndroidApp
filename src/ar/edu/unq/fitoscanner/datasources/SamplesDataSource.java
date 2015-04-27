@@ -1,13 +1,7 @@
 package ar.edu.unq.fitoscanner.datasources;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-
-
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,13 +41,13 @@ public class SamplesDataSource {
 		String hash = cursor.getString(9);
 		Boolean sent = ( 1 == cursor.getInt(10)?true:false);
 		Sample Sample = new Sample(id, date, null, field, sampleName,
-				latitude,longitude,city,state,country, hash,sent);
+				latitude,longitude,city,state,country, hash,sent,null);
 		return Sample;
 	}
 
-	private ArrayList<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent) {
+	private List<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent) {
 
-		ArrayList<Sample> samples = new ArrayList<Sample>();
+		List<Sample> samples = new ArrayList<Sample>();
 
 		if (cursor != null) {
 			try {
@@ -151,6 +145,7 @@ public class SamplesDataSource {
 		String country = sample.getLocationData().getCountry();
 		String hash = sample.getHash();
 		Integer sent = sample.getSent()?1:0;
+		Long idTreatmentResolution = sample.getTreatmentResolution().getId();
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
@@ -163,7 +158,7 @@ public class SamplesDataSource {
 		values.put(SampleSQLiteTable.COLUMN_COUNTRY, country);
 		values.put(SampleSQLiteTable.COLUMN_HASH, hash);
 		values.put(SampleSQLiteTable.COLUMN_SENT, sent);
-		
+		values.put(SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID, idTreatmentResolution);
 
 		if (id != null && sampleExists(sample)) {
 			database.update(SampleSQLiteTable.TABLE, values,
@@ -255,8 +250,8 @@ public class SamplesDataSource {
 	 * 
 	 * @return
 	 */
-	public ArrayList<Sample> getSamples(Boolean getSent) {
-		ArrayList<Sample> samples = new ArrayList<Sample>();
+	public List<Sample> getSamples(Boolean getSent) {
+		List<Sample> samples = new ArrayList<Sample>();
 		try {
 
 			Cursor cursor = database
@@ -268,8 +263,7 @@ public class SamplesDataSource {
 			for (Sample sample : samples) {
 				// Se le pasa al imageDatasource la conexion a la base de datos
 				this.imageDataSource.setDatabase(getDatabase());
-				ArrayList<Image> images = this.imageDataSource
-						.getImagesBySampleId(sample.getId());
+				List<Image> images = this.imageDataSource.getImagesBySampleId(sample.getId());
 				sample.setImages(images);
 			}
 		} catch (Exception e) {

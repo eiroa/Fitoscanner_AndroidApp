@@ -30,11 +30,12 @@ public class ImageDataSource {
 	private Image cursorToImage(Cursor cursor) {
 		Long id = cursor.getLong(0);
 		Long idSample = cursor.getLong(1);
-		String title = cursor.getString(2);
-		String description = cursor.getString(3);
-		String base64 = cursor.getString(4);
+		Long idTreatment = cursor.getLong(2);
+		String title = cursor.getString(3);
+		String description = cursor.getString(4);
+		String base64 = cursor.getString(5);
 				
-		Image image = new Image(id,idSample,title,description,base64);
+		Image image = new Image(id,idSample,idTreatment,title,description,base64);
 		return image;
 	}
 	
@@ -107,12 +108,14 @@ public class ImageDataSource {
 		{
 			Long id = image.getId();
 			Long idSample = image.getIdSample();
+			Long idTreatment = image.getIdTreatment();
 			String title = image.getTitle();
 			String description = image.getDescription();
 			String base64 = image.getBase64();
 			
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
+			values.put(ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_ID, idTreatment);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);

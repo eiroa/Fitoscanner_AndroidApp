@@ -345,7 +345,7 @@ public class MakePhotoActivity extends Activity {
 //				System.out.println("bytes obtained with size:"+compressedBytes.length);
 //				compressed = BitmapFactory.decodeByteArray(compressedBytes, 0, compressedBytes.length);
 //				System.out.println("Bitmap compressed with size: " + compressed.getByteCount());
-				Image newImage = new Image(null, null, "Picture "
+				Image newImage = new Image(null, null,null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
 						Base64Helper.encodeTobase64(recentPhoto));
 //				

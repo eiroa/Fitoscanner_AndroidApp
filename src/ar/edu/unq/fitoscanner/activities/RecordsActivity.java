@@ -52,7 +52,7 @@ public class RecordsActivity extends Activity{
 	SamplesDataSource samplesDataSource;
 	ConfigurationDataSource configurationDataSource;
 	int samplePositionSelected = -1;
-	private ArrayList<Sample> samples = new ArrayList<Sample>();
+	private List<Sample> samples = new ArrayList<Sample>();
 	private final Context context = this;
 	private Typeface font;
 	private Boolean getSent;
@@ -197,7 +197,7 @@ public class RecordsActivity extends Activity{
 	/**
 	 * Guarda la muestra que fue generada al tomar la primera foto
 	 */
-	public ArrayList<Sample> getSamples(){
+	public List<Sample> getSamples(){
 		samplesDataSource.open();
     	try
     	{
