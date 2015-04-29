@@ -1,11 +1,14 @@
 package ar.edu.unq.fitoscanner.model;
 
+import java.util.List;
+
 public class Treatment{
 	
 	
 	private Long id;
 	private String name;
 	private String description;
+	private List<Image> images;
 	private String unit;
 	private String unitType;
 	private String frequency;
@@ -13,7 +16,6 @@ public class Treatment{
 	private String extraLink1;
 	private String extraLink2;
 	private String extraLink3;
-	
 	
 	public Long getId() {
 		return id;
@@ -115,13 +117,25 @@ public class Treatment{
 	}
 
 
-	public Treatment(Long id, String name, String description, String unit,
-			String unitType, String frequency, String frequencyType,
-			String extraLink1, String extraLink2, String extraLink3) {
+	public List<Image> getImages() {
+		return images;
+	}
+
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+
+
+	public Treatment(Long id, String name, String description,
+			List<Image> images, String unit, String unitType, String frequency,
+			String frequencyType, String extraLink1, String extraLink2,
+			String extraLink3) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.images = images;
 		this.unit = unit;
 		this.unitType = unitType;
 		this.frequency = frequency;
@@ -130,6 +144,20 @@ public class Treatment{
 		this.extraLink2 = extraLink2;
 		this.extraLink3 = extraLink3;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Treatment [id=" + id + ", name=" + name + ", description="
+				+ description + ", images=" + images + ", unit=" + unit
+				+ ", unitType=" + unitType + ", frequency=" + frequency
+				+ ", frequencyType=" + frequencyType + ", extraLink1="
+				+ extraLink1 + ", extraLink2=" + extraLink2 + ", extraLink3="
+				+ extraLink3 + "]";
+	}
+
+	
+	
 	
 	
 

@@ -145,7 +145,7 @@ public class SamplesDataSource {
 		String country = sample.getLocationData().getCountry();
 		String hash = sample.getHash();
 		Integer sent = sample.getSent()?1:0;
-		Long idTreatmentResolution = sample.getTreatmentResolution().getId();
+		Long idTreatmentResolution = sample.getTreatmentResolution()!=null?sample.getTreatmentResolution().getId():null;
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
