@@ -1,92 +1,88 @@
 package ar.edu.unq.fitoscanner.datasources;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-
-
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
-import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
-import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
-import ar.edu.unq.fitoscanner.model.Image;
-import ar.edu.unq.fitoscanner.model.Sample;
+import ar.edu.unq.fitoscanner.data.TreatmentSQLiteTable;
+import ar.edu.unq.fitoscanner.model.Treatment;
 
-public class TreatmentDataSource {
+public class TreatmentDataSource extends AbstractDataSource {
 	public final String TAG = "ImageDateSource";
-	private SQLiteDatabase database;
-	private FitoscannerSqLiteHelper dbHelper;
+
 	
-/**
- * Construye un objeto Image utilizando la informacion de la base
- * @param cursor
- * @return
- */
-	private Image cursorToImage(Cursor cursor) {
-		Long id = cursor.getLong(0);
-		Long idSample = cursor.getLong(1);
-		Long idTreatment = cursor.getLong(2);
-		String title = cursor.getString(3);
-		String description = cursor.getString(4);
-		String base64 = cursor.getString(5);
-				
-		Image image = new Image(id,idSample,idTreatment,title,description,base64);
-		return image;
-	}
 	
 	/**
-	 * Construye una lista de images obtenidas de la base
+	 * Construye un objeto treatMent utilizando la informacion de la
+	 * base
+	 * 
 	 * @param cursor
 	 * @return
 	 */
-	private ArrayList<Image> cursorToListOfImages(Cursor cursor) {		
-		ArrayList<Image> images = new ArrayList<Image>();
+	private Treatment cursorToTreatment(Cursor cursor) {
+		
+		Long id = cursor.getLong(0);
+		String name = cursor.getString(1);
+		String description = cursor.getString(2);
+		String idImages = cursor.getString(3);
+		String unit = cursor.getString(4);
+		String unitType = cursor.getString(5);
+		String frequency = cursor.getString(6);
+		String frequencyType = cursor.getString(7);
+		String extraLink1 = cursor.getString(8);
+		String extraLink2 = cursor.getString(9);
+		String extraLink3 = cursor.getString(10);
+
+		Treatment tr = new Treatment(id, name, description, null, 
+				unit, unitType, frequency, frequencyType, extraLink1, extraLink2, extraLink3);
+
+		tr.setIdImages(idImages);
+
+		return tr;
+	}
+
+	/**
+	 * Construye una lista de tratamientos obtenidas de la base
+	 * 
+	 * @param cursor
+	 * @return
+	 */
+	private List<Treatment> cursorToListOfTreatments(
+			Cursor cursor) {
+		List<Treatment> trs = new ArrayList<Treatment>();
 		if (cursor != null) {
-			try{
+			try {
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast()) {
-					Image image = cursorToImage(cursor);
-					images.add(image);
+					Treatment tr = cursorToTreatment(cursor);
+					trs.add(tr);
 					cursor.moveToNext();
-				}				
-			}
-			finally{
+				}
+			} finally {
 				cursor.close();
 			}
 		}
-		return images;
-	}	
+		return trs;
+	}
 
 	public TreatmentDataSource(Context context) {
-		dbHelper = new FitoscannerSqLiteHelper(context);
+		setDbHelper(new FitoscannerSqLiteHelper(context));
 	}
-	
-/**
- * Abre una conexion a la base
- * @throws SQLException
- */
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-/**
- * Cierra la conexion a la base
- */
-	public void close() {
-		dbHelper.close();
-	}	
-	
-	public boolean imageExists(Image image) {
+
+	public boolean treatmentExists(Treatment tr) {
 
 		boolean exists = false;
 		try {
-			String table = ImageSQLiteTable.TABLE;
-			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + image.getId();
-			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS, where, null, null, null, null);						
+			String table = TreatmentSQLiteTable.TABLE;
+			String where = TreatmentSQLiteTable.COLUMN_TREATMENT_ID
+					+ " = " + tr.getId();
+			Cursor cursor = getDatabase().query(table,
+					TreatmentSQLiteTable.ALL_COLUMNS, where, null,
+					null, null, null);
 			if (cursor != null) {
 				try {
 					cursor.moveToFirst();
@@ -94,174 +90,96 @@ public class TreatmentDataSource {
 					exists = count != 0;
 				} finally {
 					cursor.close();
-				}				
+				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, ("Image not found" + image.getId().toString()));
-		}		
+			Log.e(TAG,
+					("Treatment not found" + tr.getId().toString()));
+		}
 
 		return exists;
 	}
-	
-	public void doSaveImage(Image image) {		
-		if (image != null)
-		{
-			Long id = image.getId();
-			Long idSample = image.getIdSample();
-			Long idTreatment = image.getIdTreatment();
-			String title = image.getTitle();
-			String description = image.getDescription();
-			String base64 = image.getBase64();
-			
-			ContentValues values = new ContentValues();
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_ID, idTreatment);
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
-			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
-			if(id!=null&&imageExists(image))
-			{
-				database.update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
-			} else 
-			{
-				database.insert(ImageSQLiteTable.TABLE, null, values);	
-			}														
-		}		
-	}
 
-	private String parseForSqlIn(ArrayList<Long> params) {
-		String in = "(";
-		
-		if (params.size() == 0){
-			in += "-1";
-		}		
-		for (int i = 0; i < params.size(); i++) {
-			in += params.get(i);
-			if(i != params.size() - 1){
-				in += ", ";
+	public void doSaveTreatment(Treatment tr) {
+		if (tr != null) {
+			Long id = tr.getId();
+			String name = tr.getName();
+			String description = tr.getDescription();
+			String idImages = tr.getIdImages();
+			String unit = tr.getUnit();
+			String unitType = tr.getUnitType();
+			String frequency = tr.getFrequency();
+			String frequencyType = tr.getFrequencyType();
+			String extraLink1 = tr.getExtraLink1();
+			String extraLink2 = tr.getExtraLink2();
+			String extraLink3 = tr.getExtraLink3();
+
+			ContentValues values = new ContentValues();
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_ID, id);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_NAME,name);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_DESCRIPTION,description);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_ID_IMAGES,idImages);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_UNIT,unit);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_UNIT_TYPE,unitType);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_FREQUENCY,frequency);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_FREQUENCY_TYPE,frequencyType);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_1,extraLink1);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_2,extraLink2);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3,extraLink3);
+			if (id != null && treatmentExists(tr)) {
+				getDatabase().update(
+						TreatmentSQLiteTable.TABLE,
+						values,
+						TreatmentSQLiteTable.COLUMN_TREATMENT_ID
+								+ " = " + id, null);
+			} else {
+				getDatabase().insert(TreatmentSQLiteTable.TABLE,
+						null, values);
 			}
 		}
-		
-		in += ")";
-		return in;
 	}
-	
 
-
-	public Image getImageById(Long id) {
-		Image image = null;		
+	public Treatment getTreatmentById(Long id) {
+		Treatment TR = null;
 		try {
-			String table = ImageSQLiteTable.TABLE;
-			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id;
-			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
+			String table = TreatmentSQLiteTable.TABLE;
+			String where = TreatmentSQLiteTable.COLUMN_TREATMENT_ID
+					+ " = " + id;
+			Cursor cursor = getDatabase().query(table,
+					TreatmentSQLiteTable.ALL_COLUMNS, where, null,
+					null, null, null);
 			if (cursor != null) {
 				try {
 					if (cursor.moveToFirst()) {
-						image = cursorToImage(cursor);
+						TR = cursorToTreatment(cursor);
 					}
 				} finally {
 					cursor.close();
 				}
-			}				
+			}
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
-		
-		return image;
+		return TR;
 	}
-	
-	public Image getImageByTitle(String title) {
-		Image image = null;		
-		try {
-			String table = ImageSQLiteTable.TABLE;
-			String where = ImageSQLiteTable.COLUMN_IMAGE_TITLE + " = " + title;
-			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
-			if (cursor != null) {
-				try {
-					if (cursor.moveToFirst()) {
-						image = cursorToImage(cursor);
-					}
-				} finally {
-					cursor.close();
-				}
-			}				
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
-		}
-		
-		return image;
-	}
-	
-
-	public ArrayList<Long> getImageIds() {		
-		ArrayList<Long> ids = new ArrayList<Long>();								
-		ArrayList<Image> images = this.getImages();
-			
-		for (Image image : images){ 
-			ids.add(image.getId());
-		}
-		return ids;			
-	}
-
-	
-	public ArrayList<Image> getImages() {		
-		ArrayList<Image> images = null;
-		try {
-			Cursor cursor = database.query(ImageSQLiteTable.TABLE, ImageSQLiteTable.ALL_COLUMNS, null,null,null,null,null);				
-			images = cursorToListOfImages(cursor);
-		}
-		catch (Exception e){
-			Log.e(TAG, e.getMessage());
-		}				
-		return images;		
-	}
-
 
 	public void deleteAllRows() {
-		try {			
-			database.delete(ImageSQLiteTable.TABLE, null, null);										
+		try {
+			getDatabase().delete(TreatmentSQLiteTable.TABLE, null, null);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
-		}		
-	}
-	
-	public void saveImagesSample(Sample sample){
-		
-	}
-	
-	public ArrayList<Image> getImagesBySampleId(Long id) {
-		
-		ArrayList<Image> images = new ArrayList<Image>();		
-		try {
-			String where = ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID + " = " + id;
-			Cursor cursor = database.query(ImageSQLiteTable.TABLE, ImageSQLiteTable.ALL_COLUMNS, where,null,null,null,null);				
-			images = cursorToListOfImages(cursor);
-	
 		}
-		catch (Exception e){
-			Log.e(TAG, e.getMessage());
-		}
-				
-		return images;			
 	}
-	
+
 	public void deleteById(Long id) {
 		try {
-			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id;
-			database.delete(ImageSQLiteTable.TABLE, where, null);			
+			String where = TreatmentSQLiteTable.COLUMN_TREATMENT_ID
+					+ " = " + id;
+			getDatabase().delete(TreatmentSQLiteTable.TABLE, where,
+					null);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
-		}		
+		}
 	}
 
-	public SQLiteDatabase getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(SQLiteDatabase database) {
-		this.database = database;
-	}
-
-
-	
 }

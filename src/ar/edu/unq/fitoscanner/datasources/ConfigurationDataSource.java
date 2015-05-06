@@ -11,24 +11,11 @@ import ar.edu.unq.fitoscanner.data.ConfigurationSQLiteTable;
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.model.Configuration;
 
-public class ConfigurationDataSource {
+public class ConfigurationDataSource extends AbstractDataSource{
 	public final static String TAG = "ConfigurationDataSource";
-	private SQLiteDatabase database;
-	private FitoscannerSqLiteHelper dbHelper;
-	private Context mContext;
 
 	public ConfigurationDataSource(Context context) {
-		this.mContext = context;
-		dbHelper = new FitoscannerSqLiteHelper(context);
-	}
-
-
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
-	public void close() {
-		dbHelper.close();
+		setDbHelper(new FitoscannerSqLiteHelper(context));
 	}
 	
 	/**
@@ -52,7 +39,7 @@ public class ConfigurationDataSource {
 		ContentValues values = new ContentValues();
 		values.put(ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID, 1);
 		values.put(ConfigurationSQLiteTable.COLUMN_SERVER_IP, ip);
-		database.update(ConfigurationSQLiteTable.TABLE, values,
+		getDatabase().update(ConfigurationSQLiteTable.TABLE, values,
 				ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);
 		
 		return idResult;
@@ -77,9 +64,9 @@ public class ConfigurationDataSource {
 			
 			if(this.configurationExists(conf))
 			{
-				database.update(ConfigurationSQLiteTable.TABLE, values, ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);			} else 
+				getDatabase().update(ConfigurationSQLiteTable.TABLE, values, ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);			} else 
 			{
-				database.insert(ConfigurationSQLiteTable.TABLE, null, values);	
+				getDatabase().insert(ConfigurationSQLiteTable.TABLE, null, values);	
 			}	
 		}		
 	}
@@ -89,7 +76,7 @@ public class ConfigurationDataSource {
 		try {
 			String table = ConfigurationSQLiteTable.TABLE;
 			String where = ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + id;
-			Cursor cursor = database.query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
+			Cursor cursor = getDatabase().query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);
 			if (cursor != null) {
 				try {
 					if (cursor.moveToFirst()) {
@@ -112,7 +99,7 @@ public class ConfigurationDataSource {
 		try {
 			String table = ConfigurationSQLiteTable.TABLE;
 			String where = ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + conf.getId();
-			Cursor cursor = database.query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);						
+			Cursor cursor = getDatabase().query(table, ConfigurationSQLiteTable.ALL_COLUMNS, where, null, null, null, null);						
 			if (cursor != null) {
 				try {
 					cursor.moveToFirst();
@@ -130,12 +117,5 @@ public class ConfigurationDataSource {
 	}
 
 
-	public SQLiteDatabase getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(SQLiteDatabase database) {
-		this.database = database;
-	}
 
 }

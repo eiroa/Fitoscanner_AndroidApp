@@ -8,6 +8,7 @@ public class Treatment{
 	private Long id;
 	private String name;
 	private String description;
+	private String idImages; // EJ:"1-5-3"
 	private List<Image> images;
 	private String unit;
 	private String unitType;
@@ -41,9 +42,17 @@ public class Treatment{
 		return description;
 	}
 
-
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getIdImages() {
+		return idImages;
+	}
+
+
+	public void setIdImages(String idImages) {
+		this.idImages = idImages;
 	}
 
 

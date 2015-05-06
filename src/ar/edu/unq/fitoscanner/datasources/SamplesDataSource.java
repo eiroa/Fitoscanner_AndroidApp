@@ -6,8 +6,6 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
@@ -15,16 +13,12 @@ import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
 
-public class SamplesDataSource {
+public class SamplesDataSource extends AbstractDataSource{
 	public final static String TAG = "SamplesDataSource";
-	private SQLiteDatabase database;
-	private FitoscannerSqLiteHelper dbHelper;
-	private Context mContext;
 	private ImageDataSource imageDataSource;
 
 	public SamplesDataSource(Context context) {
-		this.mContext = context;
-		dbHelper = new FitoscannerSqLiteHelper(context);
+		setDbHelper(new FitoscannerSqLiteHelper(context));
 		this.imageDataSource = new ImageDataSource(context);
 	}
 
@@ -70,15 +64,6 @@ public class SamplesDataSource {
 		return samples;
 	}
 	
-	
-
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
-	public void close() {
-		dbHelper.close();
-	}
 
 	public Long saveSample(Sample sample) {
 		Long idResult = 0L;
@@ -124,10 +109,10 @@ public class SamplesDataSource {
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
 
 			if (imageExists(image)) {
-				database.update(ImageSQLiteTable.TABLE, values,
+				getDatabase().update(ImageSQLiteTable.TABLE, values,
 						ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
 			} else {
-				database.insert(ImageSQLiteTable.TABLE, null, values);
+				getDatabase().insert(ImageSQLiteTable.TABLE, null, values);
 			}
 		}
 	}
@@ -161,10 +146,10 @@ public class SamplesDataSource {
 		values.put(SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID, idTreatmentResolution);
 
 		if (id != null && sampleExists(sample)) {
-			database.update(SampleSQLiteTable.TABLE, values,
+			getDatabase().update(SampleSQLiteTable.TABLE, values,
 					SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id, null);
 		} else {
-			idResult = database.insert(SampleSQLiteTable.TABLE, null, values);
+			idResult = getDatabase().insert(SampleSQLiteTable.TABLE, null, values);
 		}
 		return idResult;
 	}
@@ -176,7 +161,7 @@ public class SamplesDataSource {
 			String table = SampleSQLiteTable.TABLE;
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = "
 					+ sample.getId();
-			Cursor cursor = database.query(table,
+			Cursor cursor = getDatabase().query(table,
 					SampleSQLiteTable.ALL_COLUMNS, where, null, null, null,
 					null);
 			if (cursor != null) {
@@ -202,7 +187,7 @@ public class SamplesDataSource {
 			String table = ImageSQLiteTable.TABLE;
 			String where = ImageSQLiteTable.COLUMN_IMAGE_ID + " = "
 					+ image.getId();
-			Cursor cursor = database.query(table, ImageSQLiteTable.ALL_COLUMNS,
+			Cursor cursor = getDatabase().query(table, ImageSQLiteTable.ALL_COLUMNS,
 					where, null, null, null, null);
 			if (cursor != null) {
 				try {
@@ -225,7 +210,7 @@ public class SamplesDataSource {
 		try {
 			String table = SampleSQLiteTable.TABLE;
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
-			Cursor cursor = database.query(table,
+			Cursor cursor = getDatabase().query(table,
 					SampleSQLiteTable.ALL_COLUMNS, where, null, null, null,
 					null);
 			if (cursor != null) {
@@ -254,7 +239,7 @@ public class SamplesDataSource {
 		List<Sample> samples = new ArrayList<Sample>();
 		try {
 
-			Cursor cursor = database
+			Cursor cursor = getDatabase()
 					.query(SampleSQLiteTable.TABLE,
 							SampleSQLiteTable.ALL_COLUMNS, null, null, null,
 							null, null);
@@ -276,7 +261,7 @@ public class SamplesDataSource {
 	public void deleteById(Long id) {
 		try {
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
-			database.delete(SampleSQLiteTable.TABLE, where, null);				
+			getDatabase().delete(SampleSQLiteTable.TABLE, where, null);				
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}		
@@ -290,21 +275,13 @@ public class SamplesDataSource {
 				this.imageDataSource.deleteById(image.getId());
 			}
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + sample.getId();
-			database.delete(SampleSQLiteTable.TABLE, where, null);
+			getDatabase().delete(SampleSQLiteTable.TABLE, where, null);
 			Log.i(TAG,"Se ha eliminado la muestra "+sample.getId()+ " de nombre "+
 			sample.getSampleName() + " de fecha "+sample.getOriginDate() + " junto con sus "+
 					sample.getImages().size() + " imagenes ");
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}		
-	}
-
-	public SQLiteDatabase getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(SQLiteDatabase database) {
-		this.database = database;
 	}
 
 }

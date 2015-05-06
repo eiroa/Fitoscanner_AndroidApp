@@ -5,15 +5,17 @@ public class Image {
 	private Long id;
 	private Long idSample;
 	private Long idTreatment;
+	private Long idTreatmentResolution;
 	private String title;
 	private String description;
 	private String base64;
 	
 	
-	public Image(Long id, Long idSample, Long idTreatment,String title, String desc,String base64){
+	public Image(Long id, Long idSample, Long idTreatment,Long idTreatmentResolution,String title, String desc,String base64){
 		this.id = id;
 		this.idSample = idSample;	
 		this.idTreatment = idTreatment;
+		this.idTreatmentResolution = idTreatmentResolution;
 		this.title = title;
 		this.description = desc;
 		this.base64 =base64;
@@ -41,7 +43,7 @@ public class Image {
 	}
 
 	public void setDescription(String description) {
-		description = description;
+		this.description = description;
 	}
 	
 	public Long getId() {
@@ -66,6 +68,14 @@ public class Image {
 
 	public void setIdTreatment(Long idTreatment) {
 		this.idTreatment = idTreatment;
+	}
+	
+	public Long getIdTreatmentResolution() {
+		return idTreatmentResolution;
+	}
+
+	public void setIdTreatmentResolution(Long idTreatmentResolution) {
+		this.idTreatmentResolution = idTreatmentResolution;
 	}
 
 	@Override

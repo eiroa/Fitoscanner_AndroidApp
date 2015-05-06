@@ -35,6 +35,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ ImageSQLiteTable.COLUMN_IMAGE_ID + " integer primary key autoincrement, "
 			+ ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID+ " integer , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_ID+ " integer , "
+			+ ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_RESOLUTION_ID+ " integer , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_TITLE+ " text , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION+ " text , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_BASE64 + " text not null"
