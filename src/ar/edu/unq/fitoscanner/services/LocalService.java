@@ -39,6 +39,8 @@ public class LocalService extends Service{
 	public final static String TAG = "GetTreatmentService";
     private static Timer timer = new Timer(); 
     private Context ctx;
+    private SamplesDataSource samplesDataSource;
+    public Integer timeRepetition = 300000 //ms
 
     public IBinder onBind(Intent arg0) 
     {
@@ -53,15 +55,49 @@ public class LocalService extends Service{
     }
 
     private void startService()
-    {           
-        timer.scheduleAtFixedRate(new mainTask(), 0, 15000);
+    {   
+    // cada 5 min, verificar muestras a consultar resolucion
+        timer.scheduleAtFixedRate(new requestTreatmentTask(), 0, timeRepetition);
     }
 
-    private class mainTask extends TimerTask
+    private class requestTreatmentTask extends TimerTask
     { 
+        private List<Sample> samplesToCheck;
     	private int x = 0;
         public void run() 
-        {
+        {   
+            //Obtener muestras a consultar
+            samplesToCheck = getSamples();
+            for (Sample sample : samplesToCheck) {
+			    switch (sample.getRequestTreatmentIntents()) {
+                case 0:
+                break;
+                case 1:
+                break;
+                case 2:
+                break;
+                case 3:
+                break;
+                case 4:
+                break;
+                case 5:
+                break;
+                case 6:
+                break;
+                case 7:
+                break;
+                case 8:
+                break;
+                case 9:
+                break;
+                case 10:
+                break;
+                case 11:
+                break;
+                case 12:
+                break;
+                }
+		    }
             Log.d("Local Service", "var increased = "+x);
             x++;
             
@@ -173,12 +209,47 @@ public class LocalService extends Service{
           Toast.makeText(this, "Service Stopped ...", Toast.LENGTH_SHORT).show();
     }
 
-    private final Handler toastHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
+    public List<Sample> getSamples(){
+		samplesDataSource.open();
+    	try
+    	{
+    		return samplesDataSource.getSamples(getSent);
+    	}
+    	finally{
+    		samplesDataSource.close();
+    	}
+	}
+	
+	public void deleteSample(Sample sample){
+		samplesDataSource.open();
+    	try
+    	{
+    		samplesDataSource.deleteSample(sample);
+    	}
+    	finally{
+    		samplesDataSource.close();
+    	}
+	}
+	
+	
+	public String getUrl(){
+		configurationDataSource.open();
+		try{
+			return configurationDataSource.getConfigurationById(1).getIp();
+		}
+		finally{
+        	configurationDataSource.close();
         }
-    };    
+	}
+	
+	public void saveSample(Sample sample) {
+		samplesDataSource.open();
+		try {
+
+			samplesDataSource.saveSample(sample);
+
+		} finally {
+			samplesDataSource.close();
+		}
+	} 
 }
