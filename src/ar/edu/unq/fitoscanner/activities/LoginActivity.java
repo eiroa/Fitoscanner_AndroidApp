@@ -4,6 +4,10 @@ package ar.edu.unq.fitoscanner.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -25,6 +29,7 @@ import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Configuration;
 import ar.edu.unq.fitoscanner.model.Sample;
+import ar.edu.unq.fitoscanner.services.LocalService;
 
 @SuppressLint("NewApi")
 public class LoginActivity extends Activity implements OnClickListener {
@@ -35,9 +40,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.activity = this;
+		Intent test = new Intent(activity, LocalService.class);
+		// Flag de publicidad se activará al instalarse la app, valor de lastSearch seteado en string vacio.
+		activity.startService(test);
 		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        
+        
+        
+        
 //		describeView();
 //		setDefaultIP();
 	}

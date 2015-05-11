@@ -39,7 +39,7 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.menu_layout);
         this.activity = this;
         configurationDataSource = new ConfigurationDataSource(this);
-        Button bt = (Button) findViewById(R.id.buttonMenuLogout);
+        Button btLogout = (Button) findViewById(R.id.buttonMenuLogout);
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
         btnShowLocation.setTypeface(font);
@@ -84,8 +84,7 @@ public class MenuActivity extends Activity {
                  
             }
         });
-        bt.setTypeface(font);
-        bt.setOnClickListener(new View.OnClickListener() {
+        btLogout.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {       		
         		LoginActivity.logged = false;
@@ -103,31 +102,20 @@ public class MenuActivity extends Activity {
             }
             
         });
-        goTakePic.setTypeface(font);
-        Button goRecords = (Button)findViewById(R.id.buttonOpenRecords);
+        Button goRecords = (Button)findViewById(R.id.buttonOpenRecordsMenu);
         goRecords.setOnClickListener(new View.OnClickListener() {
         	
         	public void onClick(View arg0) {
-            	Intent intent = new Intent(activity, RecordsActivity.class);
-            	intent.putExtra("getSent", false);
+            	Intent intent = new Intent(activity, RecordsMenuActivity.class);
         		activity.startActivity(intent);      		
             }
         	
             
         });
-        Button goSentRecords = (Button)findViewById(R.id.buttonOpenSentRecords);
-        goSentRecords.setOnClickListener(new View.OnClickListener() {
-        	
-        	public void onClick(View arg0) {
-            	Intent intent = new Intent(activity, RecordsActivity.class);
-            	intent.putExtra("getSent", true);
-        		activity.startActivity(intent);      		
-            }
-        	
-            
-        });
+        
+        btLogout.setTypeface(font);
+        goTakePic.setTypeface(font);
         goRecords.setTypeface(font);
-        goSentRecords.setTypeface(font);
     }
 	
 	

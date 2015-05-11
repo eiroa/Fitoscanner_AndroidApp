@@ -3,7 +3,7 @@ package ar.edu.unq.fitoscanner.data;
 public class TreatmentResolutionSQLiteTable {
 
 	// Table name
-	public static final String TABLE = "treatment";
+	public static final String TABLE = "treatmentResolution";
 	
 	// Column names
 	public static final String COLUMN_TREATMENTR_ID = "_id";

@@ -38,6 +38,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="ar.edu.unq.fitoscanner.activities.RecordsMenuActivity"
+            android:largeHeap="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="ar.edu.unq.fitoscanner.activities.RecordsActivity"
             android:largeHeap="true"
             android:configChanges="orientation|keyboardHidden"
@@ -55,6 +61,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" >
         </activity>
+        
+         <service
+            android:name="ar.edu.unq.fitoscanner.services.LocalService"
+            android:exported="false">
+         </service>
 
     </application>
 

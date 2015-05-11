@@ -26,7 +26,7 @@
                 android:padding="5dp"
                 android:shadowDx="1"
                 android:shadowDy="1"
-                android:text="MENU"
+                android:text="Muestras y tratamientos"
                 android:textColor="@color/greenLeaf"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -46,14 +46,13 @@
                 android:padding="10dp" >
 
                 <Button
-                android:id="@+id/buttonOpenRecordsMenu"
+                android:id="@+id/buttonOpenNewRecords"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                
                 android:padding="10dp"
-                android:text="Muestras y tratamientos"
+                android:text="Ver muestras no enviadas"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
@@ -71,14 +70,14 @@
                 android:padding="10dp" >
 
                 <Button
-                android:id="@+id/buttonOpenTakePic"
+                android:id="@+id/buttonOpenSentRecords"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 
                 android:padding="15dp"
-                android:text="Tomar Muestra"
+                android:text="Ver muestras enviadas"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
@@ -94,14 +93,14 @@
                 android:padding="10dp" >
 
                 <Button
-                android:id="@+id/buttonShowLocation"
+                android:id="@+id/buttonOpenResolvedRecords"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 
                 android:padding="15dp"
-                android:text="Mostrar Ubicación"
+                android:text="Ver muestras resueltas"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
@@ -112,31 +111,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|center"
-            android:gravity="bottom|center"
-            android:padding="10dp" >
-
-            <Button
-                android:id="@+id/buttonMenuLogout"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                
-                android:padding="15dp"
-                android:text="Salir"
-                android:background="@drawable/button_shape_1"
-                android:shadowColor="#BFBFBF"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="5"
-                android:textColor="#BDFFC8"
-                android:textSize="15sp"/>
-
-        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>
