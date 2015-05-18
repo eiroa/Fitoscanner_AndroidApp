@@ -29,7 +29,7 @@ import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Configuration;
 import ar.edu.unq.fitoscanner.model.Sample;
-import ar.edu.unq.fitoscanner.services.LocalService;
+import ar.edu.unq.fitoscanner.services.GetTreatmentService;
 
 @SuppressLint("NewApi")
 public class LoginActivity extends Activity implements OnClickListener {
@@ -40,7 +40,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.activity = this;
-		Intent test = new Intent(activity, LocalService.class);
+		Intent test = new Intent(activity, GetTreatmentService.class);
 		// Flag de publicidad se activará al instalarse la app, valor de lastSearch seteado en string vacio.
 		activity.startService(test);
 		configurationDataSource = new ConfigurationDataSource(this);

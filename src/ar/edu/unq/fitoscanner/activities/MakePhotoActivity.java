@@ -194,6 +194,8 @@ public class MakePhotoActivity extends Activity {
 		newSample.setFieldName("testing field");
 		newSample.setImages(previews);
 		newSample.setSent(false);
+		newSample.setRequestTreatmentIntents(0);
+		newSample.setMinutesFromLastRequest(0);
 		String base64full = "";
 		String hash = "";
 		
@@ -219,28 +221,34 @@ public class MakePhotoActivity extends Activity {
         // check if GPS enabled     
         if(gps.canGetLocation()){
              
-            String latitude = Double.toString(gps.getLatitude());
-            String longitude = Double.toString(gps.getLongitude());
-             
-            try {
-    			addresses = gcd.getFromLocation(gps.getLocation().getLatitude(), gps.getLocation().getLongitude(), 1);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    		String city = "-";
+        	String latitude="";
+        	String longitude="";
+        	String city = "-";
     		String state = "-";
     		String country = "-";
     		try {
+    			latitude = Double.toString(gps.getLatitude());
+                longitude = Double.toString(gps.getLongitude());
+    			
+    			addresses = gcd.getFromLocation(gps.getLocation().getLatitude(), gps.getLocation().getLongitude(), 1);
+    			
     			city = addresses.get(0).getLocality();
     			state = addresses.get(0).getAdminArea();
     			country = addresses.get(0).getCountryName();
+    			
+    			newSample.setLocationData(latitude, longitude, city, state, country);
+                Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
+                longitude + "\n  Closest city: "+gps.getAddress());
     		} catch (NullPointerException e) {
     			Log.e(TAG, "Error! No data obtained from geocoder");
-    		}
-        	newSample.setLocationData(latitude, longitude, city, state, country);
-            Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
-            longitude + "\n  Closest city: "+gps.getAddress());
-            gps.stopSelf();
+    		}catch (IOException e) {
+    			e.printStackTrace();
+    		}catch (Exception e) {
+    			e.printStackTrace();
+			}finally{
+				gps.stopSelf();
+			}
+            
         }else{
             // can't get location
             // GPS or Network is not enabled

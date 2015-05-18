@@ -15,6 +15,8 @@ public class Sample {
 	private Boolean sent;
 	private TreatmentResolution treatmentResolution;
 	private LocationData locationData = new LocationData();
+	private Integer requestTreatmentIntents;
+	private Integer minutesFromLastRequest;
 
 	/**
 	 * Constructor que deja Location data en null, 
@@ -26,7 +28,8 @@ public class Sample {
 	 * @param sampleName
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
-			String fieldName, String sampleName, String hash,Boolean sent,TreatmentResolution treatmentResolution) {
+			String fieldName, String sampleName, String hash,Boolean sent,
+			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -35,6 +38,8 @@ public class Sample {
 		this.hash = hash;
 		this.sent = sent;
 		this.treatmentResolution = treatmentResolution;
+		this.requestTreatmentIntents = reqs;
+		this.minutesFromLastRequest = minutesPassed;
 	}
 
 	/**
@@ -53,7 +58,8 @@ public class Sample {
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName, String sampleName, String lat, String lon,
-			String city, String state, String country,String hash,Boolean sent,TreatmentResolution treatmentResolution) {
+			String city, String state, String country,String hash,Boolean sent,
+			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -63,6 +69,8 @@ public class Sample {
 		this.hash = hash;
 		this.sent = sent;
 		this.treatmentResolution = treatmentResolution;
+		this.requestTreatmentIntents = reqs;
+		this.minutesFromLastRequest = minutesPassed;
 	}
 
 	public Sample() {
@@ -144,6 +152,22 @@ public class Sample {
 	public void setLocationData(String lat, String lon, String city,
 			String state, String country) {
 		this.locationData = new LocationData(lat, lon, city, state, country);
+	}
+
+	public Integer getRequestTreatmentIntents() {
+		return requestTreatmentIntents;
+	}
+
+	public void setRequestTreatmentIntents(Integer requestTreatmentInstents) {
+		this.requestTreatmentIntents = requestTreatmentInstents;
+	}
+
+	public Integer getMinutesFromLastRequest() {
+		return minutesFromLastRequest;
+	}
+
+	public void setMinutesFromLastRequest(Integer minutesFromLastRequest) {
+		this.minutesFromLastRequest = minutesFromLastRequest;
 	}
 
 }

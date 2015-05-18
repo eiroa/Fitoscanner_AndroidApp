@@ -34,8 +34,11 @@ public class SamplesDataSource extends AbstractDataSource{
 		String country = cursor.getString(8);
 		String hash = cursor.getString(9);
 		Boolean sent = ( 1 == cursor.getInt(10)?true:false);
+		Integer reqs = cursor.getInt(12);
+		Integer minutesPassed = cursor.getInt(13);
+		
 		Sample Sample = new Sample(id, date, null, field, sampleName,
-				latitude,longitude,city,state,country, hash,sent,null);
+				latitude,longitude,city,state,country, hash,sent,null,reqs,minutesPassed);
 		return Sample;
 	}
 
@@ -131,6 +134,8 @@ public class SamplesDataSource extends AbstractDataSource{
 		String hash = sample.getHash();
 		Integer sent = sample.getSent()?1:0;
 		Long idTreatmentResolution = sample.getTreatmentResolution()!=null?sample.getTreatmentResolution().getId():null;
+		Integer reqs = sample.getRequestTreatmentIntents();
+		Integer minutesPassed = sample.getMinutesFromLastRequest();
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
@@ -144,6 +149,8 @@ public class SamplesDataSource extends AbstractDataSource{
 		values.put(SampleSQLiteTable.COLUMN_HASH, hash);
 		values.put(SampleSQLiteTable.COLUMN_SENT, sent);
 		values.put(SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID, idTreatmentResolution);
+		values.put(SampleSQLiteTable.COLUMN_SAMPLE_REQUEST_TREATMENT_INTENTS, reqs);
+		values.put(SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST, minutesPassed);
 
 		if (id != null && sampleExists(sample)) {
 			getDatabase().update(SampleSQLiteTable.TABLE, values,

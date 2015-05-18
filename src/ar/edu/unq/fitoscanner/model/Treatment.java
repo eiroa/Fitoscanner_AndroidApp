@@ -155,6 +155,11 @@ public class Treatment{
 	}
 
 
+	public Treatment() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	@Override
 	public String toString() {
 		return "Treatment [id=" + id + ", name=" + name + ", description="

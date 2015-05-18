@@ -34,4 +34,23 @@ public class TreatmentResolution extends TreatmentResolutionRaw{
 		setMessage(message);
 		this.treatments = treatments;
 	}
+	public TreatmentResolution() {
+	}
+	@Override
+	public String toString() {
+		return "TreatmentResolution [specieImages=" + specieImages
+				+ ", treatments=" + treatments + ", getSpecieImages()="
+				+ getSpecieImages() + ", getTreatments()=" + getTreatments()
+				+ ", getId()=" + getId() + ", getSpecieName()="
+				+ getSpecieName() + ", getSpecieScientificName()="
+				+ getSpecieScientificName() + ", getSpecieDescription()="
+				+ getSpecieDescription() + ", getValid()=" + getValid()
+				+ ", getResolved()=" + getResolved() + ", getMessage()="
+				+ getMessage() + ", getIdSpecieImages()=" + getIdSpecieImages()
+				+ ", getIdTreatments()=" + getIdTreatments() + ", toString()="
+				+ super.toString() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + "]";
+	}
+	
+	
 }

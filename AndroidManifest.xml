@@ -63,7 +63,7 @@
         </activity>
         
          <service
-            android:name="ar.edu.unq.fitoscanner.services.LocalService"
+            android:name="ar.edu.unq.fitoscanner.services.GetTreatmentService"
             android:exported="false">
          </service>
 
