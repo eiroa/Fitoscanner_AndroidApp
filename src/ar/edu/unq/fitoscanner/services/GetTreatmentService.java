@@ -87,7 +87,7 @@ public class GetTreatmentService extends Service {
 				
 				String hash = sample.getHash();
 				
-				if(sample.getMinutesFromLastRequest() > Math.pow(2, sample.getRequestTreatmentIntents())
+				if(sample.getMinutesFromLastRequest() < Math.pow(2, sample.getRequestTreatmentIntents())
 				&& sample.getRequestTreatmentIntents() <= 12){
 					resolveServerResponse(sample);
 					//Estamos haciendo request, minutos pasados es cero
@@ -120,12 +120,9 @@ public class GetTreatmentService extends Service {
 				final NotificationManager mgr= (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 				JSONObject jsonResponse = new JSONObject(serverResponse);
 				Boolean valid = jsonResponse.getBoolean("valid");
-				Boolean resolved = jsonResponse.getBoolean("resolved");
 				String serverMessage = jsonResponse.getString("message");
 				Notification userNotification;
-				Log.d(TAG, "Response is valid= " + valid
-						+ " , Sample is resolved= " + resolved
-						+ " , Server message is: " + serverMessage);
+				
 				if(!valid){
 					userNotification = new Notification(R.drawable.flechitader, "Resolucion de muestra",
 							System.currentTimeMillis());
@@ -135,87 +132,94 @@ public class GetTreatmentService extends Service {
 					userNotification.setLatestEventInfo(ctx,"Error resolviendo muestra "+sample.getSampleName(),
 							"Por favor reenvíe la muestra ", i);
 					mgr.notify(notifyId, userNotification);
-				}
-				if (!resolved) {
-					Notification note = new Notification(
-							R.drawable.flechitader, "Resolucion de muestra",
-							System.currentTimeMillis());
-
-					// This pending intent will open after notification click
-					PendingIntent i = PendingIntent.getActivity(ctx, 0,
-							new Intent(ctx, RecordsMenuActivity.class), 0);
-
-					note.setLatestEventInfo(ctx,
-							"Muestra "+sample.getSampleName(),
-							"Muestra "+sample.getSampleName()+ " sin respuesta aún", i);
-					mgr.notify(notifyId, note);
 				}else{
-					//resolve
-					JSONObject specie =jsonResponse.getJSONObject("specie");
-					JSONArray specieImages = jsonResponse.getJSONArray("images");
-					String idSpecieImages="";
-					for (int i = 0; i < specieImages.length(); i++) {
-				    	if(i==0){
-				    		idSpecieImages = specieImages.getString(i);
-				    	}else{
-				    		idSpecieImages = idSpecieImages + "-" + specieImages.getString(i);
-				    	}
-				    }
-					
-					String specieName = specie.getString("name");
-					String specieScientificName = specie.getString("scientific_name");
-					String specieDescription = specie.getString("description");
-					
-					JSONArray treatments = jsonResponse.getJSONArray("treatments");
-					List<Treatment> treatmentsParsed = new ArrayList<Treatment>();
-					
-					//procesamos la lista de tratamientos
-					for (int i = 0; i < treatments.length(); i++) {
-					    JSONObject row = treatments.getJSONObject(i);
-					    Treatment newTreatment = new Treatment();
-					    JSONArray treatmentImages = treatments.getJSONArray(i);
-					    String treatmentImagesIds ="";
-					    for (int i2 = 0; i < treatmentImages.length(); i++) {
-					    	if(i2==0){
-					    		treatmentImagesIds = treatmentImages.getString(i2);
+					Boolean resolved = jsonResponse.getBoolean("resolved");
+					Log.d(TAG, "Response is valid= " + valid
+							+ " , Sample is resolved= " + resolved
+							+ " , Server message is: " + serverMessage);
+					if (!resolved) {
+						Notification note = new Notification(
+								R.drawable.flechitader, "Resolucion de muestra",
+								System.currentTimeMillis());
+
+						// This pending intent will open after notification click
+						PendingIntent i = PendingIntent.getActivity(ctx, 0,
+								new Intent(ctx, RecordsMenuActivity.class), 0);
+
+						note.setLatestEventInfo(ctx,
+								"Muestra "+sample.getSampleName(),
+								"Muestra "+sample.getSampleName()+ " sin respuesta aún", i);
+						mgr.notify(notifyId, note);
+
+					}else{
+						//resolve
+						JSONObject specie =jsonResponse.getJSONObject("specie");
+						JSONArray specieImages = specie.getJSONArray("images");
+						String idSpecieImages="";
+						for (int i = 0; i < specieImages.length(); i++) {
+					    	if(i==0){
+					    		idSpecieImages = specieImages.getString(i);
 					    	}else{
-					    		treatmentImagesIds = treatmentImagesIds + "-" + treatmentImages.getString(i2);
+					    		idSpecieImages = idSpecieImages + "-" + specieImages.getString(i);
 					    	}
 					    }
-					    newTreatment.setName(row.getString("name"));
-					    newTreatment.setDescription(row.getString("description"));
-					    newTreatment.setIdImages(treatmentImagesIds);
-					    treatmentsParsed.add(newTreatment);
+						
+						String specieName = specie.getString("name");
+						String specieScientificName = specie.getString("scientific_name");
+						String specieDescription = specie.getString("description");
+						
+						JSONArray treatments = jsonResponse.getJSONArray("treatments");
+						List<Treatment> treatmentsParsed = new ArrayList<Treatment>();
+						
+						//procesamos la lista de tratamientos
+						for (int i = 0; i < treatments.length(); i++) {
+						    JSONObject row = treatments.getJSONObject(i);
+						    Treatment newTreatment = new Treatment();
+						    JSONArray treatmentImages = row.getJSONArray("images");
+						    String treatmentImagesIds ="";
+						    for (int i2 = 0; i < treatmentImages.length(); i++) {
+						    	if(i2==0){
+						    		treatmentImagesIds = treatmentImages.getString(i2);
+						    	}else{
+						    		treatmentImagesIds = treatmentImagesIds + "-" + treatmentImages.getString(i2);
+						    	}
+						    }
+						    newTreatment.setName(row.getString("name"));
+						    newTreatment.setDescription(row.getString("description"));
+						    newTreatment.setIdImages(treatmentImagesIds);
+						    treatmentsParsed.add(newTreatment);
+						}
+//						construimos la resolucion
+						TreatmentResolution tr = new TreatmentResolution();
+						tr.setSpecieName(specieName);
+						tr.setSpecieDescription(specieDescription);
+						tr.setSpecieScientificName(specieScientificName);
+						tr.setMessage(serverMessage);
+						tr.setValid(valid);
+						tr.setResolved(resolved);
+						tr.setTreatments(treatmentsParsed);
+						tr.setIdSpecieImages(idSpecieImages);
+						
+						Notification note = new Notification(
+								R.drawable.flechitader, "Resolucion de muestra",
+								System.currentTimeMillis());
+
+						// This pending intent will open after notification click
+						PendingIntent i = PendingIntent.getActivity(ctx, 0,
+								new Intent(ctx, RecordsMenuActivity.class), 0);
+
+						note.setLatestEventInfo(ctx,
+								"Muestra resuelta",
+								"Tratamiento obtenido para "+sample.getSampleName(), i);
+						mgr.notify(notifyId, note);
+						
+						Log.d(TAG, "Tratamiento obtenido para la muestra "+sample.getSampleName()+"!! , To string de T"
+								+ "reatmentResolution ==> ");
+						sample.setSent(false);
+						
 					}
-//					construimos la resolucion
-					TreatmentResolution tr = new TreatmentResolution();
-					tr.setSpecieName(specieName);
-					tr.setSpecieDescription(specieDescription);
-					tr.setSpecieScientificName(specieScientificName);
-					tr.setMessage(serverMessage);
-					tr.setValid(valid);
-					tr.setResolved(resolved);
-					tr.setTreatments(treatmentsParsed);
-					tr.setIdSpecieImages(idSpecieImages);
-					
-					Notification note = new Notification(
-							R.drawable.flechitader, "Resolucion de muestra",
-							System.currentTimeMillis());
-
-					// This pending intent will open after notification click
-					PendingIntent i = PendingIntent.getActivity(ctx, 0,
-							new Intent(ctx, RecordsMenuActivity.class), 0);
-
-					note.setLatestEventInfo(ctx,
-							"Muestra resuelta",
-							"Tratamiento obtenido para "+sample.getSampleName(), i);
-					mgr.notify(notifyId, note);
-					
-					Log.d(TAG, "Tratamiento obtenido para la muestra "+sample.getSampleName()+"!! , To string de T"
-							+ "reatmentResolution ==> ");
-					sample.setSent(false);
-					
 				}
+				
 				notifyId++;
 				
 				
@@ -248,6 +252,9 @@ public class GetTreatmentService extends Service {
 			InputStream inputStream = null;
 			String result = "";
 			try {
+				
+				Log.d(TAG,"Attempting to get treatment for sample: "+sampleHash);
+				
 				HttpResponse response = httpclient.execute(httppost);
 				HttpEntity entity = response.getEntity();
 
