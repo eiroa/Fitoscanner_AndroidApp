@@ -163,16 +163,12 @@ public class Treatment{
 	@Override
 	public String toString() {
 		return "Treatment [id=" + id + ", name=" + name + ", description="
-				+ description + ", images=" + images + ", unit=" + unit
-				+ ", unitType=" + unitType + ", frequency=" + frequency
-				+ ", frequencyType=" + frequencyType + ", extraLink1="
-				+ extraLink1 + ", extraLink2=" + extraLink2 + ", extraLink3="
-				+ extraLink3 + "]";
+				+ description + ", idImages=" + idImages + ", images=" + images
+				+ ", unit=" + unit + ", unitType=" + unitType + ", frequency="
+				+ frequency + ", frequencyType=" + frequencyType
+				+ ", extraLink1=" + extraLink1 + ", extraLink2=" + extraLink2
+				+ ", extraLink3=" + extraLink3 + "]";
 	}
 
-	
-	
-	
-	
 
 }

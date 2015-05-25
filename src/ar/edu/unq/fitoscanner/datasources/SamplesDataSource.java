@@ -36,13 +36,18 @@ public class SamplesDataSource extends AbstractDataSource{
 		Boolean sent = ( 1 == cursor.getInt(10)?true:false);
 		Integer reqs = cursor.getInt(12);
 		Integer minutesPassed = cursor.getInt(13);
+		Boolean resolved = ( 1 == cursor.getInt(14)?true:false);
+		Boolean valid = ( 1 == cursor.getInt(15)?true:false);
 		
-		Sample Sample = new Sample(id, date, null, field, sampleName,
-				latitude,longitude,city,state,country, hash,sent,null,reqs,minutesPassed);
+		Sample Sample = new Sample(id, date, null, field, 
+				sampleName,latitude,longitude,city,state,
+				country, hash,sent,null,reqs,
+				minutesPassed,resolved,valid);
+		
 		return Sample;
 	}
 
-	private List<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent) {
+	private List<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent,Boolean resolved,Boolean valid) {
 
 		List<Sample> samples = new ArrayList<Sample>();
 
@@ -51,12 +56,26 @@ public class SamplesDataSource extends AbstractDataSource{
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast()) {
 					Sample sample = cursorToSample(cursor);
+					
+					//lo que viene es una mierda, necesito un puto filter
 					if(getSent){
-						if(sample.getSent())samples.add(sample);
+						//Quiero las enviadas
+						if(resolved){
+							//Quiero las enviadas resueltas
+							if(sample.getSent() && sample.getResolved())samples.add(sample);
+						}else{
+							//quiero las que fallaron
+							if(!valid){
+								if(sample.getSent() && !sample.getResolved() && !sample.getValid())samples.add(sample);
+							}else{
+								//Quiero las enviadas sin resolver
+								if(sample.getSent() && !sample.getResolved())samples.add(sample);
+							}
+						}
 					}else{
+						//No quiero las enviadas, representan las muestras nuevas
 						if(!sample.getSent())samples.add(sample);
 					}
-					
 					cursor.moveToNext();
 				}
 			} finally {
@@ -136,6 +155,8 @@ public class SamplesDataSource extends AbstractDataSource{
 		Long idTreatmentResolution = sample.getTreatmentResolution()!=null?sample.getTreatmentResolution().getId():null;
 		Integer reqs = sample.getRequestTreatmentIntents();
 		Integer minutesPassed = sample.getMinutesFromLastRequest();
+		Integer resolved = sample.getResolved()?1:0;
+		Integer valid = sample.getValid()?1:0;
 		ContentValues values = new ContentValues();
 
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_ORIGIN_DATE, date);
@@ -151,6 +172,8 @@ public class SamplesDataSource extends AbstractDataSource{
 		values.put(SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID, idTreatmentResolution);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_REQUEST_TREATMENT_INTENTS, reqs);
 		values.put(SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST, minutesPassed);
+		values.put(SampleSQLiteTable.COLUMN_RESOLVED, resolved);
+		values.put(SampleSQLiteTable.COLUMN_VALID, valid);
 
 		if (id != null && sampleExists(sample)) {
 			getDatabase().update(SampleSQLiteTable.TABLE, values,
@@ -236,13 +259,31 @@ public class SamplesDataSource extends AbstractDataSource{
 		}
 		return Sample;
 	}
+	
+	
+	public List<Sample> getSamplesSentResolved(){
+		return this.getSamples(true,true,true);
+	}
+	
+	public List<Sample> getSamplesSentUnresolved(){
+		return this.getSamples(true, false,true);
+	}
+	
+	public List<Sample> getSamplesUnsent(){
+		return this.getSamples(false, false,true);
+	}
+	
+	public List<Sample>getSamplesSentInvalid(){
+		return this.getSamples(true, false,false);
+	}
+	
 
 	/**
 	 * Devuelve en una lista todas las muestras con sus respectivas imágenes
 	 * 
 	 * @return
 	 */
-	public List<Sample> getSamples(Boolean getSent) {
+	private List<Sample> getSamples(Boolean getSent,Boolean getResolved,Boolean getValid) {
 		List<Sample> samples = new ArrayList<Sample>();
 		try {
 
@@ -250,8 +291,7 @@ public class SamplesDataSource extends AbstractDataSource{
 					.query(SampleSQLiteTable.TABLE,
 							SampleSQLiteTable.ALL_COLUMNS, null, null, null,
 							null, null);
-			samples = cursorToListOfSamples(cursor,getSent);
-
+			samples = cursorToListOfSamples(cursor,getSent,getResolved,getValid);
 			for (Sample sample : samples) {
 				// Se le pasa al imageDatasource la conexion a la base de datos
 				this.imageDataSource.setDatabase(getDatabase());

@@ -17,6 +17,8 @@ public class Sample {
 	private LocationData locationData = new LocationData();
 	private Integer requestTreatmentIntents;
 	private Integer minutesFromLastRequest;
+	private Boolean resolved;
+	private Boolean valid;
 
 	/**
 	 * Constructor que deja Location data en null, 
@@ -29,7 +31,8 @@ public class Sample {
 	 */
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName, String sampleName, String hash,Boolean sent,
-			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed) {
+			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed,
+			Boolean resolved,Boolean valid) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -40,6 +43,8 @@ public class Sample {
 		this.treatmentResolution = treatmentResolution;
 		this.requestTreatmentIntents = reqs;
 		this.minutesFromLastRequest = minutesPassed;
+		this.resolved = resolved;
+		this.valid = valid;
 	}
 
 	/**
@@ -59,7 +64,8 @@ public class Sample {
 	public Sample(Long id, String originDate, ArrayList<Image> images,
 			String fieldName, String sampleName, String lat, String lon,
 			String city, String state, String country,String hash,Boolean sent,
-			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed) {
+			TreatmentResolution treatmentResolution,Integer reqs, Integer minutesPassed,
+			Boolean resolved,Boolean valid) {
 		this.id = id;
 		this.originDate = originDate;
 		this.images = images;
@@ -71,6 +77,8 @@ public class Sample {
 		this.treatmentResolution = treatmentResolution;
 		this.requestTreatmentIntents = reqs;
 		this.minutesFromLastRequest = minutesPassed;
+		this.resolved = resolved;
+		this.valid = valid;
 	}
 
 	public Sample() {
@@ -170,4 +178,20 @@ public class Sample {
 		this.minutesFromLastRequest = minutesFromLastRequest;
 	}
 
+	public Boolean getResolved() {
+		return resolved;
+	}
+
+	public void setResolved(Boolean resolved) {
+		this.resolved = resolved;
+	}
+
+	public Boolean getValid() {
+		return valid;
+	}
+
+	public void setValid(Boolean valid) {
+		this.valid = valid;
+	}
+	
 }

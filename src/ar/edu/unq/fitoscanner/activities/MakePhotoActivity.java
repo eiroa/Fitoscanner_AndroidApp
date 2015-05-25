@@ -6,6 +6,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.Semaphore;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,8 +34,11 @@ import android.hardware.Camera.ShutterCallback;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -40,6 +57,7 @@ import ar.edu.unq.fitoscanner.helpers.CustomImageListViewAdapter;
 import ar.edu.unq.fitoscanner.helpers.GPSHelper;
 import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
+import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
 
@@ -60,6 +78,8 @@ public class MakePhotoActivity extends Activity {
 	private Sample newSample;
 	private Typeface font;
 	private boolean usesLocation;
+	private boolean saving; 
+	private Activity activity = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +101,7 @@ public class MakePhotoActivity extends Activity {
 			setImageDatasource(new ImageDataSource(this));
 
 		}
+		saving = false;
 
 	}
 
@@ -98,7 +119,7 @@ public class MakePhotoActivity extends Activity {
 		takeOneMoreButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setShotView();
+				if(!saving)setShotView();
 			}
 		});
 	}
@@ -127,30 +148,25 @@ public class MakePhotoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String sampleName = (sampleNameField.getText()).toString();
-				if (previews.size() < 3) {
-					Toast.makeText(
-							getApplicationContext(),
-							"Atencion, de momento, la muestra debe contener al menos 3 imagenes",
-							Toast.LENGTH_LONG).show();
-					
-				} else {
-					if(sampleName.equals("")|| sampleName==null){
+				if(!saving){
+					if (previews.size() < 3) {
 						Toast.makeText(
 								getApplicationContext(),
-								"Aplique un nombre a la muestra por favor",
+								"Atencion, de momento, la muestra debe contener al menos 3 imagenes",
 								Toast.LENGTH_LONG).show();
-					}else{
-						makeNewSample();					
-						saveSample();
-						Toast.makeText(
-								getApplicationContext(),
-								"Se " + "ha guardado la muestra "
-										+ newSample.getSampleName() + " con " + ""
-										+ previews.size() + " imágenes",
-								Toast.LENGTH_LONG).show();
-						finish();
+						
+					} else {
+						if(sampleName.equals("")|| sampleName==null){
+							Toast.makeText(
+									getApplicationContext(),
+									"Aplique un nombre a la muestra por favor",
+									Toast.LENGTH_LONG).show();
+						}else{
+							processNewSample();
+							saving =true;
+						}
+						
 					}
-					
 				}
 			}
 		});
@@ -180,20 +196,26 @@ public class MakePhotoActivity extends Activity {
 			}
 		}
 	}
+	
+	private void processNewSample(){
+		new NewSampleTask().execute("");
+	}
 
 	/**
 	 * Construye una nueva muestra
 	 */
-	private void makeNewSample() {
+	private Sample makeNewSample() {
 		EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
 		String sampleName = (sampleNameField.getText()).toString();
-		newSample = new Sample();
+		final Sample newSample = new Sample();
 		newSample.setSampleName(sampleName);
 		newSample.setOriginDate(new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss")
 				.format(new Date()));
 		newSample.setFieldName("testing field");
 		newSample.setImages(previews);
 		newSample.setSent(false);
+		newSample.setResolved(false);
+		newSample.setValid(true);
 		newSample.setRequestTreatmentIntents(0);
 		newSample.setMinutesFromLastRequest(0);
 		String base64full = "";
@@ -207,14 +229,30 @@ public class MakePhotoActivity extends Activity {
 		}
 		newSample.setHash(SecurityHelper.toSHA256(hash));
 		if(this.usesLocation){
-			Log.d(TAG, "Attempting to obtain location for sample " + sampleName); 
-			addLocation();
+			Log.d(TAG, "Attempting to obtain location for sample " + sampleName);
+			final Semaphore sm = new Semaphore(1);
+			//Debido a que estamos en un asyncTask, debemos usar un runnable puesto que gps.getLocation es otro thread
+			//Atenti con concurrencia, hay que asegurarse que se obtuvo la location
+			try {
+				sm.acquire();
+				activity.runOnUiThread(new Runnable() {
+					  public void run() {
+							addLocation(newSample);
+							sm.release();
+					  }
+					});
+				sm.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 		}
+		return newSample;
 		
 
 	}
 	
-	private void addLocation(){
+	private void addLocation(Sample sample){
 		GPSHelper gps = new GPSHelper(MakePhotoActivity.this);
 		Geocoder gcd = new Geocoder(this);
 		List<Address> addresses = null;
@@ -236,7 +274,7 @@ public class MakePhotoActivity extends Activity {
     			state = addresses.get(0).getAdminArea();
     			country = addresses.get(0).getCountryName();
     			
-    			newSample.setLocationData(latitude, longitude, city, state, country);
+    			sample.setLocationData(latitude, longitude, city, state, country);
                 Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
                 longitude + "\n  Closest city: "+gps.getAddress());
     		} catch (NullPointerException e) {
@@ -255,6 +293,26 @@ public class MakePhotoActivity extends Activity {
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
+	}
+	
+	
+	private class NewSampleTask extends AsyncTask<String, Void,Void> {
+		Sample sample = null;
+	    @Override
+	    protected Void doInBackground(String... params) {
+	    	sample =makeNewSample();					
+			saveSample(sample);
+			return null;
+	    }
+	    
+	    @Override
+	    protected void onPostExecute(Void result) {
+	    	Toast.makeText(
+					getApplicationContext(),"Se ha guardado la muestra "+ sample.getSampleName() + 
+					" con " + ""+ previews.size() + " imágenes",
+					Toast.LENGTH_LONG).show();
+	    	activity.finish();
+	    }
 	}
 
 	/**
@@ -435,11 +493,11 @@ public class MakePhotoActivity extends Activity {
 	/**
 	 * Guarda la muestra que fue generada al tomar la primera foto
 	 */
-	public void saveSample() {
+	public void saveSample(Sample sample) {
 		samplesDataSource.open();
 		try {
 
-			samplesDataSource.saveSample(this.newSample);
+			samplesDataSource.saveSample(sample);
 
 		} finally {
 			samplesDataSource.close();

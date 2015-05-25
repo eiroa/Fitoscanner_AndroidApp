@@ -20,6 +20,8 @@ public class SampleSQLiteTable {
 	public static final String COLUMN_TREATMENT_RESOLUTION_ID= "treatmentResolutionId";
 	public static final String COLUMN_SAMPLE_REQUEST_TREATMENT_INTENTS= "requestTreatmentIntents";
 	public static final String COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST= "minutesFromLastRequest";
+	public static final String COLUMN_RESOLVED = "resolved";
+	public static final String COLUMN_VALID = "valid";
 	
 	
 
@@ -38,7 +40,7 @@ public class SampleSQLiteTable {
 			SampleSQLiteTable.COLUMN_SENT,
 			SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID,
 			SampleSQLiteTable.COLUMN_SAMPLE_REQUEST_TREATMENT_INTENTS,
-			SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST};
-	
-
+			SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST,
+			SampleSQLiteTable.COLUMN_RESOLVED,
+			SampleSQLiteTable.COLUMN_VALID};
 }

@@ -29,7 +29,9 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ SampleSQLiteTable.COLUMN_SENT + " integer, "
 			+ SampleSQLiteTable.COLUMN_TREATMENT_RESOLUTION_ID + " integer, "
 			+ SampleSQLiteTable.COLUMN_SAMPLE_REQUEST_TREATMENT_INTENTS + " integer, "
-			+ SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST + " integer"
+			+ SampleSQLiteTable.COLUMN_SAMPLE_MINUTES_FROM_LAST_REQUEST + " integer, "
+			+ SampleSQLiteTable.COLUMN_RESOLVED + " integer, "
+			+ SampleSQLiteTable.COLUMN_VALID + " integer"
 			+ " );";
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "

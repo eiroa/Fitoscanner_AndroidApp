@@ -39,11 +39,13 @@
             android:padding="10dp" >
 
             <LinearLayout
+            
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:padding="10dp" >
+                android:padding="10dp" 
+                >
 
                 <Button
                 android:id="@+id/buttonOpenNewRecords"
@@ -78,6 +80,29 @@
                 
                 android:padding="15dp"
                 android:text="Ver muestras enviadas"
+                android:background="@drawable/button_shape_1"
+                android:shadowColor="#BFBFBF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#BDFFC8"
+                android:textSize="15sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp" >
+
+                <Button
+                android:id="@+id/buttonOpenUnresolvedRecords"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                
+                android:padding="15dp"
+                android:text="Ver muestras sin resolución"
                 android:background="@drawable/button_shape_1"
                 android:shadowColor="#BFBFBF"
                 android:shadowDx="0"
