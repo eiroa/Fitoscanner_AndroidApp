@@ -30,6 +30,8 @@ public class RecordsMenuActivity extends Activity {
         	public void onClick(View arg0) {
             	Intent intent = new Intent(activity, RecordsActivity.class);
             	intent.putExtra("getSent", false);
+            	intent.putExtra("getResolved", false);
+            	intent.putExtra("getValid", true);
         		activity.startActivity(intent);      		
             }
         	
@@ -37,17 +39,40 @@ public class RecordsMenuActivity extends Activity {
         });
         Button goSentRecords = (Button)findViewById(R.id.buttonOpenSentRecords);
         goSentRecords.setOnClickListener(new View.OnClickListener() {
-        	
         	public void onClick(View arg0) {
             	Intent intent = new Intent(activity, RecordsActivity.class);
             	intent.putExtra("getSent", true);
+            	intent.putExtra("getResolved", false);
+            	intent.putExtra("getValid", true);
         		activity.startActivity(intent);      		
             }
-        	
-            
+        });
+        
+        Button goResolvedRecords = (Button)findViewById(R.id.buttonOpenResolvedRecords);
+        goResolvedRecords.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View arg0) {
+            	Intent intent = new Intent(activity, RecordsActivity.class);
+            	intent.putExtra("getSent", true);
+            	intent.putExtra("getResolved", true);
+            	intent.putExtra("getValid", true);
+        		activity.startActivity(intent);      		
+            }
+        });
+        
+        Button goFailedRecords = (Button)findViewById(R.id.buttonOpenUnresolvedRecords);
+        goFailedRecords.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View arg0) {
+            	Intent intent = new Intent(activity, RecordsActivity.class);
+            	intent.putExtra("getSent", true);
+            	intent.putExtra("getResolved", false);
+            	intent.putExtra("getValid", false);
+        		activity.startActivity(intent);      		
+            }
         });
         
         goRecords.setTypeface(font);
         goSentRecords.setTypeface(font);
-    }
+        goResolvedRecords.setTypeface(font);
+        goFailedRecords.setTypeface(font);
+	}
 }

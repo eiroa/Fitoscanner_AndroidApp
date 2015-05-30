@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -58,14 +59,18 @@ public class RecordsActivity extends Activity{
 	private final Context context = this;
 	private Typeface font;
 	private Boolean getSent;
+	private Boolean getResolved;
+	private Boolean getValid;
+	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
         configurationDataSource = new ConfigurationDataSource(this);
-        this.getSent =getIntent().getBooleanExtra("getSent", true);
-        
+        this.getSent =getIntent().getBooleanExtra("getSent", false);
+        this.getResolved = getIntent().getBooleanExtra("getResolved", false);
+        this.getValid = getIntent().getBooleanExtra("getValid", true);
         
     }
 	
@@ -113,29 +118,30 @@ public class RecordsActivity extends Activity{
 	 	         				context);
 	 	          
 	 	         			// set title
-	 	         			alertDialogBuilder.setTitle("¿Eliminar muestra "+
-	 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
-	 	         			samples.get(samplePositionSelected).getOriginDate()+ " ?");
+	 	         			String title = "¿Eliminar muestra "+
+	 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ " ?";
 	 	          
-	 	         			// set dialog message
-	 	         			alertDialogBuilder
-	 	         				.setMessage("Elija una opción ")
-	 	         				.setCancelable(false)
-	 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
-	 	         					public void onClick(DialogInterface dialog,int id) {
-	 	         						deleteSample(samples.get(samplePositionSelected));
-	 	         						generateSamplesView();
-	 	         						
-	 	         					}
-	 	         				  })
-	 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
-	 	         					public void onClick(DialogInterface dialog,int id) {
-	 	         						// if this button is clicked, just close
-	 	         						// the dialog box and do nothing
-	 	         						dialog.cancel();
-	 	         					}
-	 	         				});
-	 	          
+	 	         			//prepare dialog
+	 	         			
+	 	         			prepareDialog(alertDialogBuilder,
+	 	         					title,
+	 	         					"Elija una opción ", 
+	 	         					true, 
+	 	         					"Aceptar", new DialogInterface.OnClickListener() {
+		 	         					public void onClick(DialogInterface dialog,int id) {
+		 	         						deleteSample(samples.get(samplePositionSelected));
+		 	         						generateSamplesView();
+		 	         						
+		 	         					}
+		 	         				  }, 
+		 	         				"Cancelar", new DialogInterface.OnClickListener() {
+		 	         					public void onClick(DialogInterface dialog,int id) {
+		 	         						// if this button is clicked, just close
+		 	         						// the dialog box and do nothing
+		 	         						dialog.cancel();
+		 	         					}
+		 	         				});
+	 	         			
 	 	         				// create alert dialog
 	 	         				AlertDialog alertDialog = alertDialogBuilder.create();
 	 	          
@@ -147,10 +153,21 @@ public class RecordsActivity extends Activity{
 	     );
 	}
 	
+	private void prepareDialog(AlertDialog.Builder builder,String title,String message,
+			Boolean isCancelable,String OkButtonTxt, android.content.DialogInterface.OnClickListener okListener, 
+			String cancelButtonTxt, android.content.DialogInterface.OnClickListener cancelListener){
+		    builder
+			.setTitle(title)
+			.setMessage(message)
+			.setCancelable(isCancelable)
+			.setPositiveButton(OkButtonTxt,okListener)
+			.setNegativeButton(cancelButtonTxt,cancelListener);
+	}
+	
 	private void setSendSampleButton(){
 		Button sendButton = (Button) findViewById(R.id.button_send);
 		sendButton.setTypeface(font);
-		if(!getSent){
+		if(!getSent ){
 			sendButton.setOnClickListener(
 			         new View.OnClickListener() {
 			             @Override
@@ -160,26 +177,26 @@ public class RecordsActivity extends Activity{
 			            	 }else{
 			            		 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 			 	         				context);
-			 	          
-			 	         			alertDialogBuilder.setTitle("¿Enviar muestra "+
-			 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ "'  de fecha " +
-			 	         			samples.get(samplePositionSelected).getOriginDate()+ " al servidor para determinar tratamiento?");
-			 	          
-			 	         			alertDialogBuilder
-			 	         				.setMessage("Elija una opción ")
-			 	         				.setCancelable(false)
-			 	         				.setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
-			 	         					public void onClick(DialogInterface dialog,int id) {
-			 	         						sendSample(samples.get(samplePositionSelected));
-			 	         						generateSamplesView();
-			 	         						
-			 	         					}
-			 	         				  })
-			 	         				.setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
+			            		 
+			            		 String title = "¿Enviar muestra "+
+					 	         			"'"+samples.get(samplePositionSelected).getSampleName()+ " al servidor para determinar tratamiento?";
+			            		 
+			            		   prepareDialog(alertDialogBuilder, title, 
+			 	         			"Elija una opción ", 
+			 	         			false,
+			 	         			"Aceptar", new DialogInterface.OnClickListener() {
+		 	         					public void onClick(DialogInterface dialog,int id) {
+		 	         						sendSample(samples.get(samplePositionSelected));
+		 	         						generateSamplesView();
+		 	         						
+		 	         					}
+		 	         				  }, 
+		 	         				"Cancelar",new DialogInterface.OnClickListener() {
 			 	         					public void onClick(DialogInterface dialog,int id) {
 			 	         						dialog.cancel();
 			 	         					}
 			 	         				});
+			 	          
 			 	         				AlertDialog alertDialog = alertDialogBuilder.create();
 			 	         				alertDialog.show();
 			            	 }	            		         			            
@@ -204,7 +221,15 @@ public class RecordsActivity extends Activity{
     	try
     	{
     		if(getSent){
-    			return samplesDataSource.getSamplesSentUnresolved();
+    			if(getValid){
+    				if(getResolved){
+    					return samplesDataSource.getSamplesSentResolved();
+    				}else{
+    					return samplesDataSource.getSamplesSentUnresolved();
+    				}
+    			}else{
+    				return samplesDataSource.getSamplesSentInvalid();
+    			}
     		}else{
     			return samplesDataSource.getSamplesUnsent();
     		}

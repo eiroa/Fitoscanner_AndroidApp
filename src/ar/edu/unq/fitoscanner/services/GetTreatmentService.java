@@ -49,7 +49,7 @@ public class GetTreatmentService extends Service {
 	private Context ctx;
 	private SamplesDataSource samplesDataSource;
 	private ConfigurationDataSource configurationDataSource;
-	public Integer timeRepetition = 300000; // ms
+	public Integer timeRepetition = 100000; // ms
 	public String imei;
 	public Integer notifyId;
 
@@ -137,6 +137,8 @@ public class GetTreatmentService extends Service {
 						notifyToUser(mgr, R.drawable.flechitader, "Resolucion de muestra", 
 								"Muestra "+sample.getSampleName(), 
 								"Muestra "+sample.getSampleName()+ " sin respuesta aún");
+						sample.setSent(true);
+						sample.setResolved(false);
 						
 					}else{
 												//tratamiento obtenido, resolver
@@ -174,8 +176,11 @@ public class GetTreatmentService extends Service {
 						
 						Log.d(TAG, "Tratamiento obtenido para la muestra "+sample.getSampleName()+"!! , To string de T"
 								+ "reatmentResolution ==> " +tr.toString());
-						sample.setSent(false);
+						sample.setSent(true);
 						sample.setResolved(true);
+						
+						//Guardar el tratamiento
+						sample.setTreatmentResolution(tr);
 						
 					}
 				}
@@ -193,7 +198,7 @@ public class GetTreatmentService extends Service {
 			notifyToUser(mgr, R.drawable.flechitader, "Resolucion de muestra",
 					"Error resolviendo muestra", 
 					"Por favor reenviar muestra "+sample.getSampleName());
-			sample.setSent(false);
+			sample.setSent(true);
 			sample.setValid(false);
 		}
 
@@ -301,7 +306,9 @@ public class GetTreatmentService extends Service {
 		samplesDataSource.open();
 		try {
 			//preguntar por muestras enviadas
-			return samplesDataSource.getSamplesSentUnresolved();
+			 List <Sample> result = samplesDataSource.getSamplesSentUnresolved();
+			 result.addAll(samplesDataSource.getSamplesUnsent());
+			 return result;
 		} finally {
 			samplesDataSource.close();
 		}

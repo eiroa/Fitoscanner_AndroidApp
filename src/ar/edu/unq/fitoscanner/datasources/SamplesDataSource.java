@@ -57,20 +57,20 @@ public class SamplesDataSource extends AbstractDataSource{
 				while (!cursor.isAfterLast()) {
 					Sample sample = cursorToSample(cursor);
 					
-					//lo que viene es una mierda, necesito un puto filter
+					//lo que viene es una mierda, necesito  lambda x -> x.property
 					if(getSent){
 						//Quiero las enviadas
-						if(resolved){
-							//Quiero las enviadas resueltas
-							if(sample.getSent() && sample.getResolved())samples.add(sample);
-						}else{
-							//quiero las que fallaron
-							if(!valid){
-								if(sample.getSent() && !sample.getResolved() && !sample.getValid())samples.add(sample);
+						if(valid){
+							if(resolved){
+								//Quiero las enviadas resueltas
+								if(sample.getSent() && sample.getResolved() && sample.getValid())samples.add(sample);
 							}else{
 								//Quiero las enviadas sin resolver
-								if(sample.getSent() && !sample.getResolved())samples.add(sample);
+								if(sample.getSent() && !sample.getResolved() && sample.getValid())samples.add(sample);
 							}
+						}else{
+							//quiero las que fallaron
+							if(sample.getSent()  && !sample.getValid())samples.add(sample);
 						}
 					}else{
 						//No quiero las enviadas, representan las muestras nuevas
@@ -260,19 +260,34 @@ public class SamplesDataSource extends AbstractDataSource{
 		return Sample;
 	}
 	
-	
+	/**
+	 * Muestras enviadas resueltas
+	 * @return
+	 */
 	public List<Sample> getSamplesSentResolved(){
 		return this.getSamples(true,true,true);
 	}
 	
+	/**
+	 * Muestras enviadas sin resolucion
+	 * @return
+	 */
 	public List<Sample> getSamplesSentUnresolved(){
 		return this.getSamples(true, false,true);
 	}
 	
+	/**
+	 * Muestras nuevas que nunca se enviaron
+	 * @return
+	 */
 	public List<Sample> getSamplesUnsent(){
 		return this.getSamples(false, false,true);
 	}
 	
+	/**
+	 * Muestras enviadas que fallaron
+	 * @return
+	 */
 	public List<Sample>getSamplesSentInvalid(){
 		return this.getSamples(true, false,false);
 	}
