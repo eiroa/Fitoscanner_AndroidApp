@@ -1,14 +1,18 @@
 package ar.edu.unq.fitoscanner.services;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,6 +31,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -37,8 +43,11 @@ import ar.edu.unq.fitoscanner.R;
 import ar.edu.unq.fitoscanner.activities.LoginActivity;
 import ar.edu.unq.fitoscanner.activities.RecordsMenuActivity;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
+import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
+import ar.edu.unq.fitoscanner.helpers.Base64Helper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
+import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
 import ar.edu.unq.fitoscanner.model.Treatment;
 import ar.edu.unq.fitoscanner.model.TreatmentResolution;
@@ -49,6 +58,7 @@ public class GetTreatmentService extends Service {
 	private Context ctx;
 	private SamplesDataSource samplesDataSource;
 	private ConfigurationDataSource configurationDataSource;
+	private ImageDataSource imageDataSource;
 	public Integer timeRepetition = 100000; // ms
 	public String imei;
 	public Integer notifyId;
@@ -69,6 +79,7 @@ public class GetTreatmentService extends Service {
 	private void initiateVars(Context ctx){
 		configurationDataSource = new ConfigurationDataSource(ctx);
 		samplesDataSource = new SamplesDataSource(ctx);
+		imageDataSource = new ImageDataSource(ctx);
 		notifyId = 100;
 		setImei();
 	}
@@ -144,8 +155,12 @@ public class GetTreatmentService extends Service {
 												//tratamiento obtenido, resolver
 						JSONObject specie =jsonResponse.getJSONObject("specie");
 						JSONArray specieImages = specie.getJSONArray("images");
-				
-						String idSpecieImages = parseToStringPropertyInArray(specieImages, "id", "-");
+						
+						//Descargar imagenes y construir string con ids de base local.
+						
+						String serverIdSpecieImages = parseToStringPropertyInArray(specieImages, "id", "-");
+						
+						String idSpecieImages = downloadAndMakeImageIds(serverIdSpecieImages);
 												
 						String specieName = specie.getString("name");
 						String specieScientificName = specie.getString("scientific_name");
@@ -269,10 +284,48 @@ public class GetTreatmentService extends Service {
 		return parsedResult;
 	}
 	
+	public synchronized String downloadAndMakeImageIds(String serverIdSpecieImages) {
+		String result = "";
+		byte[] bytes = null;
+		Bitmap currentPic = null;
+		if (serverIdSpecieImages.contains("-")) {
+			//Existen al menos 2
+			
+			for (String currentId: serverIdSpecieImages.split("-")){
+				//Obtener imagen actual
+				
+				try {
+					if(result == null || result == ""){
+						result =  result + getAndSaveImage(currentId, bytes, currentPic);
+					}else{
+						result = result + "-" + getAndSaveImage(currentId, bytes, currentPic);
+					}
+	                
+	                
+	            } catch (Exception e) {
+	               // log error
+	            	e.printStackTrace();
+	            	Log.e(TAG, "Error getting image "+ currentId + " from server");
+	            }
+		    }
+		} else {
+			// o solo es una imagen o es nulo
+			if(serverIdSpecieImages == null ||  serverIdSpecieImages == ""){
+				try {
+					result = getAndSaveImage(serverIdSpecieImages, bytes, currentPic).toString();
+				} catch (IOException e) {
+					e.printStackTrace();
+	            	Log.e(TAG, "Error getting image "+ serverIdSpecieImages+" from server");
+				}
+			}
+		}
+		
+		return result;
+	}
+
 	public void notifyToUser(NotificationManager mgr, int icon, String tickerText,  
 			String title, String description) {
 		Notification note = new Notification(icon, tickerText,System.currentTimeMillis());
-
 		PendingIntent i = PendingIntent.getActivity(ctx, 0,new Intent(ctx, RecordsMenuActivity.class), 0);
 
 		note.setLatestEventInfo(ctx,title,description, i);
@@ -287,8 +340,9 @@ public class GetTreatmentService extends Service {
 		    Treatment newTreatment = new Treatment();
 		    JSONArray treatmentImages = element.getJSONArray("images");
 		    
-		    String treatmentImagesIds = parseToStringPropertyInArray(treatmentImages, "id", "-");
+		    String serverTreatmentImagesIds = parseToStringPropertyInArray(treatmentImages, "id", "-");
 		    
+		    String treatmentImagesIds = downloadAndMakeImageIds(serverTreatmentImagesIds);
 		    newTreatment.setName(element.getString("name"));
 		    newTreatment.setDescription(element.getString("description"));
 		    newTreatment.setIdImages(treatmentImagesIds);
@@ -300,6 +354,20 @@ public class GetTreatmentService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		Toast.makeText(this, "Service Stopped ...", Toast.LENGTH_SHORT).show();
+	}
+	
+	private Long getAndSaveImage(String currentId, byte[]bytes, Bitmap currentPic) throws IOException{
+		Log.d(TAG, "Attempting to get and save image from server with id "+currentId);
+        InputStream in = new URL(URLHelper.SERVER_ADDRESS+"/image/getImageThumbnail/" + currentId).openStream();
+        bytes = IOUtils.toByteArray(in);
+        currentPic = BitmapFactory.decodeByteArray(bytes, 0,
+				bytes.length);
+        Image newImage = new Image(null, null,null,null, 
+        		"ServerPicture_"+currentId, new Date().toLocaleString(),
+				Base64Helper.encodeTobase64(currentPic));
+        bytes = null;
+        currentPic = null;
+        return saveImage(newImage);
 	}
 
 	public List<Sample> getSamplesToSolve() {
@@ -331,6 +399,17 @@ public class GetTreatmentService extends Service {
 
 		} finally {
 			samplesDataSource.close();
+		}
+	}
+	
+	public Long saveImage(Image img){
+		imageDataSource.open();
+		try {
+
+			return imageDataSource.doSaveImage(img);
+
+		} finally {
+			imageDataSource.close();
 		}
 	}
 	

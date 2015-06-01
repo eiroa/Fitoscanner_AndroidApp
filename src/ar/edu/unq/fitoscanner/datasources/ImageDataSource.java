@@ -87,7 +87,8 @@ public class ImageDataSource extends AbstractDataSource{
 		return exists;
 	}
 	
-	public void doSaveImage(Image image) {		
+	public Long doSaveImage(Image image) {
+		Long result =0L;
 		if (image != null)
 		{
 			Long id = image.getId();
@@ -105,14 +106,15 @@ public class ImageDataSource extends AbstractDataSource{
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
-			if(id!=null&&imageExists(image))
-			{
+			if(id!=null&&imageExists(image)){
 				getDatabase().update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
-			} else 
-			{
-				getDatabase().insert(ImageSQLiteTable.TABLE, null, values);	
+				result =id;
+			} else {
+				result = getDatabase().insert(ImageSQLiteTable.TABLE, null, values);
+				Log.d(TAG, "image saved");
 			}														
-		}		
+		}
+		return result;
 	}
 
 	
@@ -222,6 +224,11 @@ public class ImageDataSource extends AbstractDataSource{
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}		
+	}
+
+	public void saveImage(Image img) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

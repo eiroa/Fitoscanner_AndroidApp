@@ -62,10 +62,10 @@ public class SamplesDataSource extends AbstractDataSource{
 						//Quiero las enviadas
 						if(valid){
 							if(resolved){
-								//Quiero las enviadas resueltas
+								//Quiero las enviadas resueltas validas
 								if(sample.getSent() && sample.getResolved() && sample.getValid())samples.add(sample);
 							}else{
-								//Quiero las enviadas sin resolver
+								//Quiero las enviadas sin resolver validas
 								if(sample.getSent() && !sample.getResolved() && sample.getValid())samples.add(sample);
 							}
 						}else{

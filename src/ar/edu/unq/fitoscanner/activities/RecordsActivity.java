@@ -31,6 +31,7 @@ import android.graphics.Typeface;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract.Instances;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -167,7 +168,7 @@ public class RecordsActivity extends Activity{
 	private void setSendSampleButton(){
 		Button sendButton = (Button) findViewById(R.id.button_send);
 		sendButton.setTypeface(font);
-		if(!getSent ){
+		if(!getSent || !getValid){
 			sendButton.setOnClickListener(
 			         new View.OnClickListener() {
 			             @Override
@@ -336,6 +337,7 @@ public class RecordsActivity extends Activity{
     		                "application/x-www-form-urlencoded;charset=UTF-8");
     		       
     		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+    		       
     		   	   return httpclient.execute(httppost);
     			  
     		}catch (HttpHostConnectException e) {
@@ -371,6 +373,9 @@ public class RecordsActivity extends Activity{
 	        	Toast.makeText(context,"Muestra enviada al servidor, "
 						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
 	        	 sample.setSent(true);
+	        	 
+	        	 //La muestra pudo no haber sido resulta o invalida, permitir reenvio
+	        	 sample.setValid(true);
   			     saveSample(sample);
 	        }else{
 	        	Toast.makeText(context,"Error al enviar muestra, "
