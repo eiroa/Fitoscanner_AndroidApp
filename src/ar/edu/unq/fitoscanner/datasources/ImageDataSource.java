@@ -1,6 +1,7 @@
 package ar.edu.unq.fitoscanner.datasources;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -120,7 +121,7 @@ public class ImageDataSource extends AbstractDataSource{
 	
 
 
-	public Image getImageById(Long id) {
+	public Image getById(Long id) {
 		Image image = null;		
 		try {
 			String table = ImageSQLiteTable.TABLE;
@@ -136,7 +137,8 @@ public class ImageDataSource extends AbstractDataSource{
 				}
 			}				
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
+			e.printStackTrace();
+			Log.e(TAG, "Error getting image by id");
 		}
 		
 		return image;
@@ -230,6 +232,21 @@ public class ImageDataSource extends AbstractDataSource{
 		// TODO Auto-generated method stub
 		
 	}
+
+//	public List<Image> getImagesForIds(String idSpecieImages) {
+//		List<Image> result = new ArrayList<Image>();
+//		Image target;
+//		if (idSpecieImages.contains("-")) {
+//			for (String retval: idSpecieImages.split("-")){
+//				target = this.getById(Long.parseLong(retval));
+//				result.add(target);
+//		      }
+//		} else {
+//			target = this.getById(Long.parseLong(idSpecieImages));
+//			result.add(target);
+//		}
+//		return result;
+//	}
 
 
 

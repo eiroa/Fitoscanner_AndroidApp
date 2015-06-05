@@ -71,6 +71,10 @@ public class ConfigurationDataSource extends AbstractDataSource{
 		}		
 	}
 	
+	public Configuration getById(Long id){
+		return getConfigurationById(id.intValue());
+	}
+	
 	public Configuration getConfigurationById(Integer id) {
 		Configuration conf = null;		
 		try {

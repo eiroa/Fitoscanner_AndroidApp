@@ -193,5 +193,19 @@ public class Sample {
 	public void setValid(Boolean valid) {
 		this.valid = valid;
 	}
+
+	@Override
+	public String toString() {
+		return "Sample [id=" + id + ", originDate=" + originDate + ", images="
+				+ images + ", fieldName=" + fieldName + ", sampleName="
+				+ sampleName + ", hash=" + hash + ", sent=" + sent
+				+ ", treatmentResolution=" + treatmentResolution.toString()
+				+ ", locationData=" + locationData
+				+ ", requestTreatmentIntents=" + requestTreatmentIntents
+				+ ", minutesFromLastRequest=" + minutesFromLastRequest
+				+ ", resolved=" + resolved + ", valid=" + valid + "]";
+	}
+	
+	
 	
 }

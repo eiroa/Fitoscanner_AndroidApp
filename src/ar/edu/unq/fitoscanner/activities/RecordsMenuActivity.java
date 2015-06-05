@@ -51,10 +51,13 @@ public class RecordsMenuActivity extends Activity {
         Button goResolvedRecords = (Button)findViewById(R.id.buttonOpenResolvedRecords);
         goResolvedRecords.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View arg0) {
-            	Intent intent = new Intent(activity, RecordsActivity.class);
-            	intent.putExtra("getSent", true);
-            	intent.putExtra("getResolved", true);
-            	intent.putExtra("getValid", true);
+        		
+        		//Abrir resolucion de tratamiento.Muchachos, este es el ultimo paso. Lets go.
+        		
+            	Intent intent = new Intent(activity, TreatmentResolutionActivity.class);
+//            	intent.putExtra("getSent", true);
+//            	intent.putExtra("getResolved", true);
+//            	intent.putExtra("getValid", true);
         		activity.startActivity(intent);      		
             }
         });

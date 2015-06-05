@@ -16,10 +16,12 @@ import ar.edu.unq.fitoscanner.model.Sample;
 public class SamplesDataSource extends AbstractDataSource{
 	public final static String TAG = "SamplesDataSource";
 	private ImageDataSource imageDataSource;
+	private TreatmentResolutionDataSource trds;
 
 	public SamplesDataSource(Context context) {
 		setDbHelper(new FitoscannerSqLiteHelper(context));
 		this.imageDataSource = new ImageDataSource(context);
+		this.trds = new TreatmentResolutionDataSource(context);
 	}
 
 	private Sample cursorToSample(Cursor cursor) {
@@ -34,16 +36,22 @@ public class SamplesDataSource extends AbstractDataSource{
 		String country = cursor.getString(8);
 		String hash = cursor.getString(9);
 		Boolean sent = ( 1 == cursor.getInt(10)?true:false);
+		Long treatmentResolutionId = cursor.getLong(11);
 		Integer reqs = cursor.getInt(12);
 		Integer minutesPassed = cursor.getInt(13);
 		Boolean resolved = ( 1 == cursor.getInt(14)?true:false);
 		Boolean valid = ( 1 == cursor.getInt(15)?true:false);
+		
 		
 		Sample Sample = new Sample(id, date, null, field, 
 				sampleName,latitude,longitude,city,state,
 				country, hash,sent,null,reqs,
 				minutesPassed,resolved,valid);
 		
+		if(Sample.getResolved()){
+			trds.setDatabase(getDatabase());
+			Sample.setTreatmentResolution(trds.getById(treatmentResolutionId));
+		}
 		return Sample;
 	}
 
@@ -152,6 +160,7 @@ public class SamplesDataSource extends AbstractDataSource{
 		String country = sample.getLocationData().getCountry();
 		String hash = sample.getHash();
 		Integer sent = sample.getSent()?1:0;
+		// El tratamiento debe haber sido guardado antes para que exista el id
 		Long idTreatmentResolution = sample.getTreatmentResolution()!=null?sample.getTreatmentResolution().getId():null;
 		Integer reqs = sample.getRequestTreatmentIntents();
 		Integer minutesPassed = sample.getMinutesFromLastRequest();
@@ -235,7 +244,7 @@ public class SamplesDataSource extends AbstractDataSource{
 		return exists;
 	}
 
-	public Sample getSampleById(Long id) {
+	public Sample getById(Long id) {
 		Sample Sample = null;
 		try {
 			String table = SampleSQLiteTable.TABLE;

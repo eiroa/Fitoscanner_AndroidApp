@@ -1,6 +1,7 @@
 package ar.edu.unq.fitoscanner.datasources;
 
 import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import ar.edu.unq.fitoscanner.model.TreatmentResolution;
 public class TreatmentResolutionDataSource extends AbstractDataSource{
 	public final String TAG = "treatmentResolutionDateSource";
 	private TreatmentDataSource treatmentDataSource;
+	private ImageDataSource imageDataSource;
 	
 	public TreatmentDataSource getTreatmentDataSource() {
 		return treatmentDataSource;
@@ -43,6 +45,14 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 		tr.setIdSpecieImages(idSpecieImages);
 		tr.setIdTreatments(idTreatments);
 		
+		if(valid && resolved){
+			//get treatments and specie determined images
+			imageDataSource.setDatabase(getDatabase());
+			treatmentDataSource.setDatabase(getDatabase());
+			tr.setSpecieImages(imageDataSource.getEntitiesForIds(idSpecieImages));
+			tr.setTreatments(treatmentDataSource.getEntitiesForIds(idTreatments));
+		}
+		
 		return tr;
 	}
 	
@@ -71,6 +81,8 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 
 	public TreatmentResolutionDataSource(Context context) {
 		setDbHelper(new FitoscannerSqLiteHelper(context));
+		this.treatmentDataSource = new TreatmentDataSource(context);
+		this.imageDataSource = new ImageDataSource(context);
 	}
 	
 	public boolean treatmentResolutionExists(TreatmentResolution tr) {
@@ -96,7 +108,8 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 		return exists;
 	}
 	
-	public void doSaveTreatmentResolution(TreatmentResolution tr) {		
+	public Long doSaveTreatmentResolution(TreatmentResolution tr) {
+		Long result = 0L;
 		if (tr != null)
 		{
 
@@ -123,14 +136,16 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 			if(id!=null&&treatmentResolutionExists(tr))
 			{
 				getDatabase().update(TreatmentResolutionSQLiteTable.TABLE, values, TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_ID + " = " + id, null);
+				result = id;
 			} else 
 			{
-				getDatabase().insert(TreatmentResolutionSQLiteTable.TABLE, null, values);	
+				result = getDatabase().insert(TreatmentResolutionSQLiteTable.TABLE, null, values);	
 			}														
-		}		
+		}
+		return result;
 	}
 
-	public TreatmentResolution getTreatmentResolutionById(Long id) {
+	public TreatmentResolution getById(Long id) {
 		TreatmentResolution TR = null;		
 		try {
 			String table = TreatmentResolutionSQLiteTable.TABLE;
@@ -146,7 +161,8 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 				}
 			}				
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
+			e.printStackTrace();
+			Log.e(TAG,"Error getting treatment resolution");
 		}
 		return TR;
 	}

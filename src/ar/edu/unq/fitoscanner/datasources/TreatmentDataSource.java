@@ -13,6 +13,7 @@ import ar.edu.unq.fitoscanner.model.Treatment;
 
 public class TreatmentDataSource extends AbstractDataSource {
 	public final String TAG = "ImageDateSource";
+	private ImageDataSource imageDataSource;
 
 	
 	
@@ -41,6 +42,9 @@ public class TreatmentDataSource extends AbstractDataSource {
 				unit, unitType, frequency, frequencyType, extraLink1, extraLink2, extraLink3);
 
 		tr.setIdImages(idImages);
+		
+		imageDataSource.setDatabase(getDatabase());
+		tr.setImages(imageDataSource.getEntitiesForIds(idImages));
 
 		return tr;
 	}
@@ -71,6 +75,7 @@ public class TreatmentDataSource extends AbstractDataSource {
 
 	public TreatmentDataSource(Context context) {
 		setDbHelper(new FitoscannerSqLiteHelper(context));
+		this.imageDataSource = new ImageDataSource(context);
 	}
 
 	public boolean treatmentExists(Treatment tr) {
@@ -100,7 +105,8 @@ public class TreatmentDataSource extends AbstractDataSource {
 		return exists;
 	}
 
-	public void doSaveTreatment(Treatment tr) {
+	public Long doSaveTreatment(Treatment tr) {
+		Long result = 0L;
 		if (tr != null) {
 			Long id = tr.getId();
 			String name = tr.getName();
@@ -128,18 +134,16 @@ public class TreatmentDataSource extends AbstractDataSource {
 			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3,extraLink3);
 			if (id != null && treatmentExists(tr)) {
 				getDatabase().update(
-						TreatmentSQLiteTable.TABLE,
-						values,
-						TreatmentSQLiteTable.COLUMN_TREATMENT_ID
-								+ " = " + id, null);
+						TreatmentSQLiteTable.TABLE,values,TreatmentSQLiteTable.COLUMN_TREATMENT_ID+ " = " + id, null);
+				result = id;
 			} else {
-				getDatabase().insert(TreatmentSQLiteTable.TABLE,
-						null, values);
+				result = getDatabase().insert(TreatmentSQLiteTable.TABLE,null, values);
 			}
 		}
+		return result;
 	}
 
-	public Treatment getTreatmentById(Long id) {
+	public Treatment getById(Long id) {
 		Treatment TR = null;
 		try {
 			String table = TreatmentSQLiteTable.TABLE;
@@ -180,6 +184,11 @@ public class TreatmentDataSource extends AbstractDataSource {
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage());
 		}
+	}
+
+	public List<Treatment> getTreatmentsForIds(String idTreatments) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

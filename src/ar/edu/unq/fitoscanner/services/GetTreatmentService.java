@@ -45,6 +45,8 @@ import ar.edu.unq.fitoscanner.activities.RecordsMenuActivity;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.datasources.SamplesDataSource;
+import ar.edu.unq.fitoscanner.datasources.TreatmentDataSource;
+import ar.edu.unq.fitoscanner.datasources.TreatmentResolutionDataSource;
 import ar.edu.unq.fitoscanner.helpers.Base64Helper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Image;
@@ -59,6 +61,8 @@ public class GetTreatmentService extends Service {
 	private SamplesDataSource samplesDataSource;
 	private ConfigurationDataSource configurationDataSource;
 	private ImageDataSource imageDataSource;
+	private TreatmentResolutionDataSource trds;
+	private TreatmentDataSource tds;
 	public Integer timeRepetition = 100000; // ms
 	public String imei;
 	public Integer notifyId;
@@ -80,6 +84,8 @@ public class GetTreatmentService extends Service {
 		configurationDataSource = new ConfigurationDataSource(ctx);
 		samplesDataSource = new SamplesDataSource(ctx);
 		imageDataSource = new ImageDataSource(ctx);
+		tds = new TreatmentDataSource(ctx);
+		trds = new TreatmentResolutionDataSource(ctx);
 		notifyId = 100;
 		setImei();
 	}
@@ -181,9 +187,11 @@ public class GetTreatmentService extends Service {
 						tr.setMessage(serverMessage);
 						tr.setValid(valid);
 						tr.setResolved(resolved);
-						tr.setTreatments(treatmentsParsed);
 						tr.setIdSpecieImages(idSpecieImages);
-						
+						//guardamos los tratamientos y generamos el string con ids de base
+						tr.setIdTreatments(saveAndGetIdTreatments(treatmentsParsed));
+						//guardamos la resolucion y se lo seteamos al mismo objeto. el id ser usado al actualizar el sample
+						tr.setId(saveTreatmentResolution(tr));
 						notifyToUser(mgr, R.drawable.flechitader, "Resolucion de muestra", 
 								"Muestra resuelta", 
 								"Tratamiento obtenido para "+sample.getSampleName());
@@ -284,6 +292,20 @@ public class GetTreatmentService extends Service {
 		return parsedResult;
 	}
 	
+	public String saveAndGetIdTreatments(List<Treatment> treatmentsParsed) {
+		String result = "";
+		Long currentId;
+		for (Treatment treatment : treatmentsParsed) {
+			currentId = saveTreatment(treatment);
+			if(result == null || result == ""){
+				result =  result + currentId;
+			}else{
+				result = result + "-" + currentId;
+			}
+		}
+		return result;
+	}
+
 	public synchronized String downloadAndMakeImageIds(String serverIdSpecieImages) {
 		String result = "";
 		byte[] bytes = null;
@@ -293,6 +315,7 @@ public class GetTreatmentService extends Service {
 			
 			for (String currentId: serverIdSpecieImages.split("-")){
 				//Obtener imagen actual
+				Log.d(TAG, "Getting image with id = "+currentId+ " from serve");
 				
 				try {
 					if(result == null || result == ""){
@@ -312,6 +335,7 @@ public class GetTreatmentService extends Service {
 			// o solo es una imagen o es nulo
 			if(serverIdSpecieImages == null ||  serverIdSpecieImages == ""){
 				try {
+					Log.d(TAG, "Getting image with id = "+serverIdSpecieImages+ " from serve");
 					result = getAndSaveImage(serverIdSpecieImages, bytes, currentPic).toString();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -410,6 +434,24 @@ public class GetTreatmentService extends Service {
 
 		} finally {
 			imageDataSource.close();
+		}
+	}
+	
+	public Long saveTreatmentResolution(TreatmentResolution tr){
+		trds.open();
+		try {
+			return trds.doSaveTreatmentResolution(tr);
+		} finally {
+			trds.close();
+		}
+	}
+	
+	public Long saveTreatment(Treatment t){
+		tds.open();
+		try {
+			return tds.doSaveTreatment(t);
+		} finally {
+			tds.close();
 		}
 	}
 	
