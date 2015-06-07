@@ -196,10 +196,11 @@ public class Sample {
 
 	@Override
 	public String toString() {
+		
 		return "Sample [id=" + id + ", originDate=" + originDate + ", images="
 				+ images + ", fieldName=" + fieldName + ", sampleName="
 				+ sampleName + ", hash=" + hash + ", sent=" + sent
-				+ ", treatmentResolution=" + treatmentResolution.toString()
+				+ ", treatmentResolution=" 
 				+ ", locationData=" + locationData
 				+ ", requestTreatmentIntents=" + requestTreatmentIntents
 				+ ", minutesFromLastRequest=" + minutesFromLastRequest

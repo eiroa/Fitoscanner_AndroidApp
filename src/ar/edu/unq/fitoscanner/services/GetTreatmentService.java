@@ -399,7 +399,6 @@ public class GetTreatmentService extends Service {
 		try {
 			//preguntar por muestras enviadas
 			 List <Sample> result = samplesDataSource.getSamplesSentUnresolved();
-			 result.addAll(samplesDataSource.getSamplesUnsent());
 			 return result;
 		} finally {
 			samplesDataSource.close();

@@ -1,4 +1,15 @@
 <resources>
+    
+    <style name="spinner_style" >
+        <item name="android:background">@drawable/gradient_spinner</item>
+            <item name="android:layout_marginLeft">5dp</item>
+            <item name="android:layout_marginRight">5dp</item>
+            <item name="android:layout_marginBottom">5dp</item>
+            <item name="android:paddingLeft">8dp</item>
+            <item name="android:paddingTop">5dp</item>
+            <item name="android:paddingBottom">5dp</item>
+            <item name="android:popupBackground">#DFFFFFFF</item>
+        </style>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
