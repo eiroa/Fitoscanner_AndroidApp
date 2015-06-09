@@ -36,15 +36,16 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp" >
+            android:padding="7dp" >
 
             <LinearLayout
+            android:id="@+id/sampleActionButtons_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="5dp" >
+                android:padding="4dp" >
 
                 <Button
                     android:id="@+id/button_deleteSample"
@@ -53,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_shape_1"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="9dp"
                     android:shadowColor="#BFBFBF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -69,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_shape_1"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="9dp"
                     android:shadowColor="#BFBFBF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -78,16 +79,205 @@
                     android:textColor="#BDFFC8"
                     android:textSize="15sp" />
             </LinearLayout>
+            <LinearLayout
+            	android:id="@+id/spinnerSection"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp" >
+                
+                <TextView
+                	android:id="@+id/selectSampleText"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+                	android:padding="3dp"
+                	android:shadowDx="1"
+                	android:shadowDy="1"
+                	android:text="Seleccione una muestra:"
+                	android:textColor="@color/white"
+                	android:textStyle="bold" />
+                	
+              <ScrollView
+       				android:id="@+id/scrollView1"
+        			android:layout_width="match_parent"
+        			android:layout_height="wrap_content" >
+              		  <Spinner
+       				 		android:id="@+id/spinner1"
+        			 		android:layout_width="match_parent"
+        			 		android:layout_height="wrap_content"
+        			 		style="@style/spinner_style"
+        			 		android:textColor="@color/yellowFont"
+        			 		android:textSize="20sp"
+        			 		android:prompt="@string/spinner_prompt" />
+        	  </ScrollView>
+            </LinearLayout>
+            <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_sampleNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Nombre de Muestra:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_sampleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_latAndLonLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Latitud y longitud:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_latAndLon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" 
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_cityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Localidad: "
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" 
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_stateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Región: "
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" 
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_gravity="left"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/savedSample_countryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="País:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="text" 
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="2dp" >
+
+            <TextView
+                android:id="@+id/savedSample_originDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Fecha:"
+                android:textColor="@color/yellowFont" />
+
+            <TextView
+                android:id="@+id/savedSample_originDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:paddingBottom="1dp"
+                android:text="Date"
+                android:textSize="14dp" 
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:padding="5dp" >
+                android:padding="4dp" >
 
                 <ListView
-                    android:id="@+id/savedSamplesList"
+                    android:id="@+id/savedSampleImagesList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
