@@ -542,6 +542,8 @@ public class RecordsActivity extends Activity{
 	        	 
 	        	 //La muestra pudo no haber sido resulta o invalida, permitir reenvio
 	        	 sample.setValid(true);
+	        	 sample.setMinutesFromLastRequest(0);
+	        	 sample.setRequestTreatmentIntents(0);
   			     saveSample(sample);
 	        }else{
 	        	Toast.makeText(context,"Error al enviar muestra, "

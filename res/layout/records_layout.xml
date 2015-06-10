@@ -49,10 +49,11 @@
 
                 <Button
                     android:id="@+id/button_deleteSample"
-                    style="?android:attr/buttonStyleToggle"
+                    style="?android:attr/buttonStyleSmall"
+                    android:clickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_shape_1"
+                    android:background="@drawable/selector_button_level"
                     android:gravity="center"
                     android:padding="9dp"
                     android:shadowColor="#BFBFBF"
@@ -65,10 +66,11 @@
 
                 <Button
                     android:id="@+id/button_send"
-                    style="?android:attr/buttonStyleToggle"
+                    style="?android:attr/buttonStyleSmall"
+                    android:clickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_shape_1"
+                    android:background="@drawable/selector_button_level"
                     android:gravity="center"
                     android:padding="9dp"
                     android:shadowColor="#BFBFBF"
@@ -78,6 +80,7 @@
                     android:text="Enviar"
                     android:textColor="#BDFFC8"
                     android:textSize="15sp" />
+                    
             </LinearLayout>
             <LinearLayout
             	android:id="@+id/spinnerSection"
