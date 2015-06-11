@@ -26,7 +26,7 @@
                 android:padding="3dp"
                 android:shadowDx="1"
                 android:shadowDy="1"
-                android:text="RESOLUCIÓN DE MUESTRA"
+                android:text="TRATAMIENTO"
                 android:textColor="@color/greenLeaf"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -40,8 +40,6 @@
             android:padding="5dp" >
 
            
-           
-       		
             <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -49,20 +47,18 @@
             android:gravity="left" >
 
             <TextView
-                android:id="@+id/specieName_label"
+                android:id="@+id/treatmentName_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:padding="5dp"
-                android:text="Nombre de especie determinada:"
+                android:text="Nombre:"
                 android:textColor="@color/yellowFont" />
 
             <TextView
-                android:id="@+id/specieName_text"
+                android:id="@+id/treatmentName_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
                 android:focusable="false"
                 android:inputType="text"
                 android:textColor="@color/white" />
@@ -75,33 +71,7 @@
             android:gravity="left" >
 
             <TextView
-                android:id="@+id/specieScientificName_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Nombre científico:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/specieScientificName_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="text" 
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/specieDescription_label"
+                android:id="@+id/treatmentDescription_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
@@ -116,7 +86,7 @@
         			android:layout_width="wrap_content"
         			android:layout_height="120dip" >
             <TextView
-                android:id="@+id/specieDescription_text"
+                android:id="@+id/treatmentDescription_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"/>
@@ -140,35 +110,11 @@
                 android:padding="4dp" >
 
                 <ListView
-                    android:id="@+id/specieImagesList"
+                    android:id="@+id/treatmentImagesList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             
-             <LinearLayout
-                android:id="@+id/spinnerSection"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp" >
-                
-                	
-              <ScrollView
-       				android:id="@+id/scrollView1"
-        			android:layout_width="match_parent"
-        			android:layout_height="wrap_content" >
-              		  <Spinner
-       				 		android:id="@+id/spinner1"
-        			 		android:layout_width="match_parent"
-        			 		android:layout_height="wrap_content"
-        			 		style="@style/spinner_style"
-        			 		android:textColor="@color/yellowFont"
-        			 		android:textSize="20sp"
-        			 		android:prompt="@string/spinner_prompt" />
-        	  </ScrollView>
-            </LinearLayout>
             
         </LinearLayout>
 

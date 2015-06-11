@@ -54,7 +54,7 @@ public class RecordsMenuActivity extends Activity {
         		
         		//Abrir resolucion de tratamiento.Muchachos, este es el ultimo paso. Lets go.
         		
-            	Intent intent = new Intent(activity, TreatmentResolutionActivity.class);
+            	Intent intent = new Intent(activity, ResolvedSamples.class);
 //            	intent.putExtra("getSent", true);
 //            	intent.putExtra("getResolved", true);
 //            	intent.putExtra("getValid", true);

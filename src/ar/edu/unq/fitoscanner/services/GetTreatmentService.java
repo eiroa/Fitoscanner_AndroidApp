@@ -151,9 +151,9 @@ public class GetTreatmentService extends Service {
 							+ " , Server message is: " + serverMessage);
 					if (!resolved) {
 						//Muestra sin resolver aun, continuar.
-						notifyToUser(mgr, R.drawable.flechitader, "Resolucion de muestra", 
-								"Muestra "+sample.getSampleName(), 
-								"Muestra "+sample.getSampleName()+ " sin respuesta aún");
+//						notifyToUser(mgr, R.drawable.flechitader, "Resolucion de muestra", 
+//								"Muestra "+sample.getSampleName(), 
+//								"Muestra "+sample.getSampleName()+ " sin respuesta aún");
 						sample.setSent(true);
 						sample.setResolved(false);
 						

@@ -72,12 +72,12 @@ import ar.edu.unq.fitoscanner.model.Sample;
 import ar.edu.unq.fitoscanner.model.Treatment;
 import ar.edu.unq.fitoscanner.model.TreatmentResolution;
 
-public class TreatmentResolutionActivity extends Activity{
+public class TreatmentActivity extends Activity{
 	public final static String TAG = "RecordsActivity";
 	ImageDataSource imageDataSource;
 	TreatmentResolutionDataSource trds;
 	TreatmentDataSource tds;
-	private TreatmentResolution treatmentResolution;
+	private Treatment treatment;
 	private List<Treatment> treatments = new ArrayList<Treatment>();
 	private Long idTreatmentResolution;
 	private final Context context = this;
@@ -88,15 +88,15 @@ public class TreatmentResolutionActivity extends Activity{
 	private List<Image> currentTreatmentImages;
 	private Treatment currentTreatment;
 	private HashMap<String, Treatment> treatmentMap;
-	private ListView listviewTreatmentSpecie;
-	private CustomImageListViewAdapter customAdapterSpecieImages;
+	private ListView listviewTreatmentTreatment;
+	private CustomImageListViewAdapter customAdapterTreatmentImages;
 	private Bitmap imageSelected;
-	private TextView txtSpecieNameLabel;
-	private TextView txtSpecieScientificNameLabel;
-	private TextView txtSpecieDescriptionLabel;
-	private TextView txtSpecieName;
-	private TextView txtSpecieScientificName;
-	private TextView txtSpecieDescription;
+	private TextView txtTreatmentNameLabel;
+	private TextView txtTreatmentScientificNameLabel;
+	private TextView txtTreatmentDescriptionLabel;
+	private TextView txtTreatmentName;
+	private TextView txtTreatmentScientificName;
+	private TextView txtTreatmentDescription;
 	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,41 +106,30 @@ public class TreatmentResolutionActivity extends Activity{
         tds = new TreatmentDataSource(this);
         currentTreatmentImages = new ArrayList<Image>();
         treatmentMap = new HashMap<String, Treatment>();
-        idTreatmentResolution = getIntent().getLongExtra("idTreatmentResolution", 0L);
-        getTreatmentResolution();
+        treatment = (Treatment) getIntent().getSerializableExtra("treatment");
         
     }
 	
 	private void generateTreatmentsView(){
-		setContentView(R.layout.treatment_resolution_layout);
-        treatments = treatmentResolution.getTreatments();
+		setContentView(R.layout.treatment_layout);
         
-        //check that we really have them.
         
-        Log.d(TAG, " showing treatments obtained");
-        for (Treatment r : treatments) {
-			Log.d(TAG, "treatment => "+r.toString());
-		}
-        
-        //Spinner seleccionador de muestras
-        setSpinnerSelector();
         initiateTextFields();
         configureTextFields();
-        listviewTreatmentSpecie = (ListView) findViewById(R.id.specieImagesList);
+        listviewTreatmentTreatment = (ListView) findViewById(R.id.treatmentImagesList);
         
         
-        //Anulamos elementos de muestra al inicio del activity
-        customAdapterSpecieImages = new CustomImageListViewAdapter(
+        customAdapterTreatmentImages = new CustomImageListViewAdapter(
 				getApplicationContext(),
-				R.layout.samplepreview_fragment, treatmentResolution.getSpecieImages());
-        listviewTreatmentSpecie.setAdapter(customAdapterSpecieImages); 
+				R.layout.samplepreview_fragment, treatment.getImages());
+        listviewTreatmentTreatment.setAdapter(customAdapterTreatmentImages); 
          
-        listviewTreatmentSpecie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listviewTreatmentTreatment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
            @Override
            public void onItemClick(AdapterView<?> parent, final View view,
                int position, long id) {
-        	   Image i = (Image)listviewTreatmentSpecie.getAdapter().getItem(position);
+        	   Image i = (Image)listviewTreatmentTreatment.getAdapter().getItem(position);
         	   
         	    imageSelected =Base64Helper.decodeBase64(i.getBase64());
         	    final Dialog builder = new Dialog(context);
@@ -161,24 +150,20 @@ public class TreatmentResolutionActivity extends Activity{
 	}
 	
 	private void initiateTextFields(){
-		txtSpecieNameLabel = (TextView) findViewById(R.id.specieName_label);
-        txtSpecieScientificNameLabel = (TextView) findViewById(R.id.specieScientificName_label);
-        txtSpecieDescriptionLabel= (TextView) findViewById(R.id.specieDescription_label);
+		txtTreatmentNameLabel = (TextView) findViewById(R.id.treatmentName_label);
+        txtTreatmentDescriptionLabel= (TextView) findViewById(R.id.treatmentDescription_label);
         
-        txtSpecieName = (TextView) findViewById(R.id.specieName_text);
-        txtSpecieScientificName = (TextView) findViewById(R.id.specieScientificName_text);
-        txtSpecieDescription = (TextView) findViewById(R.id.specieDescription_text);
+        txtTreatmentName = (TextView) findViewById(R.id.treatmentName_text);
+        txtTreatmentDescription = (TextView) findViewById(R.id.treatmentDescription_text);
 	}
 	
 	
 	private void setTextFieldsVisibility(Integer v){
-		txtSpecieNameLabel.setVisibility(v);
-		txtSpecieScientificNameLabel.setVisibility(v);
-        txtSpecieDescriptionLabel.setVisibility(v);
+		txtTreatmentNameLabel.setVisibility(v);
+        txtTreatmentDescriptionLabel.setVisibility(v);
         
-        txtSpecieName.setVisibility(v);
-        txtSpecieScientificName.setVisibility(v);
-        txtSpecieDescription.setVisibility(v);
+        txtTreatmentName.setVisibility(v);
+        txtTreatmentDescription.setVisibility(v);
 	}
 	
 	private void anulateAllTextViews(){
@@ -188,63 +173,12 @@ public class TreatmentResolutionActivity extends Activity{
 	private void configureTextFields(){
         setTextFieldsVisibility(View.VISIBLE);
         
-        txtSpecieName.setText(treatmentResolution.getSpecieName());
-        txtSpecieScientificName.setText(treatmentResolution.getSpecieScientificName());
-        txtSpecieDescription.setText(treatmentResolution.getSpecieDescription());
+        txtTreatmentName.setText(treatment.getName());
+        txtTreatmentDescription.setText(treatment.getDescription());
         
 	}
 	
-	public void setSpinnerSelector(){
-		spinner1 = (Spinner) findViewById(R.id.spinner1);
-        List<String> list = new ArrayList<String>();
-        
-        list.add("Seleccione un tratamiento");
-        for (Treatment r : treatments) {
-			list.add(r.getName());
-			treatmentMap.put(r.getName(), r);
-		}
-        
-         
-        if(treatments.isEmpty()){
-        	
-        	View buttons = (View) findViewById(R.id.sampleActionButtons_layout);
-        	View spinner = (View) findViewById(R.id.spinner1);
-        	spinner.setVisibility(View.GONE);
-        	buttons.setVisibility(View.GONE);
-        }else{
-        	ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
-            (this, R.layout.custom_spinner_item,list);
-        	dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        	spinner1.setAdapter(dataAdapter);
-        	//seter comportamiento al seleccionar elemento de spinner
-        	addListenerOnSpinnerItemSelection();
-        }
-	}
 	
-	public void addListenerOnSpinnerItemSelection(){
-        
-        spinner1.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(final AdapterView<?> parent, View view,
-					final int position, long id) {
-				if(!parent.getItemAtPosition(position).toString().equals("Seleccione un tratamiento")){
-					currentTreatment = treatmentMap.get(parent.getItemAtPosition(position).toString());
-					Intent intent = new Intent(context, TreatmentActivity.class);
-				    intent.putExtra("treatment", currentTreatment);
-					context.startActivity(intent);  
-				}
-				
-				
-				 
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				
-			}
-		});
-	}
 
 	private void setDeleteSampleButton(){
 		Button deleteButton = (Button) findViewById(R.id.button_deleteSample);
@@ -288,19 +222,6 @@ public class TreatmentResolutionActivity extends Activity{
 		generateTreatmentsView();
 	}
 	
-	/**
-	 * Obtiene las muestras resueltas
-	 */
-	public void getTreatmentResolution(){
-		trds.open();
-    	try
-    	{
-    		treatmentResolution = trds.getById(idTreatmentResolution);
-    	}
-    	finally{
-    		trds.close();
-    	}
-	}
 	
 	
 	

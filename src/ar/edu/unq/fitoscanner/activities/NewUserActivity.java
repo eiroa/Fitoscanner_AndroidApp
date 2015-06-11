@@ -44,6 +44,11 @@ public class NewUserActivity extends Activity {
 	private final Context context = this;
 	ConfigurationDataSource configurationDataSource;
 	Configuration conf;
+	EditText userNickField;
+	EditText userPassField;
+	EditText userRepeatPassField;
+	EditText userNameField;
+	EditText userSurnameField;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -62,11 +67,11 @@ public class NewUserActivity extends Activity {
 		TextView userNameTxt = (TextView) findViewById(R.id.newUserNameText);
 		TextView userSurnameTxt = (TextView) findViewById(R.id.newUserSurnameText);
 		
-		final EditText userNickField= (EditText) findViewById(R.id.newUserNickField);
-		final EditText userPassField = (EditText) findViewById(R.id.newUserPassField);
-		final EditText userRepeatPassField= (EditText) findViewById(R.id.newUserRepeatPassField);
-		final EditText userNameField = (EditText) findViewById(R.id.newUserNameField);
-		final EditText userSurnameField = (EditText) findViewById(R.id.newUserSurnameField);
+		userNickField= (EditText) findViewById(R.id.newUserNickField);
+		userPassField = (EditText) findViewById(R.id.newUserPassField);
+		userRepeatPassField= (EditText) findViewById(R.id.newUserRepeatPassField);
+		userNameField = (EditText) findViewById(R.id.newUserNameField);
+		userSurnameField = (EditText) findViewById(R.id.newUserSurnameField);
 
 		Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
 		userNickTxt.setTypeface(font);
@@ -82,6 +87,10 @@ public class NewUserActivity extends Activity {
 			public void onClick(View arg0) {
 				if( ! (userPassField.getText().toString().equals(userRepeatPassField.getText().toString()) )){
 					Toast.makeText(context,"Las contraseñas no coinciden",Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(!validatefields()){
+					Toast.makeText(context,"Debe completar todos los campos",Toast.LENGTH_SHORT).show();
 					return;
 				}
 				
@@ -168,6 +177,18 @@ public class NewUserActivity extends Activity {
 		});
 	}
 	
+	private Boolean validatefields(){
+		return fieldNotNull(userNickField) &&
+				fieldNotNull(userPassField) &&
+				fieldNotNull(userRepeatPassField) &&
+				fieldNotNull(userNameField) &&
+				fieldNotNull(userSurnameField);
+				
+	}
+	
+	private Boolean fieldNotNull(EditText et){
+		return et.getText().toString() != null && !et.getText().toString().equals("") ;
+	}
 	
 	private void registerUser(){
 		
