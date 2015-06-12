@@ -265,8 +265,8 @@ int id action_context_bar 0x7f0a001d
 int id action_menu_divider 0x7f0a0002
 int id action_menu_presenter 0x7f0a0003
 int id action_mode_close_button 0x7f0a0024
-int id action_settings 0x7f0a0096
-int id activateSampleLocation 0x7f0a0098
+int id action_settings 0x7f0a0097
+int id activateSampleLocation 0x7f0a0099
 int id activity_chooser_view_content 0x7f0a0025
 int id always 0x7f0a000f
 int id beginning 0x7f0a0016
@@ -288,7 +288,7 @@ int id checkbox 0x7f0a002d
 int id collapseActionView 0x7f0a0010
 int id container 0x7f0a003c
 int id createUserButton 0x7f0a0044
-int id deactivateSampleLocation 0x7f0a0097
+int id deactivateSampleLocation 0x7f0a0098
 int id default_activity_button 0x7f0a0028
 int id dialog 0x7f0a0014
 int id disableHome 0x7f0a0009
@@ -385,7 +385,7 @@ int id showHome 0x7f0a000c
 int id showTitle 0x7f0a000d
 int id specieDescription_label 0x7f0a0093
 int id specieDescription_text 0x7f0a0094
-int id specieImagesList 0x7f0a0095
+int id specieImagesList 0x7f0a0096
 int id specieName_label 0x7f0a008f
 int id specieName_text 0x7f0a0090
 int id specieScientificName_label 0x7f0a0091
@@ -397,6 +397,7 @@ int id submit_area 0x7f0a0039
 int id tabMode 0x7f0a0008
 int id takePicTitle 0x7f0a0088
 int id textView1 0x7f0a0048
+int id textView2 0x7f0a0095
 int id title 0x7f0a002b
 int id top_action_bar 0x7f0a0020
 int id treatmentDescription_label 0x7f0a008c

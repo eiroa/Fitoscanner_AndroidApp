@@ -412,6 +412,7 @@ public class ResolvedSamples extends Activity{
 	public void openSampleResolution(){
 		Intent intent = new Intent(context, TreatmentResolutionActivity.class);
     	intent.putExtra("idTreatmentResolution", currentSample.getTreatmentResolution().getId());
+//    	Log.d(TAG, "Opening treatment resolution = "+currentSample.getTreatmentResolution().toString());
 		context.startActivity(intent);   
 	}
 	

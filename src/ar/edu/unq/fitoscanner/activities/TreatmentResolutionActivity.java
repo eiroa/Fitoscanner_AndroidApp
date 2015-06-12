@@ -104,10 +104,6 @@ public class TreatmentResolutionActivity extends Activity{
         imageDataSource = new ImageDataSource(this);
         trds = new TreatmentResolutionDataSource(this);
         tds = new TreatmentDataSource(this);
-        currentTreatmentImages = new ArrayList<Image>();
-        treatmentMap = new HashMap<String, Treatment>();
-        idTreatmentResolution = getIntent().getLongExtra("idTreatmentResolution", 0L);
-        getTreatmentResolution();
         
     }
 	
@@ -119,7 +115,7 @@ public class TreatmentResolutionActivity extends Activity{
         
         Log.d(TAG, " showing treatments obtained");
         for (Treatment r : treatments) {
-			Log.d(TAG, "treatment => "+r.toString());
+//			Log.d(TAG, "treatment => "+r.toString());
 		}
         
         //Spinner seleccionador de muestras
@@ -142,7 +138,11 @@ public class TreatmentResolutionActivity extends Activity{
                int position, long id) {
         	   Image i = (Image)listviewTreatmentSpecie.getAdapter().getItem(position);
         	   
-        	    imageSelected =Base64Helper.decodeBase64(i.getBase64());
+        	   //Optimizacion de ram
+        	   // Queremos ver bien la imagen, por lo tanto, escalamos la imagen al tamaño del dispositivo
+        	   imageSelected =Base64Helper.decodeScaledBase64(i.getBase64(),
+       	    		getWindowManager().getDefaultDisplay().getWidth(),
+       	    		getWindowManager().getDefaultDisplay().getWidth());
         	    final Dialog builder = new Dialog(context);
         	    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
         	    builder.setContentView(R.layout.image_popup);
@@ -199,9 +199,11 @@ public class TreatmentResolutionActivity extends Activity{
         List<String> list = new ArrayList<String>();
         
         list.add("Seleccione un tratamiento");
+        int i = 1;
         for (Treatment r : treatments) {
-			list.add(r.getName());
-			treatmentMap.put(r.getName(), r);
+			list.add(i+". "+r.getName());
+			treatmentMap.put(i+". "+r.getName(), r);
+			i++;
 		}
         
          
@@ -230,13 +232,26 @@ public class TreatmentResolutionActivity extends Activity{
 					final int position, long id) {
 				if(!parent.getItemAtPosition(position).toString().equals("Seleccione un tratamiento")){
 					currentTreatment = treatmentMap.get(parent.getItemAtPosition(position).toString());
-					Intent intent = new Intent(context, TreatmentActivity.class);
-				    intent.putExtra("treatment", currentTreatment);
-					context.startActivity(intent);  
+					try {
+						Intent intent = new Intent(context, TreatmentActivity.class);
+					    intent.putExtra("idTreatment", currentTreatment.getId());
+					    intent.putExtra("idTreatmentResolution", idTreatmentResolution);
+						onTrimMemory(TRIM_MEMORY_UI_HIDDEN);
+						customAdapterSpecieImages.clear();
+						listviewTreatmentSpecie.destroyDrawingCache();
+						currentTreatment = null;
+						System.gc();
+					    
+						context.startActivity(intent); 
+					} catch (OutOfMemoryError e) {
+						finish();
+						Intent intent = new Intent(context, TreatmentActivity.class);
+					    intent.putExtra("idTreatment", currentTreatment.getId());
+					    intent.putExtra("idTreatmentResolution", idTreatmentResolution);
+						context.startActivity(intent);
+					}
+					 
 				}
-				
-				
-				 
 			}
 
 			@Override
@@ -285,11 +300,15 @@ public class TreatmentResolutionActivity extends Activity{
 	@Override
 	protected void onStart() {
 		super.onStart();
+		currentTreatmentImages = new ArrayList<Image>();
+        treatmentMap = new HashMap<String, Treatment>();
+        idTreatmentResolution = (Long) getIntent().getLongExtra("idTreatmentResolution", 0L);
+        getTreatmentResolution();
 		generateTreatmentsView();
 	}
 	
 	/**
-	 * Obtiene las muestras resueltas
+	 * Obtiene la resolucion por id
 	 */
 	public void getTreatmentResolution(){
 		trds.open();

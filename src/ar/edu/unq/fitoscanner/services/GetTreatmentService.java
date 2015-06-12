@@ -63,7 +63,7 @@ public class GetTreatmentService extends Service {
 	private ImageDataSource imageDataSource;
 	private TreatmentResolutionDataSource trds;
 	private TreatmentDataSource tds;
-	public Integer timeRepetition = 100000; // ms
+	public Integer timeRepetition = 300000; // ms
 	public String imei;
 	public Integer notifyId;
 
@@ -166,7 +166,7 @@ public class GetTreatmentService extends Service {
 						
 						String serverIdSpecieImages = parseToStringPropertyInArray(specieImages, "id", "-");
 						
-						String idSpecieImages = downloadAndMakeImageIds(serverIdSpecieImages);
+						String idSpecieImages = downloadAndMakeImageIds("Imagen_Especie",serverIdSpecieImages);
 												
 						String specieName = specie.getString("name");
 						String specieScientificName = specie.getString("scientific_name");
@@ -211,8 +211,12 @@ public class GetTreatmentService extends Service {
 				notifyId = notifyId + 1;
 				
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				//Ante un error obteniendo la muestra, reseteamos los flags y una posible resolucion fallida
+				Log.e(TAG, "Error resolving sample "+sample.getSampleName());
+				sample.setResolved(false);
+				sample.setSent(true);
+				sample.setTreatmentResolution(null);
 			}
 		}
 		
@@ -306,7 +310,7 @@ public class GetTreatmentService extends Service {
 		return result;
 	}
 
-	public synchronized String downloadAndMakeImageIds(String serverIdSpecieImages) {
+	public synchronized String downloadAndMakeImageIds(String prefix,String serverIdSpecieImages) {
 		String result = "";
 		byte[] bytes = null;
 		Bitmap currentPic = null;
@@ -319,9 +323,9 @@ public class GetTreatmentService extends Service {
 				
 				try {
 					if(result == null || result == ""){
-						result =  result + getAndSaveImage(currentId, bytes, currentPic);
+						result =  result + getAndSaveImage(prefix,currentId, bytes, currentPic);
 					}else{
-						result = result + "-" + getAndSaveImage(currentId, bytes, currentPic);
+						result = result + "-" + getAndSaveImage(prefix,currentId, bytes, currentPic);
 					}
 	                
 	                
@@ -333,10 +337,10 @@ public class GetTreatmentService extends Service {
 		    }
 		} else {
 			// o solo es una imagen o es nulo
-			if(serverIdSpecieImages == null ||  serverIdSpecieImages == ""){
+			if(serverIdSpecieImages != null ||  serverIdSpecieImages != ""){
 				try {
 					Log.d(TAG, "Getting image with id = "+serverIdSpecieImages+ " from serve");
-					result = getAndSaveImage(serverIdSpecieImages, bytes, currentPic).toString();
+					result = getAndSaveImage(prefix,serverIdSpecieImages, bytes, currentPic).toString();
 				} catch (IOException e) {
 					e.printStackTrace();
 	            	Log.e(TAG, "Error getting image "+ serverIdSpecieImages+" from server");
@@ -366,7 +370,7 @@ public class GetTreatmentService extends Service {
 		    
 		    String serverTreatmentImagesIds = parseToStringPropertyInArray(treatmentImages, "id", "-");
 		    
-		    String treatmentImagesIds = downloadAndMakeImageIds(serverTreatmentImagesIds);
+		    String treatmentImagesIds = downloadAndMakeImageIds("Imagen_tratamiento_",serverTreatmentImagesIds);
 		    newTreatment.setName(element.getString("name"));
 		    newTreatment.setDescription(element.getString("description"));
 		    newTreatment.setIdImages(treatmentImagesIds);
@@ -380,14 +384,14 @@ public class GetTreatmentService extends Service {
 		Toast.makeText(this, "Service Stopped ...", Toast.LENGTH_SHORT).show();
 	}
 	
-	private Long getAndSaveImage(String currentId, byte[]bytes, Bitmap currentPic) throws IOException{
+	private Long getAndSaveImage(String prefix,String currentId, byte[]bytes, Bitmap currentPic) throws IOException{
 		Log.d(TAG, "Attempting to get and save image from server with id "+currentId);
         InputStream in = new URL(URLHelper.SERVER_ADDRESS+"/image/getImageThumbnail/" + currentId).openStream();
         bytes = IOUtils.toByteArray(in);
         currentPic = BitmapFactory.decodeByteArray(bytes, 0,
 				bytes.length);
         Image newImage = new Image(null, null,null,null, 
-        		"ServerPicture_"+currentId, new Date().toLocaleString(),
+        		prefix+currentId, new Date().toLocaleString(),
 				Base64Helper.encodeTobase64(currentPic));
         bytes = null;
         currentPic = null;

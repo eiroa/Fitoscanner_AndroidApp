@@ -25,8 +25,15 @@ public class Base64Helper {
 	{
 	    byte[] decodedByte = Base64.decode(input, 0);
 	    
+	    return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+	}
+	
+	public static Bitmap decodeScaledBase64(String input, int width, int height) 
+	{
+	    byte[] decodedByte = Base64.decode(input, 0);
+	    
 	    Bitmap bm = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
-	    return bm;
+	    return Bitmap.createScaledBitmap(bm,width,height,true);
 	}
 
 }

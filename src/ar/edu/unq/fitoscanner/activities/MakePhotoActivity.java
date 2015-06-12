@@ -59,6 +59,7 @@ import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
 import ar.edu.unq.fitoscanner.model.Image;
+import ar.edu.unq.fitoscanner.model.LocationData;
 import ar.edu.unq.fitoscanner.model.Sample;
 
 @SuppressLint("NewApi")
@@ -79,7 +80,7 @@ public class MakePhotoActivity extends Activity {
 	private Typeface font;
 	private boolean usesLocation;
 	private boolean saving; 
-	private Activity activity = this;
+	final private Context activity = this;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -152,20 +153,25 @@ public class MakePhotoActivity extends Activity {
 					if (previews.size() < 3) {
 						Toast.makeText(
 								getApplicationContext(),
-								"Atencion, de momento, la muestra debe contener al menos 3 imagenes",
-								Toast.LENGTH_LONG).show();
-						
+								"Atencion, la muestra debe contener al menos 3 imagenes",
+								Toast.LENGTH_SHORT).show();
 					} else {
-						if(sampleName.equals("")|| sampleName==null){
+						if(previews.size() > 7){
 							Toast.makeText(
 									getApplicationContext(),
-									"Aplique un nombre a la muestra por favor",
-									Toast.LENGTH_LONG).show();
+									"Atencion, la muestra no puede superar las 7 imagenes",
+									Toast.LENGTH_SHORT).show();
 						}else{
-							processNewSample();
-							saving =true;
+							if(sampleName.equals("")|| sampleName==null){
+								Toast.makeText(
+										getApplicationContext(),
+										"Aplique un nombre a la muestra por favor",
+										Toast.LENGTH_LONG).show();
+							}else{
+								processNewSample();
+								saving =true;
+							}
 						}
-						
 					}
 				}
 			}
@@ -199,6 +205,7 @@ public class MakePhotoActivity extends Activity {
 	
 	private void processNewSample(){
 		new NewSampleTask().execute("");
+		onBackPressed();
 	}
 
 	/**
@@ -228,33 +235,16 @@ public class MakePhotoActivity extends Activity {
 			hash = hash+SecurityHelper.toSHA256(base64full);
 		}
 		newSample.setHash(SecurityHelper.toSHA256(hash));
-		if(this.usesLocation){
-			Log.d(TAG, "Attempting to obtain location for sample " + sampleName);
-			final Semaphore sm = new Semaphore(1);
-			//Debido a que estamos en un asyncTask, debemos usar un runnable puesto que gps.getLocation es otro thread
-			//Atenti con concurrencia, hay que asegurarse que se obtuvo la location
-			try {
-				sm.acquire();
-				activity.runOnUiThread(new Runnable() {
-					  public void run() {
-							addLocation(newSample);
-							sm.release();
-					  }
-					});
-				sm.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		}
+		
 		return newSample;
 		
 
 	}
 	
-	private void addLocation(Sample sample){
+	private LocationData getLocation(){
 		GPSHelper gps = new GPSHelper(MakePhotoActivity.this);
 		Geocoder gcd = new Geocoder(this);
+		LocationData ldt = null;
 		List<Address> addresses = null;
         // check if GPS enabled     
         if(gps.canGetLocation()){
@@ -274,7 +264,7 @@ public class MakePhotoActivity extends Activity {
     			state = addresses.get(0).getAdminArea();
     			country = addresses.get(0).getCountryName();
     			
-    			sample.setLocationData(latitude, longitude, city, state, country);
+    			ldt = new LocationData(latitude, longitude, city, state, country);
                 Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
                 longitude + "\n  Closest city: "+gps.getAddress());
     		} catch (NullPointerException e) {
@@ -291,27 +281,51 @@ public class MakePhotoActivity extends Activity {
             // can't get location
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
+//            gps.showSettingsAlert();
+        	Toast.makeText(activity,"Atencion, tanto internet como gps esta deshabilitado, "
+					+ "no podra adjuntar ubicacion",Toast.LENGTH_SHORT).show();
         }
+        return ldt;
 	}
 	
 	
 	private class NewSampleTask extends AsyncTask<String, Void,Void> {
 		Sample sample = null;
+		SamplesDataSource sds = new SamplesDataSource(activity);
 	    @Override
 	    protected Void doInBackground(String... params) {
-	    	sample =makeNewSample();					
-			saveSample(sample);
+	    	sample =makeNewSample();
+	    	if(usesLocation){
+				Log.d(TAG, "Attempting to obtain location for sample " + sample.getSampleName());
+				runOnUiThread(new Runnable() 
+				{
+				   public void run() 
+				   {
+					   LocationData ldt = getLocation();    
+					   sample.setLocationData(ldt);
+				   }
+				}); 
+			}
+			sds.open();
+			sds.saveSample(sample);
+			sds.close();
 			return null;
 	    }
 	    
 	    @Override
 	    protected void onPostExecute(Void result) {
-	    	Toast.makeText(
-					getApplicationContext(),"Se ha guardado la muestra "+ sample.getSampleName() + 
-					" con " + ""+ previews.size() + " imágenes",
-					Toast.LENGTH_LONG).show();
-	    	activity.finish();
+	    	runOnUiThread(new Runnable() 
+			{
+			   public void run() 
+			   {
+				   Toast.makeText(
+							activity,"Se ha guardado la muestra "+ sample.getSampleName() + 
+							" con " + ""+ previews.size() + " imágenes",
+							Toast.LENGTH_LONG).show();
+			   }
+			}); 
+	    	
+	    	
 	    }
 	}
 
@@ -396,29 +410,16 @@ public class MakePhotoActivity extends Activity {
 			setTakeOneMoreButton();
 			try {				
 				final BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inSampleSize = 8;
+				//Del size original, generamos una imagen el tercio de resolucion
+				options.inSampleSize = 3;
 				options.inPurgeable = true;
 				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
 						data.length,options);
 				
-				//System.out.println("Photo encoded from camera with size "+ recentPhoto.getByteCount()+", attempting resize");
-//				byte[] compressedBytes =  BitmapResizer.resizeImage(
-//						data, 
-//						recentPhoto.getWidth(), 
-//						recentPhoto.getHeight(), 1);
-//				recentPhoto.recycle();
-//				recentPhoto=null;
-//				System.out.println("bytes obtained with size:"+compressedBytes.length);
-//				compressed = BitmapFactory.decodeByteArray(compressedBytes, 0, compressedBytes.length);
-//				System.out.println("Bitmap compressed with size: " + compressed.getByteCount());
 				Image newImage = new Image(null, null,null,null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
 						Base64Helper.encodeTobase64(recentPhoto));
-//				
-//				compressed=null;
-//				
 				recentPhoto.recycle();
-//				compressedBytes = null;
 				System.gc();
 				previews.add(newImage);
 				newImage = null;

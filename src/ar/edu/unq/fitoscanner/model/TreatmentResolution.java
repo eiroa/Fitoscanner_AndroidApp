@@ -1,9 +1,15 @@
 package ar.edu.unq.fitoscanner.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TreatmentResolution extends TreatmentResolutionRaw{
+public class TreatmentResolution extends TreatmentResolutionRaw implements Serializable
+{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2046224991220210094L;
 	private List<Image> specieImages;
 	private List<Treatment> treatments;
 	

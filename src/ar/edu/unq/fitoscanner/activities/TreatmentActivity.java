@@ -75,38 +75,27 @@ import ar.edu.unq.fitoscanner.model.TreatmentResolution;
 public class TreatmentActivity extends Activity{
 	public final static String TAG = "RecordsActivity";
 	ImageDataSource imageDataSource;
-	TreatmentResolutionDataSource trds;
 	TreatmentDataSource tds;
 	private Treatment treatment;
-	private List<Treatment> treatments = new ArrayList<Treatment>();
-	private Long idTreatmentResolution;
+	private Long idTreatment;
 	private final Context context = this;
 	private Typeface font;
-	private Spinner spinner1;
-	private TextView txtSample;
-	private TextView txtCountry;
-	private List<Image> currentTreatmentImages;
-	private Treatment currentTreatment;
-	private HashMap<String, Treatment> treatmentMap;
 	private ListView listviewTreatmentTreatment;
-	private CustomImageListViewAdapter customAdapterTreatmentImages;
 	private Bitmap imageSelected;
 	private TextView txtTreatmentNameLabel;
-	private TextView txtTreatmentScientificNameLabel;
 	private TextView txtTreatmentDescriptionLabel;
 	private TextView txtTreatmentName;
-	private TextView txtTreatmentScientificName;
 	private TextView txtTreatmentDescription;
+	private CustomImageListViewAdapter customAdapterTreatmentImages;
 	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.gc();
         font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
-        trds = new TreatmentResolutionDataSource(this);
         tds = new TreatmentDataSource(this);
-        currentTreatmentImages = new ArrayList<Image>();
-        treatmentMap = new HashMap<String, Treatment>();
-        treatment = (Treatment) getIntent().getSerializableExtra("treatment");
+        idTreatment = (Long) getIntent().getLongExtra("idTreatment", 0L);
+        getTreatment();
         
     }
 	
@@ -119,10 +108,7 @@ public class TreatmentActivity extends Activity{
         listviewTreatmentTreatment = (ListView) findViewById(R.id.treatmentImagesList);
         
         
-        customAdapterTreatmentImages = new CustomImageListViewAdapter(
-				getApplicationContext(),
-				R.layout.samplepreview_fragment, treatment.getImages());
-        listviewTreatmentTreatment.setAdapter(customAdapterTreatmentImages); 
+        
          
         listviewTreatmentTreatment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -131,7 +117,9 @@ public class TreatmentActivity extends Activity{
                int position, long id) {
         	   Image i = (Image)listviewTreatmentTreatment.getAdapter().getItem(position);
         	   
-        	    imageSelected =Base64Helper.decodeBase64(i.getBase64());
+        	    imageSelected =Base64Helper.decodeScaledBase64(i.getBase64(),
+        	    		getWindowManager().getDefaultDisplay().getWidth(),
+        	    		getWindowManager().getDefaultDisplay().getWidth());
         	    final Dialog builder = new Dialog(context);
         	    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
         	    builder.setContentView(R.layout.image_popup);
@@ -216,13 +204,26 @@ public class TreatmentActivity extends Activity{
 		);
 	}
 	
+	public void getTreatment(){
+		tds.open();
+    	try
+    	{
+    		treatment = tds.getById(idTreatment);
+    	}
+    	finally{
+    		tds.close();
+    	}
+	}
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
 		generateTreatmentsView();
+		customAdapterTreatmentImages = new CustomImageListViewAdapter(
+				getApplicationContext(),
+				R.layout.samplepreview_fragment, treatment.getImages());
+        listviewTreatmentTreatment.setAdapter(customAdapterTreatmentImages); 
 	}
-	
-	
 	
 	
 }

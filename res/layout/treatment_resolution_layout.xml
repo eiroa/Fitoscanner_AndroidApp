@@ -54,14 +54,13 @@
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:padding="5dp"
-                android:text="Nombre de especie determinada:"
+                android:text="Nombre:"
                 android:textColor="@color/yellowFont" />
 
             <TextView
                 android:id="@+id/specieName_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="text"
@@ -87,7 +86,6 @@
                 android:id="@+id/specieScientificName_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="text" 
@@ -123,42 +121,28 @@
          </ScrollView>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="2dp" >
-
-        </LinearLayout>
 	 
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="4dp" >
-
-                <ListView
-                    android:id="@+id/specieImagesList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            
-             <LinearLayout
-                android:id="@+id/spinnerSection"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp" >
-                
-                	
-              <ScrollView
+                android:gravity="center">
+    			<TextView
+			        android:id="@+id/textView2"
+			        android:layout_alignParentTop="true"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Imágenes de la especie"
+			        android:textColor="@color/white"
+			        android:layout_centerHorizontal="true">
+    			</TextView>
+   			 <ScrollView
        				android:id="@+id/scrollView1"
         			android:layout_width="match_parent"
-        			android:layout_height="wrap_content" >
+        			android:layout_height="wrap_content"
+        			android:layout_alignParentBottom="true" 
+        			android:padding="3dp" >
+              		  
               		  <Spinner
        				 		android:id="@+id/spinner1"
         			 		android:layout_width="match_parent"
@@ -166,10 +150,36 @@
         			 		style="@style/spinner_style"
         			 		android:textColor="@color/yellowFont"
         			 		android:textSize="20sp"
-        			 		android:prompt="@string/spinner_prompt" />
+        			 		android:prompt="@string/spinner_prompt" 
+        			 		android:padding="3dp"
+        			 		/>
         	  </ScrollView>
-            </LinearLayout>
+    
+				
+                <ListView
+                    android:id="@+id/specieImagesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView2"
+        			android:layout_above="@+id/scrollView1"
+        			android:padding="3dp"
+                     />
+                    
+             
+            </RelativeLayout>
             
+            <LinearLayout
+                android:id="@+id/spinnerSection"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp" >
+                
+                	
+              
+            </LinearLayout>
         </LinearLayout>
 
 </FrameLayout>

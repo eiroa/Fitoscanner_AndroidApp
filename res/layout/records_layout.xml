@@ -23,7 +23,7 @@
                 android:id="@+id/recordsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="2dp"
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:text="MUESTRAS"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="7dp" >
+            android:padding="3dp" >
 
             <LinearLayout
             android:id="@+id/sampleActionButtons_layout"
@@ -45,7 +45,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="4dp" >
+                android:padding="1dp" >
 
                 <Button
                     android:id="@+id/button_deleteSample"
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/selector_button_level"
                     android:gravity="center"
-                    android:padding="9dp"
+                    android:padding="8dp"
                     android:shadowColor="#BFBFBF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/selector_button_level"
                     android:gravity="center"
-                    android:padding="9dp"
+                    android:padding="8dp"
                     android:shadowColor="#BFBFBF"
                     android:shadowDx="0"
                     android:shadowDy="0"
@@ -89,7 +89,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="3dp" >
+                android:padding="2dp" >
                 
                 <TextView
                 	android:id="@+id/selectSampleText"
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Latitud y longitud:"
                 android:textColor="@color/yellowFont" />
 
@@ -161,7 +161,6 @@
                 android:id="@+id/savedSample_latAndLon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="text" 
@@ -179,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Localidad: "
                 android:textColor="@color/yellowFont" />
 
@@ -187,7 +186,6 @@
                 android:id="@+id/savedSample_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="text" 
@@ -205,7 +203,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Región: "
                 android:textColor="@color/yellowFont" />
 
@@ -213,7 +211,6 @@
                 android:id="@+id/savedSample_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="text" 
@@ -231,7 +228,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="País:"
                 android:textColor="@color/yellowFont" />
 
@@ -240,7 +237,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
                 android:focusable="false"
                 android:inputType="text" 
                 android:textColor="@color/white"/>
@@ -250,14 +246,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:padding="2dp" >
+            android:padding="1dp" >
 
             <TextView
                 android:id="@+id/savedSample_originDateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Fecha:"
                 android:textColor="@color/yellowFont" />
 
@@ -266,7 +262,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:paddingBottom="1dp"
                 android:text="Date"
                 android:textSize="14dp" 
                 android:textColor="@color/white"/>
@@ -277,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:padding="4dp" >
+                android:padding="2dp" >
 
                 <ListView
                     android:id="@+id/savedSampleImagesList"

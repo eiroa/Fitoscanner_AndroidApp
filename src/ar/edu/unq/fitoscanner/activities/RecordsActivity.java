@@ -145,7 +145,9 @@ public class RecordsActivity extends Activity{
                int position, long id) {
         	   Image i = (Image)listview.getAdapter().getItem(position);
         	   
-        	    imageSelected =Base64Helper.decodeBase64(i.getBase64());
+        	   imageSelected =Base64Helper.decodeScaledBase64(i.getBase64(),
+       	    		getWindowManager().getDefaultDisplay().getWidth(),
+       	    		getWindowManager().getDefaultDisplay().getWidth());
         	    final Dialog builder = new Dialog(context);
         	    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
         	    builder.setContentView(R.layout.image_popup);
