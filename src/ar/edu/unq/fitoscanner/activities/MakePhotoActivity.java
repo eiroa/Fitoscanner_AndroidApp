@@ -120,7 +120,31 @@ public class MakePhotoActivity extends Activity {
 		takeOneMoreButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(!saving)setShotView();
+				
+				//Al volver a utilizar la camara, 
+				//asegurarse de toda forma posible, que se destruye la instancia de la camara, y volver a pedir otra
+				if(camera != null){
+					camera.stopPreview();
+					camera.setPreviewCallback(null);
+					camera.lock();
+					camera.release();
+					camera = null;
+					try {
+						Thread.sleep(400);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					camera = Camera.open();
+				}
+				if(previews.size() >7){
+					Toast.makeText(
+							getApplicationContext(),
+							"Atencion, la muestra no puede superar las 7 imagenes",
+							Toast.LENGTH_SHORT).show();
+				}else{
+					if(!saving)setShotView();
+				}
+				
 			}
 		});
 	}
@@ -156,12 +180,6 @@ public class MakePhotoActivity extends Activity {
 								"Atencion, la muestra debe contener al menos 3 imagenes",
 								Toast.LENGTH_SHORT).show();
 					} else {
-						if(previews.size() > 7){
-							Toast.makeText(
-									getApplicationContext(),
-									"Atencion, la muestra no puede superar las 7 imagenes",
-									Toast.LENGTH_SHORT).show();
-						}else{
 							if(sampleName.equals("")|| sampleName==null){
 								Toast.makeText(
 										getApplicationContext(),
@@ -171,7 +189,6 @@ public class MakePhotoActivity extends Activity {
 								processNewSample();
 								saving =true;
 							}
-						}
 					}
 				}
 			}
@@ -291,10 +308,14 @@ public class MakePhotoActivity extends Activity {
 	
 	private class NewSampleTask extends AsyncTask<String, Void,Void> {
 		Sample sample = null;
+		int size = 3;
+		String name = "";
 		SamplesDataSource sds = new SamplesDataSource(activity);
 	    @Override
 	    protected Void doInBackground(String... params) {
 	    	sample =makeNewSample();
+	    	size = sample.getImages().size();
+	    			name = sample.getSampleName();
 	    	if(usesLocation){
 				Log.d(TAG, "Attempting to obtain location for sample " + sample.getSampleName());
 				runOnUiThread(new Runnable() 
@@ -319,9 +340,9 @@ public class MakePhotoActivity extends Activity {
 			   public void run() 
 			   {
 				   Toast.makeText(
-							activity,"Se ha guardado la muestra "+ sample.getSampleName() + 
-							" con " + ""+ previews.size() + " imágenes",
-							Toast.LENGTH_LONG).show();
+							activity,"Se ha guardado la muestra "+ name + 
+							" con " + ""+ size + " imágenes",
+							Toast.LENGTH_SHORT).show();
 			   }
 			}); 
 	    	
@@ -447,6 +468,7 @@ public class MakePhotoActivity extends Activity {
 					}
 
 				});
+				
 				Log.i(TAG, "Recent photo loaded");
 				Log.i(TAG, previews.toString());
 			} catch (Exception e) {
