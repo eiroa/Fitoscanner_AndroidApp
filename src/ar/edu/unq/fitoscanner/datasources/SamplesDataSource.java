@@ -55,7 +55,7 @@ public class SamplesDataSource extends AbstractDataSource{
 		return Sample;
 	}
 
-	private List<Sample> cursorToListOfSamples(Cursor cursor, Boolean getSent,Boolean resolved,Boolean valid) {
+	private List<Sample> cursorToListOfSamples(Cursor cursor) {
 
 		List<Sample> samples = new ArrayList<Sample>();
 
@@ -64,26 +64,7 @@ public class SamplesDataSource extends AbstractDataSource{
 				cursor.moveToFirst();
 				while (!cursor.isAfterLast()) {
 					Sample sample = cursorToSample(cursor);
-					
-					//lo que viene es una mierda, necesito  lambda x -> x.property
-					if(getSent){
-						//Quiero las enviadas
-						if(valid){
-							if(resolved){
-								//Quiero las enviadas resueltas validas
-								if(sample.getSent() && sample.getResolved() && sample.getValid())samples.add(sample);
-							}else{
-								//Quiero las enviadas sin resolver validas
-								if(sample.getSent() && !sample.getResolved() && sample.getValid())samples.add(sample);
-							}
-						}else{
-							//quiero las que fallaron
-							if(sample.getSent()  && !sample.getValid())samples.add(sample);
-						}
-					}else{
-						//No quiero las enviadas, representan las muestras nuevas
-						if(!sample.getSent())samples.add(sample);
-					}
+					samples.add(sample);
 					cursor.moveToNext();
 				}
 			} finally {
@@ -310,12 +291,26 @@ public class SamplesDataSource extends AbstractDataSource{
 	private List<Sample> getSamples(Boolean getSent,Boolean getResolved,Boolean getValid) {
 		List<Sample> samples = new ArrayList<Sample>();
 		try {
+			
+			Integer sent = (getSent?1:0);
+			Integer resolved = (getResolved?1:0);
+			Integer valid = (getValid?1:0);
+			
+			String whereClause = SampleSQLiteTable.COLUMN_SENT+" = ?"+" AND "+
+			SampleSQLiteTable.COLUMN_RESOLVED+" = ?"+" AND "+
+					SampleSQLiteTable.COLUMN_VALID+" = ?";
+			
+			String[] whereArgs = new String[] {
+			    sent.toString(),
+			    resolved.toString(),
+			    valid.toString()
+			};
 
 			Cursor cursor = getDatabase()
 					.query(SampleSQLiteTable.TABLE,
-							SampleSQLiteTable.ALL_COLUMNS, null, null, null,
+							SampleSQLiteTable.ALL_COLUMNS, whereClause, whereArgs, null,
 							null, null);
-			samples = cursorToListOfSamples(cursor,getSent,getResolved,getValid);
+			samples = cursorToListOfSamples(cursor);
 			for (Sample sample : samples) {
 				// Se le pasa al imageDatasource la conexion a la base de datos
 				this.imageDataSource.setDatabase(getDatabase());

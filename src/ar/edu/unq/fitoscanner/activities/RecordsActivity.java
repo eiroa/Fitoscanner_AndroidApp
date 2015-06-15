@@ -116,10 +116,10 @@ public class RecordsActivity extends Activity{
         
         //check that we really have them.
         
-        Log.d(TAG, " showing samples obtained");
-        for (Sample s : samples) {
-			Log.d(TAG, "sample => "+s.toString());
-		}
+//        Log.d(TAG, " showing samples obtained");
+//        for (Sample s : samples) {
+//			Log.d(TAG, "sample => "+s.toString());
+//		}
         
         //Spinner seleccionador de muestras
         setSpinnerSelector();
@@ -452,6 +452,10 @@ public class RecordsActivity extends Activity{
 		Sample sample = currentSample;
 	    @Override
 	    protected HttpResponse doInBackground(String... params) {
+	    	
+	    	sample.setSent(true);
+	    	
+	    	saveSample(sample);
 	        final HttpParams httpParameters = new BasicHttpParams();
 			HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
 			HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);

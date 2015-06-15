@@ -58,8 +58,10 @@ public abstract class AbstractDataSource<T> {
 				result.add(target);
 		      }
 		} else {
-			target = getById(Long.parseLong(ids));
-			result.add(target);
+			if(!ids.equals("")){
+				target = getById(Long.parseLong(ids));
+				result.add(target);
+			}
 		}
 		return result;
 	}

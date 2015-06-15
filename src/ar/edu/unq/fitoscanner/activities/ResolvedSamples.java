@@ -73,15 +73,11 @@ public class ResolvedSamples extends Activity{
 	public final static String TAG = "RecordsActivity";
 	ImageDataSource imageDataSource;
 	SamplesDataSource samplesDataSource;
-	ConfigurationDataSource configurationDataSource;
 	TreatmentResolutionDataSource trds;
 	int samplePositionSelected = -1;
 	private List<Sample> samples = new ArrayList<Sample>();
 	private final Context context = this;
 	private Typeface font;
-	private Boolean getSent;
-	private Boolean getResolved;
-	private Boolean getValid;
 	private Spinner spinner1;
 	private TextView txtDateLabel;
 	private TextView txtSampleLabel;
@@ -97,7 +93,7 @@ public class ResolvedSamples extends Activity{
 	private TextView txtCountry;
 	private List<Image> currentSampleImages;
 	private Sample currentSample;
-	private HashMap<String, Sample> samplesMap;
+	private HashMap<String,Sample> samplesMap;
 	private ListView listview;
 	private CustomImageListViewAdapter customAdapter;
 	private Bitmap imageSelected;
@@ -107,11 +103,7 @@ public class ResolvedSamples extends Activity{
         font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
         imageDataSource = new ImageDataSource(this);
         samplesDataSource = new SamplesDataSource(this);
-        configurationDataSource = new ConfigurationDataSource(this);
         trds = new TreatmentResolutionDataSource(this);
-        this.getSent =getIntent().getBooleanExtra("getSent", false);
-        this.getResolved = getIntent().getBooleanExtra("getResolved", false);
-        this.getValid = getIntent().getBooleanExtra("getValid", true);
         currentSampleImages = new ArrayList<Image>();
         samplesMap = new HashMap<String, Sample>();
         
@@ -119,14 +111,17 @@ public class ResolvedSamples extends Activity{
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.resolved_samples_layout);
+		Long start = System.currentTimeMillis();
         samples = this.getSamples();
-        
+        Long end =System.currentTimeMillis();
+        Log.d(TAG, "TIME START get samplesResolved = "+new Date(start).toGMTString());
+        Log.d(TAG, "TIME END get samplesResolved = "+new Date(end).toGMTString());
         //check that we really have them.
         
-        Log.d(TAG, " showing samples obtained");
-        for (Sample s : samples) {
-			Log.d(TAG, "sample => "+s.toString());
-		}
+//        Log.d(TAG, " showing samples obtained");
+//        for (Sample s : samples) {
+//			Log.d(TAG, "sample => "+s.toString());
+//		}
         
         //Spinner seleccionador de muestras
         setSpinnerSelector();
@@ -229,7 +224,6 @@ public class ResolvedSamples extends Activity{
 			list.add(s.getSampleName() + "  "+s.getOriginDate());
 			samplesMap.put(s.getSampleName() + "  "+s.getOriginDate(), s);
 		}
-         
         if(samples.isEmpty()){
         	
         	View buttons = (View) findViewById(R.id.sampleActionButtons_layout);
@@ -386,16 +380,6 @@ public class ResolvedSamples extends Activity{
     	}
 	}
 	
-	
-	public String getUrl(){
-		configurationDataSource.open();
-		try{
-			return configurationDataSource.getConfigurationById(1).getIp();
-		}
-		finally{
-        	configurationDataSource.close();
-        }
-	}
 	
 	public void saveSample(Sample sample) {
 		samplesDataSource.open();

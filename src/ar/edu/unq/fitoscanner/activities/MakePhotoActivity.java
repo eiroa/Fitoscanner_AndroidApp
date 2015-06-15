@@ -81,6 +81,8 @@ public class MakePhotoActivity extends Activity {
 	private boolean usesLocation;
 	private boolean saving; 
 	final private Context activity = this;
+	private String sampleName = "";
+	private EditText sampleNameField;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,9 @@ public class MakePhotoActivity extends Activity {
 	}
 
 	private void setShotView() {
+		if(previews.size()>0){
+			sampleName = sampleNameField.getText().toString();
+		}
 		this.setContentView(R.layout.takepic_layout);
 		Log.i(TAG, "Layout changed to previews layout");
 		Log.i(TAG, "previews are... " + previews.toString());
@@ -136,7 +141,7 @@ public class MakePhotoActivity extends Activity {
 					}
 					camera = Camera.open();
 				}
-				if(previews.size() >7){
+				if(previews.size() >=7){
 					Toast.makeText(
 							getApplicationContext(),
 							"Atencion, la muestra no puede superar las 7 imagenes",
@@ -158,6 +163,8 @@ public class MakePhotoActivity extends Activity {
 				setContentView(R.layout.previews_layout);
 				Log.i(TAG, "Layout changed to previews layout");
 				Log.i(TAG, "previews are... " + previews.toString());
+				sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
+				sampleNameField.setText(sampleName);
 				setTakeOneMoreButton();
 				setSaveButton();
 			}
@@ -167,8 +174,6 @@ public class MakePhotoActivity extends Activity {
 	private void setSaveButton() {
 		Button saveButton = (Button) findViewById(R.id.button_saveSample);
 		saveButton.setTypeface(font);
-		final EditText sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
-        
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -311,6 +316,7 @@ public class MakePhotoActivity extends Activity {
 		int size = 3;
 		String name = "";
 		SamplesDataSource sds = new SamplesDataSource(activity);
+		LocationData ldt;
 	    @Override
 	    protected Void doInBackground(String... params) {
 	    	sample =makeNewSample();
@@ -322,14 +328,11 @@ public class MakePhotoActivity extends Activity {
 				{
 				   public void run() 
 				   {
-					   LocationData ldt = getLocation();    
-					   sample.setLocationData(ldt);
+					    ldt = getLocation();    
 				   }
 				}); 
 			}
-			sds.open();
-			sds.saveSample(sample);
-			sds.close();
+			
 			return null;
 	    }
 	    
@@ -339,6 +342,10 @@ public class MakePhotoActivity extends Activity {
 			{
 			   public void run() 
 			   {
+				   sample.setLocationData(ldt);
+				   sds.open();
+				   sds.saveSample(sample);
+				   sds.close();
 				   Toast.makeText(
 							activity,"Se ha guardado la muestra "+ name + 
 							" con " + ""+ size + " imágenes",
