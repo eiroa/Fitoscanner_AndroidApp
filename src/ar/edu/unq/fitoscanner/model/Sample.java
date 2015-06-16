@@ -14,6 +14,8 @@ public class Sample {
 	private String hash;
 	private Boolean sent;
 	private TreatmentResolution treatmentResolution;
+	//Id directo del tratamiendo, solo por motivo de performance
+	private Long treatmentResolutionId;
 	private LocationData locationData = new LocationData();
 	private Integer requestTreatmentIntents;
 	private Integer minutesFromLastRequest;
@@ -192,6 +194,14 @@ public class Sample {
 
 	public void setValid(Boolean valid) {
 		this.valid = valid;
+	}
+	
+	public Long getTreatmentResolutionId() {
+		return treatmentResolutionId;
+	}
+
+	public void setTreatmentResolutionId(Long treatmentResolutionId) {
+		this.treatmentResolutionId = treatmentResolutionId;
 	}
 
 	@Override

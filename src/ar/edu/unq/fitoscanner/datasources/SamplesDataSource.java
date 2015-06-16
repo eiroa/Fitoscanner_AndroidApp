@@ -12,6 +12,7 @@ import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
 import ar.edu.unq.fitoscanner.data.SampleSQLiteTable;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
+import ar.edu.unq.fitoscanner.model.TreatmentResolution;
 
 public class SamplesDataSource extends AbstractDataSource{
 	public final static String TAG = "SamplesDataSource";
@@ -49,8 +50,8 @@ public class SamplesDataSource extends AbstractDataSource{
 				minutesPassed,resolved,valid);
 		
 		if(Sample.getResolved()){
-			trds.setDatabase(getDatabase());
-			Sample.setTreatmentResolution(trds.getById(treatmentResolutionId));
+			//seteamos solo el id, simulando un cargado lazy, no obtenemos toda la resolucion y tratamientos en el momento
+			Sample.setTreatmentResolutionId(treatmentResolutionId);
 		}
 		return Sample;
 	}
@@ -230,6 +231,8 @@ public class SamplesDataSource extends AbstractDataSource{
 		try {
 			String table = SampleSQLiteTable.TABLE;
 			String where = SampleSQLiteTable.COLUMN_SAMPLE_ID + " = " + id;
+			
+			// join
 			Cursor cursor = getDatabase().query(table,
 					SampleSQLiteTable.ALL_COLUMNS, where, null, null, null,
 					null);
@@ -305,6 +308,7 @@ public class SamplesDataSource extends AbstractDataSource{
 			    resolved.toString(),
 			    valid.toString()
 			};
+			
 
 			Cursor cursor = getDatabase()
 					.query(SampleSQLiteTable.TABLE,

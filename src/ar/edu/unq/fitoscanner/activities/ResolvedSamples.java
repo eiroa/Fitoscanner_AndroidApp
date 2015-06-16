@@ -111,12 +111,11 @@ public class ResolvedSamples extends Activity{
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.resolved_samples_layout);
-		Long start = System.currentTimeMillis();
+//		Long start = System.currentTimeMillis();
         samples = this.getSamples();
-        Long end =System.currentTimeMillis();
-        Log.d(TAG, "TIME START get samplesResolved = "+new Date(start).toGMTString());
-        Log.d(TAG, "TIME END get samplesResolved = "+new Date(end).toGMTString());
-        //check that we really have them.
+//        Long end =System.currentTimeMillis();
+//        Log.d(TAG, "TIME START get samplesResolved = "+new Date(start).toGMTString());
+//        Log.d(TAG, "TIME END get samplesResolved = "+new Date(end).toGMTString());
         
 //        Log.d(TAG, " showing samples obtained");
 //        for (Sample s : samples) {
@@ -395,8 +394,7 @@ public class ResolvedSamples extends Activity{
 	
 	public void openSampleResolution(){
 		Intent intent = new Intent(context, TreatmentResolutionActivity.class);
-    	intent.putExtra("idTreatmentResolution", currentSample.getTreatmentResolution().getId());
-//    	Log.d(TAG, "Opening treatment resolution = "+currentSample.getTreatmentResolution().toString());
+    	intent.putExtra("idTreatmentResolution", currentSample.getTreatmentResolutionId());
 		context.startActivity(intent);   
 	}
 	

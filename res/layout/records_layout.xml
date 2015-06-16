@@ -45,7 +45,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="1dp" >
+                >
 
                 <Button
                     android:id="@+id/button_deleteSample"
@@ -89,13 +89,13 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="2dp" >
+                android:padding="1dp" >
                 
                 <TextView
                 	android:id="@+id/selectSampleText"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-                	android:padding="3dp"
+                	android:padding="2dp"
                 	android:shadowDx="1"
                 	android:shadowDy="1"
                 	android:text="Seleccione una muestra:"
@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Nombre de Muestra:"
                 android:textColor="@color/yellowFont" />
 
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text="Latitud y longitud:"
                 android:textColor="@color/yellowFont" />
 
@@ -178,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text="Localidad: "
                 android:textColor="@color/yellowFont" />
 
@@ -203,7 +203,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text="Región: "
                 android:textColor="@color/yellowFont" />
 
@@ -228,7 +228,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text="País:"
                 android:textColor="@color/yellowFont" />
 
@@ -246,14 +246,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:padding="1dp" >
+            >
 
             <TextView
                 android:id="@+id/savedSample_originDateLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:padding="3dp"
+                android:padding="2dp"
                 android:text="Fecha:"
                 android:textColor="@color/yellowFont" />
 
@@ -263,7 +263,7 @@
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:text="Date"
-                android:textSize="14dp" 
+                android:textSize="13dp" 
                 android:textColor="@color/white"/>
         </LinearLayout>
 

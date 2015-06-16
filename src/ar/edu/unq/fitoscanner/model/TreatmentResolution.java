@@ -42,6 +42,9 @@ public class TreatmentResolution extends TreatmentResolutionRaw implements Seria
 	}
 	public TreatmentResolution() {
 	}
+	public TreatmentResolution(Long treatmentResolutionId) {
+		this.setId(treatmentResolutionId);
+	}
 	@Override
 	public String toString() {
 		return "TreatmentResolution [specieImages=" + specieImages
