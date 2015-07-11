@@ -11,14 +11,14 @@ public class Base64Helper {
 
 	public static String encodeTobase64(Bitmap image)
 	{
-	    Bitmap immagex=image;
-
+		Log.d("Base64Helper","attempting to encode image");
+	    Log.d("Base64Helper", " image size attempting to encode: " +image.getByteCount());
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-	    immagex.compress(Bitmap.CompressFormat.JPEG, 90, baos);
+	    image.compress(Bitmap.CompressFormat.JPEG, 95, baos);
 	    byte[] b = baos.toByteArray();
 	    String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
 
-	    Log.e("LOOK", imageEncoded);
+	    Log.d("Base64Helper", "Base64 result of new image is: "+ imageEncoded);
 	    return imageEncoded;
 	}
 	public static Bitmap decodeBase64(String input) 

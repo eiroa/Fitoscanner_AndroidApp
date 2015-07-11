@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class MenuActivity extends Activity {
 	final Context context = this;
 	private boolean longClick = false;
 	private boolean usesLocation = true;
+	public boolean debug = true;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_layout);
@@ -96,6 +98,7 @@ public class MenuActivity extends Activity {
         Button goTakePic = (Button)findViewById(R.id.buttonOpenTakePic);
         goTakePic.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View arg0) {
+        		if(debug)Log.d("Menu Activity", "Starting Make Photo Activity from Menu");
             	Intent intent = new Intent(activity, MakePhotoActivity.class);
             	intent.putExtra("usesLocation", usesLocation);
         		activity.startActivity(intent);

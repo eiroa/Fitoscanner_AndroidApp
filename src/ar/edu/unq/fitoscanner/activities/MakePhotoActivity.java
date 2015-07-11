@@ -23,10 +23,12 @@ import org.apache.http.protocol.HTTP;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -40,12 +42,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
@@ -71,7 +76,6 @@ public class MakePhotoActivity extends Activity {
 	private int cameraId = 0;
 	private boolean hasCamera;
 	private Bitmap recentPhoto;
-	private Bitmap compressed;
 	private ArrayList<Image> previews = new ArrayList<Image>();
 	private CameraPreview mPreview;
 	private ImageDataSource imageDatasource;
@@ -80,9 +84,11 @@ public class MakePhotoActivity extends Activity {
 	private Typeface font;
 	private boolean usesLocation;
 	private boolean saving; 
+	public boolean debug = true;
 	final private Context activity = this;
 	private String sampleName = "";
 	private EditText sampleNameField;
+	private Bitmap imageSelected;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,10 +99,17 @@ public class MakePhotoActivity extends Activity {
 		this.hasCamera = checkCameraHardware(this);
 		if (this.hasCamera) {
 			// Abrimos la camara trasera que este disponible
+			if(debug)Log.d(TAG, "Camera detected, attempting opening for first time");
 			this.camera = Camera.open();
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			// Se inicia el layout para tomar una foto
+			if(debug)Log.d(TAG, "Attempting to set Photo screen ");
 			this.setShotView();
-
+			
 			// Iniciamos los data source para poder guardar la nueva muestra con
 			// sus
 			// respectivas imagenes en la base de datos SQLite
@@ -107,16 +120,29 @@ public class MakePhotoActivity extends Activity {
 		saving = false;
 
 	}
+	
 
 	private void setShotView() {
 		if(previews.size()>0){
 			sampleName = sampleNameField.getText().toString();
 		}
+		if(debug)Log.d(TAG, "Setting Photo screen layout");
 		this.setContentView(R.layout.takepic_layout);
 		Log.i(TAG, "Layout changed to previews layout");
 		Log.i(TAG, "previews are... " + previews.toString());
 		this.startPreview();
 		System.gc();
+	}
+	
+	private void releaseCamera(){
+		if(camera != null){
+			Log.d(TAG, "Releasing camera resources");
+			camera.stopPreview();
+			camera.setPreviewCallback(null);
+			camera.lock();
+			camera.release();
+			camera = null;
+		}
 	}
 
 	private void setTakeOneMoreButton() {
@@ -128,47 +154,100 @@ public class MakePhotoActivity extends Activity {
 				
 				//Al volver a utilizar la camara, 
 				//asegurarse de toda forma posible, que se destruye la instancia de la camara, y volver a pedir otra
-				if(camera != null){
-					camera.stopPreview();
-					camera.setPreviewCallback(null);
-					camera.lock();
-					camera.release();
-					camera = null;
-					try {
-						Thread.sleep(400);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					camera = Camera.open();
-				}
+				
+				releaseCamera();
+				
 				if(previews.size() >=7){
 					Toast.makeText(
 							getApplicationContext(),
 							"Atencion, la muestra no puede superar las 7 imagenes",
 							Toast.LENGTH_SHORT).show();
 				}else{
+						try {
+							Thread.sleep(300);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						Log.d(TAG, "Re opening camera");
+						camera = Camera.open();
 					if(!saving)setShotView();
 				}
 				
 			}
 		});
 	}
-
+	
+	/**
+	 * Su funcion es solamente hacer un wrap del metodo take picture.
+	 * @param previewFrame
+	 */
 	private void setShotButton(FrameLayout previewFrame) {
 		previewFrame.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.d(TAG, "Attempting to take photo");
 				camera.takePicture(myShutterCallback, myPictureCallback_RAW,
 						mPicture);
-				setContentView(R.layout.previews_layout);
-				Log.i(TAG, "Layout changed to previews layout");
-				Log.i(TAG, "previews are... " + previews.toString());
-				sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
-				sampleNameField.setText(sampleName);
-				setTakeOneMoreButton();
-				setSaveButton();
 			}
 		});
+	}
+	
+	/*
+	 * Setea el preview de layouts
+	 */
+	private void setPreviewsLayout(){
+		
+		//Seteo layout
+		setContentView(R.layout.previews_layout);
+		Log.i(TAG, "previews are... " + previews.toString());
+		
+		//Seteo listView
+		final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
+		CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
+				getApplicationContext(),
+				R.layout.samplepreview_fragment, previews);
+
+		listview.setAdapter(customAdapter);
+		Log.i(TAG, "Adapter set...");
+		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent,
+					final View view, int position, long id) {
+				Image i = (Image)listview.getAdapter().getItem(position);
+	        	   
+	        	   imageSelected =Base64Helper.decodeScaledBase64(i.getBase64(),
+	       	    		getWindowManager().getDefaultDisplay().getWidth(),
+	       	    		getWindowManager().getDefaultDisplay().getWidth());
+	        	    final Dialog builder = new Dialog(activity);
+	        	    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        	    builder.setContentView(R.layout.image_popup);
+	         	    ImageView imgPopup = (ImageView) builder.findViewById(R.id.image_popup);
+	         	    Display display = getWindowManager().getDefaultDisplay();
+	         	    Point size = new Point();
+	         	    display.getSize(size);	
+	         	    
+	        	    imgPopup.setImageBitmap(imageSelected);
+	        	    imgPopup.getLayoutParams().height = (int) (size.y*0.75);
+	        	    imgPopup.getLayoutParams().width = (int) (size.x*0.90);
+	        	    builder.show();
+
+			}
+
+		});
+		
+		//Seteo nombre 
+		sampleNameField = (EditText) findViewById(R.id.preview_sampleNameField);
+		sampleNameField.setText(sampleName);
+		
+		//Seteo comportamiento tomar nueva imagen
+		setTakeOneMoreButton();
+		
+		//Seteo comportamiento  guardar imagebn
+		setSaveButton();
+		
+		//liberamos camara
+		releaseCamera();
 	}
 
 	private void setSaveButton() {
@@ -206,8 +285,9 @@ public class MakePhotoActivity extends Activity {
 					"Toque la pantalla para tomar una foto", Toast.LENGTH_LONG)
 					.show();
 			try {
-
+					
 				camera.setDisplayOrientation(90);
+				if(debug)Log.d(TAG, "Initiating preview");
 				mPreview = new CameraPreview(this, camera);
 				FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 				preview.addView(mPreview);
@@ -216,6 +296,8 @@ public class MakePhotoActivity extends Activity {
 				// la pantalla
 
 				Camera.Parameters p = camera.getParameters();
+				p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+				p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				p.setRotation(90);
 				camera.setParameters(p);
 			} catch (Exception e) {
@@ -309,6 +391,8 @@ public class MakePhotoActivity extends Activity {
         }
         return ldt;
 	}
+	
+	
 	
 	
 	private class NewSampleTask extends AsyncTask<String, Void,Void> {
@@ -429,14 +513,19 @@ public class MakePhotoActivity extends Activity {
 
 	/**
 	 * Devuelve un PictureCallback que define el comportamiento que tendrá
-	 * ejecutar la camara
+	 * ejecutar la camara y obtener los datos de la foto
+	 * 
+	 * Al finalizar el procesamiento de la nueva imagen, se regenera el layout de las previews
 	 */
 	private PictureCallback mPicture = new PictureCallback() {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			setTakeOneMoreButton();
-			try {				
+			
+			Log.d(TAG, "Picture Taken, saving new image");
+			try {
+				
+				Log.d(TAG, "bytes length of new picture: "+data.length);
 				final BitmapFactory.Options options = new BitmapFactory.Options();
 				//Del size original, generamos una imagen el tercio de resolucion
 				options.inSampleSize = 3;
@@ -447,37 +536,19 @@ public class MakePhotoActivity extends Activity {
 				Image newImage = new Image(null, null,null,null, "Picture "
 						+ (previews.size() + 1), new Date().toLocaleString(),
 						Base64Helper.encodeTobase64(recentPhoto));
+				
+				Log.d(TAG, "Image object created =>> "+newImage.toString());
 				recentPhoto.recycle();
 				System.gc();
 				previews.add(newImage);
 				newImage = null;
-				final ListView listview = (ListView) findViewById(R.id.previewSamplesList);
-				final CustomImageListViewAdapter customAdapter = new CustomImageListViewAdapter(
-						getApplicationContext(),
-						R.layout.samplepreview_fragment, previews);
-
-				listview.setAdapter(customAdapter);
-				Log.i(TAG, "Adapter set...");
-				listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent,
-							final View view, int position, long id) {
-						Toast toast = Toast.makeText(
-								getApplicationContext(),
-								"Item " + (position + 1) + ": "
-										+ previews.get(position),
-								Toast.LENGTH_SHORT);
-						toast.setGravity(Gravity.BOTTOM
-								| Gravity.CENTER_HORIZONTAL, 0, 0);
-						toast.show();
-
-					}
-
-				});
 				
 				Log.i(TAG, "Recent photo loaded");
+				
 				Log.i(TAG, previews.toString());
+				
+				//Generamos la vista de previews
+				setPreviewsLayout();
 			} catch (Exception e) {
 				Log.d(TAG, "File not found: " + e.getMessage());
 			}
