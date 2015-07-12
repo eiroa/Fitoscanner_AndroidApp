@@ -422,7 +422,7 @@ public class GetTreatmentService extends Service {
 		samplesDataSource.open();
 		try {
 
-			samplesDataSource.saveSample(sample);
+			samplesDataSource.fullSaveSample(sample);
 
 		} finally {
 			samplesDataSource.close();

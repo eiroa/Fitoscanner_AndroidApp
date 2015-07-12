@@ -384,7 +384,7 @@ public class ResolvedSamples extends Activity{
 		samplesDataSource.open();
 		try {
 
-			samplesDataSource.saveSample(sample);
+			samplesDataSource.fullSaveSample(sample);
 
 		} finally {
 			samplesDataSource.close();

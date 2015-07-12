@@ -128,8 +128,8 @@ public class MakePhotoActivity extends Activity {
 		}
 		if(debug)Log.d(TAG, "Setting Photo screen layout");
 		this.setContentView(R.layout.takepic_layout);
-		Log.i(TAG, "Layout changed to previews layout");
-		Log.i(TAG, "previews are... " + previews.toString());
+		//Log.i(TAG, "Layout changed to previews layout");
+		//Log.i(TAG, "previews are... " + previews.toString());
 		this.startPreview();
 		System.gc();
 	}
@@ -186,6 +186,17 @@ public class MakePhotoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Attempting to take photo");
+				
+				// Call to garbage collector to avoid bug http://code.opencv.org/issues/2961 
+			    System.gc();
+			    
+			    camera.setPreviewCallback(null);
+			    camera.setOneShotPreviewCallback(null);
+				try {
+					camera.reconnect();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				camera.takePicture(myShutterCallback, myPictureCallback_RAW,
 						mPicture);
 			}
@@ -198,6 +209,7 @@ public class MakePhotoActivity extends Activity {
 	private void setPreviewsLayout(){
 		
 		//Seteo layout
+		Log.i(TAG, "Setting previews Layout");
 		setContentView(R.layout.previews_layout);
 		Log.i(TAG, "previews are... " + previews.toString());
 		
@@ -287,19 +299,21 @@ public class MakePhotoActivity extends Activity {
 			try {
 					
 				camera.setDisplayOrientation(90);
-				if(debug)Log.d(TAG, "Initiating preview");
+				if(debug)Log.d(TAG, "Initiating photo screen ");
 				mPreview = new CameraPreview(this, camera);
 				FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 				preview.addView(mPreview);
-				this.setShotButton(preview);
-				// Directamente asignamos la funcion de tomar la foto al tocar
-				// la pantalla
-
 				Camera.Parameters p = camera.getParameters();
 				p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 				p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 				p.setRotation(90);
 				camera.setParameters(p);
+				
+				this.setShotButton(preview);
+				// Directamente asignamos la funcion de tomar la foto al tocar
+				// la pantalla
+
+				
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), "Error opening camera",
 						Toast.LENGTH_LONG).show();
@@ -343,6 +357,151 @@ public class MakePhotoActivity extends Activity {
 		return newSample;
 		
 
+	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		if (camera != null) {
+			camera.release();
+			camera = null;
+		}
+		super.onPause();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		if (camera != null) {
+			camera.release();
+			camera = null;
+		}
+		super.onBackPressed();
+	}
+
+	/**
+	 * Por seguridad, para evitar leaks de memoria, seteamos en null algunos
+	 * valores El Garbage Collector, se encargará de liberar la memoria
+	 * consiguientemente
+	 */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		previews = null;
+		newSample = null;
+		imageDatasource = null;
+		samplesDataSource = null;
+	};
+
+	ShutterCallback myShutterCallback = new ShutterCallback() {
+
+		@Override
+		public void onShutter() {
+			Log.d(TAG, "OnShutter executed");
+		}
+	};
+
+	PictureCallback myPictureCallback_RAW = new PictureCallback() {
+
+		@Override
+		public void onPictureTaken(byte[] arg0, Camera arg1) {
+
+		}
+	};
+
+	/**
+	 * Devuelve un PictureCallback que define el comportamiento que tendrá
+	 * ejecutar la camara y obtener los datos de la foto
+	 * 
+	 * Al finalizar el procesamiento de la nueva imagen, se regenera el layout de las previews
+	 */
+	private PictureCallback mPicture = new PictureCallback() {
+
+		@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+			
+			Log.d(TAG, "Picture Taken, saving new image");
+			try {
+				Log.d(TAG, "bytes length of new picture: "+data.length);
+				final BitmapFactory.Options options = new BitmapFactory.Options();
+				//Del size original, generamos una imagen el tercio de resolucion
+				options.inSampleSize = 3;
+				options.inPurgeable = true;
+				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
+						data.length,options);
+				
+				Image newImage = new Image(null, null,null,null, "Picture "
+						+ (previews.size() + 1), new Date().toLocaleString(),
+						Base64Helper.encodeTobase64(recentPhoto));
+				
+				Log.d(TAG, "Image object created =>> "+newImage.toString());
+				recentPhoto.recycle();
+				System.gc();
+				previews.add(newImage);
+				newImage = null;
+				
+				Log.i(TAG, "Recent photo loaded");
+				
+				Log.i(TAG, previews.toString());
+				
+				//Generamos la vista de previews
+				setPreviewsLayout();
+			} catch (Exception e) {
+				Log.d(TAG, "File not found: " + e.getMessage());
+			}
+		}
+
+	};
+
+	public Uri getOutputMediaFileUri(int type) {
+		return Uri.fromFile(getOutputMediaFile(type));
+	}
+
+	/** Create a File for saving an image or video */
+	public File getOutputMediaFile(int type) {
+
+		File mediaStorageDir = new File(
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				"FitoScanner");
+
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd__HH_mm_ss")
+				.format(new Date());
+		File mediaFile;
+		if (type == MEDIA_TYPE_IMAGE) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator
+					+ "FitoScanner_shot_" + timeStamp + ".jpg");
+		} else if (type == MEDIA_TYPE_VIDEO) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator
+					+ "VID_" + timeStamp + ".mp4");
+		} else {
+			return null;
+		}
+
+		return mediaFile;
+	}
+
+	/**
+	 * Guarda la muestra que fue generada al tomar la primera foto
+	 */
+	public void saveSample(Sample sample) {
+		samplesDataSource.open();
+		try {
+
+			samplesDataSource.fullSaveSample(sample);
+
+		} finally {
+			samplesDataSource.close();
+		}
 	}
 	
 	private LocationData getLocation(){
@@ -428,7 +587,7 @@ public class MakePhotoActivity extends Activity {
 			   {
 				   sample.setLocationData(ldt);
 				   sds.open();
-				   sds.saveSample(sample);
+				   sds.fullSaveSample(sample);
 				   sds.close();
 				   Toast.makeText(
 							activity,"Se ha guardado la muestra "+ name + 
@@ -458,150 +617,6 @@ public class MakePhotoActivity extends Activity {
 			Toast.makeText(this, "No camera on this device", Toast.LENGTH_LONG)
 					.show();
 			return false;
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		if (camera != null) {
-			camera.release();
-			camera = null;
-		}
-		super.onPause();
-	}
-
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		if (camera != null) {
-			camera.release();
-			camera = null;
-		}
-		super.onBackPressed();
-	}
-
-	/**
-	 * Por seguridad, para evitar leaks de memoria, seteamos en null algunos
-	 * valores El Garbage Collector, se encargará de liberar la memoria
-	 * consiguientemente
-	 */
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-
-		previews = null;
-		newSample = null;
-		imageDatasource = null;
-		samplesDataSource = null;
-	};
-
-	ShutterCallback myShutterCallback = new ShutterCallback() {
-
-		@Override
-		public void onShutter() {
-
-		}
-	};
-
-	PictureCallback myPictureCallback_RAW = new PictureCallback() {
-
-		@Override
-		public void onPictureTaken(byte[] arg0, Camera arg1) {
-
-		}
-	};
-
-	/**
-	 * Devuelve un PictureCallback que define el comportamiento que tendrá
-	 * ejecutar la camara y obtener los datos de la foto
-	 * 
-	 * Al finalizar el procesamiento de la nueva imagen, se regenera el layout de las previews
-	 */
-	private PictureCallback mPicture = new PictureCallback() {
-
-		@Override
-		public void onPictureTaken(byte[] data, Camera camera) {
-			
-			Log.d(TAG, "Picture Taken, saving new image");
-			try {
-				
-				Log.d(TAG, "bytes length of new picture: "+data.length);
-				final BitmapFactory.Options options = new BitmapFactory.Options();
-				//Del size original, generamos una imagen el tercio de resolucion
-				options.inSampleSize = 3;
-				options.inPurgeable = true;
-				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
-						data.length,options);
-				
-				Image newImage = new Image(null, null,null,null, "Picture "
-						+ (previews.size() + 1), new Date().toLocaleString(),
-						Base64Helper.encodeTobase64(recentPhoto));
-				
-				Log.d(TAG, "Image object created =>> "+newImage.toString());
-				recentPhoto.recycle();
-				System.gc();
-				previews.add(newImage);
-				newImage = null;
-				
-				Log.i(TAG, "Recent photo loaded");
-				
-				Log.i(TAG, previews.toString());
-				
-				//Generamos la vista de previews
-				setPreviewsLayout();
-			} catch (Exception e) {
-				Log.d(TAG, "File not found: " + e.getMessage());
-			}
-		}
-
-	};
-
-	public Uri getOutputMediaFileUri(int type) {
-		return Uri.fromFile(getOutputMediaFile(type));
-	}
-
-	/** Create a File for saving an image or video */
-	public File getOutputMediaFile(int type) {
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"FitoScanner");
-
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd__HH_mm_ss")
-				.format(new Date());
-		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "FitoScanner_shot_" + timeStamp + ".jpg");
-		} else if (type == MEDIA_TYPE_VIDEO) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "VID_" + timeStamp + ".mp4");
-		} else {
-			return null;
-		}
-
-		return mediaFile;
-	}
-
-	/**
-	 * Guarda la muestra que fue generada al tomar la primera foto
-	 */
-	public void saveSample(Sample sample) {
-		samplesDataSource.open();
-		try {
-
-			samplesDataSource.saveSample(sample);
-
-		} finally {
-			samplesDataSource.close();
 		}
 	}
 

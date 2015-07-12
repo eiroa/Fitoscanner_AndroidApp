@@ -76,8 +76,20 @@ public class SamplesDataSource extends AbstractDataSource{
 		return samples;
 	}
 	
+	public void updateSentStatusSample(Sample sample){
+		try {
+			Integer sent = sample.getSent()?1:0;
+			getDatabase().rawQuery("UPDATE "+ SampleSQLiteTable.TABLE +
+					" SET sent = "+sent+" where "
+					+SampleSQLiteTable.COLUMN_SAMPLE_ID+"="+sample.getId(), null);
+		} catch (Exception e) {
+			Log.e(TAG, "Error updating sample!");
+			e.printStackTrace();
+		}
+	}
+	
 
-	public Long saveSample(Sample sample) {
+	public Long fullSaveSample(Sample sample) {
 		Long idResult = 0L;
 
 		try {
@@ -86,9 +98,9 @@ public class SamplesDataSource extends AbstractDataSource{
 			// dicho id se insertara en cada imagen que contenga la muestra
 			if(this.sampleExists(sample)){
 				idResult = sample.getId();
-				doSaveSample(sample);
+				simpleSaveSample(sample);
 			}else{
-				idResult = doSaveSample(sample);
+				idResult = simpleSaveSample(sample);
 			}
 			
 
@@ -129,7 +141,7 @@ public class SamplesDataSource extends AbstractDataSource{
 		}
 	}
 
-	private Long doSaveSample(Sample sample) {
+	public Long simpleSaveSample(Sample sample) {
 		Long idResult = 0L;
 		Long id = sample.getId();
 		String date = sample.getOriginDate();

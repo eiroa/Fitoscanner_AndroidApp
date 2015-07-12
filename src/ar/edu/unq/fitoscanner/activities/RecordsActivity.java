@@ -435,7 +435,29 @@ public class RecordsActivity extends Activity{
 		samplesDataSource.open();
 		try {
 
-			samplesDataSource.saveSample(sample);
+			samplesDataSource.fullSaveSample(sample);
+
+		} finally {
+			samplesDataSource.close();
+		}
+	}
+	
+	public void updateSampleValues(Sample sample){
+		samplesDataSource.open();
+		try {
+
+			samplesDataSource.simpleSaveSample(sample);
+
+		} finally {
+			samplesDataSource.close();
+		}
+	}
+	
+	public void updateSentStatus(Sample sample){
+		samplesDataSource.open();
+		try {
+
+			samplesDataSource.updateSentStatusSample(sample);
 
 		} finally {
 			samplesDataSource.close();
@@ -455,7 +477,7 @@ public class RecordsActivity extends Activity{
 	    	
 	    	sample.setSent(true);
 	    	
-	    	saveSample(sample);
+	    	updateSentStatus(sample);
 	        final HttpParams httpParameters = new BasicHttpParams();
 			HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
 			HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);
@@ -550,7 +572,7 @@ public class RecordsActivity extends Activity{
 	        	 sample.setValid(true);
 	        	 sample.setMinutesFromLastRequest(0);
 	        	 sample.setRequestTreatmentIntents(0);
-  			     saveSample(sample);
+  			     updateSampleValues(sample);
 	        }else{
 	        	Toast.makeText(context,"Error al enviar muestra, "
 						+ "intente reenviarla",Toast.LENGTH_LONG).show();
