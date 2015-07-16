@@ -367,7 +367,9 @@ public class MakePhotoActivity extends Activity {
 			base64full = img.getBase64();
 			hash = hash+SecurityHelper.toSHA256(base64full);
 		}
-		newSample.setHash(SecurityHelper.toSHA256(hash));
+		Double randomValue = Math.random();
+		Log.i(TAG, "setting final hash for sample => "+hash+randomValue.toString());
+		newSample.setHash(SecurityHelper.toSHA256(hash+randomValue.toString()));
 		
 		return newSample;
 		
