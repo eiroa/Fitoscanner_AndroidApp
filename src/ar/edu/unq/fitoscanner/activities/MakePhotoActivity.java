@@ -23,8 +23,10 @@ import org.apache.http.protocol.HTTP;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -85,7 +87,7 @@ public class MakePhotoActivity extends Activity {
 	private boolean usesLocation;
 	private boolean saving; 
 	public boolean debug = true;
-	final private Context activity = this;
+	final private Activity activity = this;
 	private String sampleName = "";
 	private EditText sampleNameField;
 	private Bitmap imageSelected;
@@ -132,6 +134,16 @@ public class MakePhotoActivity extends Activity {
 		//Log.i(TAG, "previews are... " + previews.toString());
 		this.startPreview();
 		System.gc();
+	}
+	private void prepareDialog(AlertDialog.Builder builder,String title,String message,
+			Boolean isCancelable,String OkButtonTxt, android.content.DialogInterface.OnClickListener okListener, 
+			String cancelButtonTxt, android.content.DialogInterface.OnClickListener cancelListener){
+		    builder
+			.setTitle(title)
+			.setMessage(message)
+			.setCancelable(isCancelable)
+			.setPositiveButton(OkButtonTxt,okListener)
+			.setNegativeButton(cancelButtonTxt,cancelListener);
 	}
 	
 	private void releaseCamera(){
@@ -187,16 +199,18 @@ public class MakePhotoActivity extends Activity {
 			public void onClick(View v) {
 				Log.d(TAG, "Attempting to take photo");
 				
-				// Call to garbage collector to avoid bug http://code.opencv.org/issues/2961 
-			    System.gc();
-			    
+				//El siguiente codigo antes de takePicture si no existe se ha presenciado un cuelgue en la camara
+				// en un dispositivo android, particularmente Samsung galaxy prime, no está claro el porque
+				// aparenta ser un error de Android directamente, la versión afectada fue la 4.4.4  kitkat.
+			    //+++++++++
+				System.gc();
 			    camera.setPreviewCallback(null);
 			    camera.setOneShotPreviewCallback(null);
 				try {
 					camera.reconnect();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
+				}//+++++++++
 				camera.takePicture(myShutterCallback, myPictureCallback_RAW,
 						mPicture);
 			}
@@ -283,7 +297,6 @@ public class MakePhotoActivity extends Activity {
 										Toast.LENGTH_LONG).show();
 							}else{
 								processNewSample();
-								saving =true;
 							}
 					}
 				}
@@ -322,6 +335,7 @@ public class MakePhotoActivity extends Activity {
 	}
 	
 	private void processNewSample(){
+		saving =true;
 		new NewSampleTask().execute("");
 		onBackPressed();
 	}
@@ -344,7 +358,8 @@ public class MakePhotoActivity extends Activity {
 		newSample.setRequestTreatmentIntents(0);
 		newSample.setMinutesFromLastRequest(0);
 		String base64full = "";
-		String hash = "";
+		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		String hash = mngr.getDeviceId();
 		
 		// calcular hash de cada imagen, concatenerlos y luego obtener hash de los hashes concatenados
 		// tener en cuenta que cada base 64 tiene un salto de linea al final
@@ -372,12 +387,45 @@ public class MakePhotoActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		if (camera != null) {
-			camera.release();
-			camera = null;
+		if(saving){
+			super.onBackPressed();
+		}else{
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+	  				activity);
+	   
+	  			// set title
+	  			String title = "Atención, está a punto de eliminar la muestra actual ";
+	   
+	  			//prepare dialog
+	  			
+	  			prepareDialog(alertDialogBuilder,
+	  					title,
+	  					"Elija una opción ", 
+	  					true, 
+	  					"Aceptar", new DialogInterface.OnClickListener() {
+	      					public void onClick(DialogInterface dialog,int id) {
+	      						if (camera != null) {
+	      							camera.release();
+	      							camera = null;
+	      						}
+	      						activity.finish();
+	      					}
+	      				  }, 
+	      				"Cancelar", new DialogInterface.OnClickListener() {
+	      					public void onClick(DialogInterface dialog,int id) {
+	      						// if this button is clicked, just close
+	      						// the dialog box and do nothing
+	      						dialog.cancel();
+	      					}
+	      				});
+	  			
+	  				// create alert dialog
+	  				AlertDialog alertDialog = alertDialogBuilder.create();
+	   
+	  				// show it
+	  				alertDialog.show();
 		}
-		super.onBackPressed();
+		
 	}
 
 	/**
@@ -505,36 +553,52 @@ public class MakePhotoActivity extends Activity {
 	}
 	
 	private LocationData getLocation(){
-		GPSHelper gps = new GPSHelper(MakePhotoActivity.this);
-		Geocoder gcd = new Geocoder(this);
-		LocationData ldt = null;
+		Log.d(TAG, "Attempting to get GPS data");
+		GPSHelper gps = new GPSHelper(activity);
+		Geocoder gcd = new Geocoder(activity);
+		Log.d(TAG, "GPSHelper is:"+gps+"  and Geocoder is: "+gcd);
+		LocationData ldt = new LocationData("", "", "-", "-", "-");
 		List<Address> addresses = null;
-        // check if GPS enabled     
+        // check if GPS enabled    
+		Log.d(TAG, "Checking if location can be obtained");
         if(gps.canGetLocation()){
-             
+        	Log.d(TAG, "GPS data available, accesing data...");
         	String latitude="";
         	String longitude="";
         	String city = "-";
     		String state = "-";
     		String country = "-";
     		try {
-    			latitude = Double.toString(gps.getLatitude());
-                longitude = Double.toString(gps.getLongitude());
     			
+    			latitude = Double.toString(gps.getLatitude());
+    			Log.d(TAG, "Getting latitude: "+latitude);
+                longitude = Double.toString(gps.getLongitude());
+                Log.d(TAG, "Getting longitude: "+longitude);
     			addresses = gcd.getFromLocation(gps.getLocation().getLatitude(), gps.getLocation().getLongitude(), 1);
     			
     			city = addresses.get(0).getLocality();
+    			Log.d(TAG, "Getting city: "+city);
     			state = addresses.get(0).getAdminArea();
+    			Log.d(TAG, "Getting state: "+state);
     			country = addresses.get(0).getCountryName();
+    			Log.d(TAG, "Getting country: "+country);
     			
-    			ldt = new LocationData(latitude, longitude, city, state, country);
-                Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
-                longitude + "\n  Closest city: "+gps.getAddress());
+    			ldt.setCity(city);
+    			ldt.setCountry(country);
+    			ldt.setLatitude(latitude);
+    			ldt.setLongitude(longitude);
+    			ldt.setState(state);
+//                Log.d(TAG, "Your Location is - \nLat: " + latitude + "\nLong: " + 
+//                longitude + "\n  Closest city: "+gps.getAddress());
     		} catch (NullPointerException e) {
     			Log.e(TAG, "Error! No data obtained from geocoder");
+    			Log.w(TAG, "Null pointer obtained, ... returning empty location details");
+    			
+    			return ldt;
     		}catch (IOException e) {
     			e.printStackTrace();
     		}catch (Exception e) {
+    			Log.e(TAG, "Error obtaining data from GPS");
     			e.printStackTrace();
 			}finally{
 				gps.stopSelf();
@@ -545,13 +609,12 @@ public class MakePhotoActivity extends Activity {
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
 //            gps.showSettingsAlert();
+        	Log.d(TAG, "GPS not available, ... returning empty location details");
         	Toast.makeText(activity,"Atencion, tanto internet como gps esta deshabilitado, "
 					+ "no podra adjuntar ubicacion",Toast.LENGTH_SHORT).show();
         }
         return ldt;
 	}
-	
-	
 	
 	
 	private class NewSampleTask extends AsyncTask<String, Void,Void> {

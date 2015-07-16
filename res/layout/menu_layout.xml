@@ -85,28 +85,28 @@
                 android:textColor="#BDFFC8"
                 android:textSize="15sp"/>
             </LinearLayout>
-<!--             <LinearLayout -->
-<!--                 android:layout_width="match_parent" -->
-<!--                 android:layout_height="wrap_content" -->
-<!--                 android:gravity="center" -->
-<!--                 android:padding="10dp" > -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp" >
 
-<!--                 <Button -->
-<!--                 android:id="@+id/buttonShowLocation" -->
-<!--                 style="?android:attr/buttonStyleSmall" -->
-<!--                 android:layout_width="wrap_content" -->
-<!--                 android:layout_height="wrap_content" -->
-<!--                 android:gravity="center" -->
-<!--                 android:padding="15dp" -->
-<!--                 android:text="Mostrar Ubicación" -->
-<!--                 android:background="@drawable/selector_button_level" -->
-<!--                 android:shadowColor="#BFBFBF" -->
-<!--                 android:shadowDx="0" -->
-<!--                 android:shadowDy="0" -->
-<!--                 android:shadowRadius="5" -->
-<!--                 android:textColor="#BDFFC8" -->
-<!--                 android:textSize="15sp"/> -->
-<!--             </LinearLayout> -->
+                <Button
+                android:id="@+id/buttonCreateSample"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="Armar muestra"
+                android:background="@drawable/selector_button_level"
+                android:shadowColor="#BFBFBF"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#BDFFC8"
+                android:textSize="15sp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

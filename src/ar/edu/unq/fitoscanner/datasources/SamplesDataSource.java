@@ -91,7 +91,7 @@ public class SamplesDataSource extends AbstractDataSource{
 
 	public Long fullSaveSample(Sample sample) {
 		Long idResult = 0L;
-
+		Log.d(TAG, "Saving sample "+sample.getSampleName());
 		try {
 			// Guardamos la muestra y al guardarse se devuelve el id con el que
 			// se guardo,
@@ -100,11 +100,13 @@ public class SamplesDataSource extends AbstractDataSource{
 				idResult = sample.getId();
 				simpleSaveSample(sample);
 			}else{
+				
 				idResult = simpleSaveSample(sample);
 			}
 			
 
 			// Guardamos cada imagen correspondiente de la muestra
+			Log.d(TAG, "Sample details of "+sample.getSampleName() +" saved, attempting to save images");
 			for (Image image : sample.getImages()) {
 				image.setIdSample(idResult);
 				this.imageDataSource.setDatabase(getDatabase());

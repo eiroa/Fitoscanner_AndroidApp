@@ -28,7 +28,7 @@ import ar.edu.unq.fitoscanner.model.Configuration;
 public class MenuActivity extends Activity {
 	//
 	GPSHelper gps;
-	Button btnShowLocation;
+	Button btnCreateSample;
 	MenuActivity activity;
 	ConfigurationDataSource configurationDataSource;
 	private String result;
@@ -43,19 +43,16 @@ public class MenuActivity extends Activity {
         configurationDataSource = new ConfigurationDataSource(this);
         Button btLogout = (Button) findViewById(R.id.buttonMenuLogout);
         Typeface font = TypefacesHelper.getTypeface(this, "fonts/optien.ttf");
-//        btnShowLocation = (Button) findViewById(R.id.buttonShowLocation);
-//        btnShowLocation.setTypeface(font);
-        // show location button click event
-//        btnShowLocation.setOnLongClickListener(new View.OnLongClickListener(
-//        		) {
-//			
-//			@Override
-//			public boolean onLongClick(View v) {
-//				longClick = !longClick;
-//				showIpDialog();
-//				return false;
-//			}
-//		});
+        btnCreateSample = (Button) findViewById(R.id.buttonCreateSample);
+        btnCreateSample.setTypeface(font);
+        btnCreateSample.setOnClickListener(new View.OnClickListener(){
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(activity, CreateSampleActivity.class);
+        		activity.startActivity(intent);
+			}
+		});
 //        btnShowLocation.setOnClickListener(new View.OnClickListener() {
 //             
 //            @Override
