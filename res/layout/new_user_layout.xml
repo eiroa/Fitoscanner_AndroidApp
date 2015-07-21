@@ -58,7 +58,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/mostazaFont" 
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -81,7 +83,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/mostazaFont" 
+                    />
             </LinearLayout>
             
             <LinearLayout
@@ -104,7 +108,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textNoSuggestions" />
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@color/mostazaFont" 
+                    />
             </LinearLayout>
             
             <LinearLayout
@@ -127,7 +133,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColor="@color/mostazaFont" 
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -149,7 +157,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword" 
+                    android:textColor="@color/mostazaFont"
+                    />
             </LinearLayout>
         </LinearLayout>
 

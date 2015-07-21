@@ -98,7 +98,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textNoSuggestions"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/mostazaFont"
+                    />
             </LinearLayout>
 
             <LinearLayout
