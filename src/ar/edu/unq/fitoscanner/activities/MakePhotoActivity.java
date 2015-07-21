@@ -33,6 +33,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.location.Address;
@@ -91,6 +92,7 @@ public class MakePhotoActivity extends Activity {
 	private String sampleName = "";
 	private EditText sampleNameField;
 	private Bitmap imageSelected;
+	private boolean clicked = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class MakePhotoActivity extends Activity {
 		this.hasCamera = checkCameraHardware(this);
 		if (this.hasCamera) {
 			// Abrimos la camara trasera que este disponible
-			if(debug)Log.d(TAG, "Camera detected, attempting opening for first time");
+			Log.d(TAG, "Camera detected, attempting opening for first time");
 			this.camera = Camera.open();
 			try {
 				Thread.sleep(300);
@@ -109,7 +111,7 @@ public class MakePhotoActivity extends Activity {
 				e.printStackTrace();
 			}
 			// Se inicia el layout para tomar una foto
-			if(debug)Log.d(TAG, "Attempting to set Photo screen ");
+			Log.d(TAG, "Attempting to set Photo screen ");
 			this.setShotView();
 			
 			// Iniciamos los data source para poder guardar la nueva muestra con
@@ -128,10 +130,8 @@ public class MakePhotoActivity extends Activity {
 		if(previews.size()>0){
 			sampleName = sampleNameField.getText().toString();
 		}
-		if(debug)Log.d(TAG, "Setting Photo screen layout");
+		Log.d(TAG, "Setting Photo screen layout");
 		this.setContentView(R.layout.takepic_layout);
-		//Log.i(TAG, "Layout changed to previews layout");
-		//Log.i(TAG, "previews are... " + previews.toString());
 		this.startPreview();
 		System.gc();
 	}
@@ -168,7 +168,7 @@ public class MakePhotoActivity extends Activity {
 				//asegurarse de toda forma posible, que se destruye la instancia de la camara, y volver a pedir otra
 				
 				releaseCamera();
-				
+				clicked=false;
 				if(previews.size() >=7){
 					Toast.makeText(
 							getApplicationContext(),
@@ -197,22 +197,28 @@ public class MakePhotoActivity extends Activity {
 		previewFrame.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Attempting to take photo");
+				if(!clicked){
+					Log.d(TAG, "Attempting to take photo");
+					
+					//El siguiente codigo antes de takePicture si no existe se ha presenciado un cuelgue en la camara
+					// en un dispositivo android, particularmente Samsung galaxy prime, no está claro el porque.
+					// aparenta ser un error de Android directamente, la versión afectada fue la 4.4.4  kitkat.
+				    //+++++++++
+					System.gc();
+				    camera.setPreviewCallback(null);
+				    camera.setOneShotPreviewCallback(null);
+					try {
+						camera.reconnect();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}//+++++++++
+					clicked = true;
+					camera.takePicture(myShutterCallback, myPictureCallback_RAW,
+							mPicture);
+				}else{
+					Log.d(TAG,"Attempted multiple click when taking photo");
+				}
 				
-				//El siguiente codigo antes de takePicture si no existe se ha presenciado un cuelgue en la camara
-				// en un dispositivo android, particularmente Samsung galaxy prime, no está claro el porque
-				// aparenta ser un error de Android directamente, la versión afectada fue la 4.4.4  kitkat.
-			    //+++++++++
-				System.gc();
-			    camera.setPreviewCallback(null);
-			    camera.setOneShotPreviewCallback(null);
-				try {
-					camera.reconnect();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}//+++++++++
-				camera.takePicture(myShutterCallback, myPictureCallback_RAW,
-						mPicture);
 			}
 		});
 	}
@@ -312,28 +318,54 @@ public class MakePhotoActivity extends Activity {
 			try {
 					
 				camera.setDisplayOrientation(90);
-				if(debug)Log.d(TAG, "Initiating photo screen ");
+				Log.d(TAG, "Initiating photo screen ");
 				mPreview = new CameraPreview(this, camera);
 				FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+				Log.d(TAG, "Setting camera previen into layout");
 				preview.addView(mPreview);
-				Camera.Parameters p = camera.getParameters();
-				p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-				p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-				p.setRotation(90);
-				camera.setParameters(p);
-				
+				setCameraParameters();
+				Log.d(TAG, "Camera parameters ready");
+				Log.d(TAG, "Setting  camera shot action");
 				this.setShotButton(preview);
-				// Directamente asignamos la funcion de tomar la foto al tocar
-				// la pantalla
-
+				// Directamente asignamos la funcion de tomar la foto al tocar la pantalla
 				
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), "Error opening camera",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Error opening camera !",
+						Toast.LENGTH_SHORT).show();
+				Log.e(TAG, "Error opening camera -> "+e.getStackTrace().toString()+ 
+						" message: "+  
+						e.getMessage()+
+						e.toString()
+						+e.getCause());
 			}
 		}
 	}
 	
+	private void setCameraParameters() {
+		Camera.Parameters p = camera.getParameters();
+		Log.d(TAG, "Setting camera parameters");
+		if(p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
+			Log.d(TAG,"using Auto flash...");
+			p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+		}else{
+			Log.d(TAG,"Auto flash not supported...");
+		}
+		if (p.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+			Log.d(TAG, "Standard focus enabled");
+			p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+		}else{
+			Log.d(TAG, "Standard focus mode not supported, are you a samsung?");
+			if(p.getSupportedFocusModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
+				p.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
+			}else{
+				Log.d(TAG, "No possible auto focus on camera... pitiful device");
+			}
+		}
+		p.setRotation(90);
+		camera.setParameters(p);
+	}
+
+
 	private void processNewSample(){
 		saving =true;
 		new NewSampleTask().execute("");

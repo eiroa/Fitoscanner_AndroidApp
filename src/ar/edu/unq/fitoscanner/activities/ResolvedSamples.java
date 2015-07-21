@@ -111,16 +111,7 @@ public class ResolvedSamples extends Activity{
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.resolved_samples_layout);
-//		Long start = System.currentTimeMillis();
         samples = this.getSamples();
-//        Long end =System.currentTimeMillis();
-//        Log.d(TAG, "TIME START get samplesResolved = "+new Date(start).toGMTString());
-//        Log.d(TAG, "TIME END get samplesResolved = "+new Date(end).toGMTString());
-        
-//        Log.d(TAG, " showing samples obtained");
-//        for (Sample s : samples) {
-//			Log.d(TAG, "sample => "+s.toString());
-//		}
         
         //Spinner seleccionador de muestras
         setSpinnerSelector();
