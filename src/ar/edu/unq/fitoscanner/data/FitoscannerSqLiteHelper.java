@@ -70,7 +70,8 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ TreatmentSQLiteTable.COLUMN_TREATMENT_FREQUENCY_TYPE+ " text, " 
 			+ TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_1+ " text, " 
 			+ TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_2+ " text, " 
-			+ TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3+ " text" 
+			+ TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3+ " text, "
+			+ TreatmentSQLiteTable.COLUMN_TREATMENT_USE_EXPLANATION+ " text"
 			+ " );";
 	
 	private static final String DATABASE_CREATE_TREATMENT_RESOLUTION= " create table "

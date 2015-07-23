@@ -17,6 +17,7 @@ public class TreatmentSQLiteTable {
 	public static final String COLUMN_TREATMENT_EXTRA_LINK_1= "extraLink1";
 	public static final String COLUMN_TREATMENT_EXTRA_LINK_2= "extraLink2";
 	public static final String COLUMN_TREATMENT_EXTRA_LINK_3= "extraLink3";
+	public static final String COLUMN_TREATMENT_USE_EXPLANATION= "useExplanation";
 	
 	public static String[] ALL_COLUMNS = {
 			TreatmentSQLiteTable.COLUMN_TREATMENT_ID,
@@ -30,6 +31,7 @@ public class TreatmentSQLiteTable {
 			TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_1,
 			TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_2,
 			TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3,
+			TreatmentSQLiteTable.COLUMN_TREATMENT_USE_EXPLANATION
 			};
 		
 }

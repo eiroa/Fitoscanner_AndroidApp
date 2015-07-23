@@ -514,7 +514,7 @@ public class MakePhotoActivity extends Activity {
 				recentPhoto = BitmapFactory.decodeByteArray(data, 0,
 						data.length,options);
 				
-				Image newImage = new Image(null, null,null,null, "Picture "
+				Image newImage = new Image(null, null,null,null, "Imagen "
 						+ (previews.size() + 1), new Date().toLocaleString(),
 						Base64Helper.encodeTobase64(recentPhoto));
 				

@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.http.AndroidHttpClient;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract.Instances;
@@ -95,6 +96,7 @@ public class RecordsActivity extends Activity{
 	private ListView listview;
 	private CustomImageListViewAdapter customAdapter;
 	private Bitmap imageSelected;
+	private TextView txtNoGpsDataLabel;
 	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,13 +115,6 @@ public class RecordsActivity extends Activity{
 	private void generateSamplesView(){
 		setContentView(R.layout.records_layout);
         samples = this.getSamples();
-        
-        //check that we really have them.
-        
-//        Log.d(TAG, " showing samples obtained");
-//        for (Sample s : samples) {
-//			Log.d(TAG, "sample => "+s.toString());
-//		}
         
         //Spinner seleccionador de muestras
         setSpinnerSelector();
@@ -163,6 +158,7 @@ public class RecordsActivity extends Activity{
              
            }
          });
+        
 	}
 	
 	private void initiateTextFields(){
@@ -172,6 +168,7 @@ public class RecordsActivity extends Activity{
         txtCityLabel = (TextView) findViewById(R.id.savedSample_cityLabel);
         txtStateLabel = (TextView) findViewById(R.id.savedSample_stateLabel);
         txtCountryLabel = (TextView) findViewById(R.id.savedSample_countryLabel);
+        txtNoGpsDataLabel = (TextView) findViewById(R.id.savedSample_noGPSDataLabel);
         
         txtDate = (TextView) findViewById(R.id.savedSample_originDate);
         txtSample = (TextView) findViewById(R.id.savedSample_sampleName);
@@ -198,13 +195,27 @@ public class RecordsActivity extends Activity{
         txtCountry.setVisibility(v);
 	}
 	
+	private void anulateGPSFields(){
+		 txtLatAndLondLabel.setVisibility(View.GONE);
+	        txtCityLabel.setVisibility(View.GONE);
+	        txtStateLabel.setVisibility(View.GONE);
+	        txtCountryLabel.setVisibility(View.GONE);
+	        txtNoGpsDataLabel.setVisibility(View.VISIBLE);
+	        
+	        txtLatAndLond.setVisibility(View.GONE);
+	        txtCity.setVisibility(View.GONE);
+	        txtState.setVisibility(View.GONE);
+	        txtCountry.setVisibility(View.GONE);
+	}
+	
 	private void anulateAllTextViews(){
 		setTextFieldsVisibility(View.GONE);
+		 txtNoGpsDataLabel.setVisibility(View.GONE);
 	}
 	
 	private void configureTextFields(){
         setTextFieldsVisibility(View.VISIBLE);
-        
+        txtNoGpsDataLabel.setVisibility(View.GONE);
         txtDate.setText(currentSample.getOriginDate());
         txtSample.setText(currentSample.getSampleName());
         txtLatAndLond.setText(currentSample.getLocationData().getLatitude() + " / " 
@@ -240,6 +251,7 @@ public class RecordsActivity extends Activity{
 
         	//seter comportamiento al seleccionar elemento de spinner
         	addListenerOnSpinnerItemSelection();
+        	
         }
         
 	}
@@ -259,6 +271,10 @@ public class RecordsActivity extends Activity{
 				
 				//Actualizar datos de muestra seleccionada
 				configureTextFields();
+				if((currentSample.getLocationData() == null) ||  currentSample.getLocationData().getLatitude().equals("")){
+					anulateGPSFields();
+				}
+				
 				//Generar listView para imagenes de muestra
 				customAdapter = new CustomImageListViewAdapter(
 						getApplicationContext(),

@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="ar.edu.unq.fitoscanner.activities.LoginActivity"
     tools:ignore="MergeRootFrame" >
-
+   
+   
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,7 +31,8 @@
                 android:textColor="@color/greenLeaf"
                 android:textStyle="bold" />
         </LinearLayout>
-
+	
+    
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,8 +40,8 @@
             android:orientation="vertical"
             android:padding="3dp" >
 
-            <LinearLayout
-            android:id="@+id/sampleActionButtons_layout"
+          <LinearLayout
+                android:id="@+id/sampleActionButtons_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -82,204 +84,254 @@
                     android:textSize="15sp" />
                     
             </LinearLayout>
-            <LinearLayout
-            	android:id="@+id/spinnerSection"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="1dp" >
-                
-                <TextView
-                	android:id="@+id/selectSampleText"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-                	android:padding="2dp"
-                	android:shadowDx="1"
-                	android:shadowDy="1"
-                	android:text="Seleccione una muestra:"
-                	android:textColor="@color/white"
-                	android:textStyle="bold" />
-                	
-              <ScrollView
-       				android:id="@+id/scrollView1"
-        			android:layout_width="match_parent"
-        			android:layout_height="wrap_content" >
-              		  <Spinner
-       				 		android:id="@+id/spinner1"
-        			 		android:layout_width="match_parent"
-        			 		android:layout_height="wrap_content"
-        			 		style="@style/spinner_style"
-        			 		android:textColor="@color/yellowFont"
-        			 		android:textSize="20sp"
-        			 		android:prompt="@string/spinner_prompt" />
-        	  </ScrollView>
-            </LinearLayout>
-            <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/savedSample_sampleNameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="3dp"
-                android:text="Nombre de Muestra:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_sampleName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/savedSample_latAndLonLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="2dp"
-                android:text="Latitud y longitud:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_latAndLon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="text" 
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/savedSample_cityLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="2dp"
-                android:text="Localidad: "
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="text" 
-                android:textColor="@color/white"/>
+            
+            
+        		
+        		
+            		
+		            <LinearLayout
+		            	android:id="@+id/spinnerSection"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:layout_gravity="center_horizontal"
+		                android:gravity="center"
+		                android:orientation="vertical"
+		                android:padding="1dp" >
+		                
+		                <TextView
+		                	android:id="@+id/selectSampleText"
+			                android:layout_width="wrap_content"
+			                android:layout_height="wrap_content"
+		                	android:padding="2dp"
+		                	android:shadowDx="1"
+		                	android:shadowDy="1"
+		                	android:text="Seleccione una muestra:"
+		                	android:textColor="@color/white"
+		                	android:textStyle="bold" />
+		                	
+		              <ScrollView
+		       				android:id="@+id/scrollView1"
+		        			android:layout_width="match_parent"
+		        			android:layout_height="wrap_content" >
+		              		  <Spinner
+		       				 		android:id="@+id/spinner1"
+		        			 		android:layout_width="match_parent"
+		        			 		android:layout_height="wrap_content"
+		        			 		style="@style/spinner_style"
+		        			 		android:textColor="@color/yellowFont"
+		        			 		android:textSize="20sp"
+		        			 		android:prompt="@string/spinner_prompt" />
+		        	  </ScrollView>
+		            </LinearLayout>
+		            
+		        <LinearLayout
+            	    android:layout_width="match_parent"
+            		android:layout_height="match_parent"
+            		android:orientation="vertical"
+            		weigthSum="10">	  
+            				
+            		<ScrollView
+		        			android:layout_width="match_parent"
+		        			android:layout_height="0dp"
+		        			android:layout_weight="6" 
+		        			android:fillViewport="true"
+		        			>		
+            			<LinearLayout
+					            android:layout_width="wrap_content"
+					            android:layout_height="match_parent"
+					            android:gravity="center"
+            					android:orientation="vertical"
+					            >	
+				            <LinearLayout
+					            android:layout_width="wrap_content"
+					            android:layout_height="match_parent"
+					            android:layout_gravity="left"
+					            android:gravity="left" 
+					            android:padding="3dp">
+				
+					            <TextView
+					                android:id="@+id/savedSample_sampleNameLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="1dp"
+					                android:text="Muestra:"
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_sampleName"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:layout_weight="1"
+					                android:ems="11"
+					                android:focusable="false"
+					                android:inputType="text"
+					                android:textColor="@color/white" />
+				        	</LinearLayout>
+				
+				        	<LinearLayout
+					            android:layout_width="wrap_content"
+					            android:layout_height="match_parent"
+					            android:layout_gravity="left"
+					            android:gravity="left" >
+				
+					            <TextView
+					                android:id="@+id/savedSample_latAndLonLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="2dp"
+					                android:text="Latitud y longitud:"
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_latAndLon"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:ems="11"
+					                android:focusable="false"
+					                android:inputType="text" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+				
+				        	<LinearLayout
+					            android:layout_width="wrap_content"
+					            android:layout_height="match_parent"
+					            android:layout_gravity="left"
+					            android:gravity="left" >
+				
+					            <TextView
+					                android:id="@+id/savedSample_cityLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="2dp"
+					                android:text="Localidad: "
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_city"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:ems="11"
+					                android:focusable="false"
+					                android:inputType="text" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+				        
+				        	<LinearLayout
+					            android:layout_width="wrap_content"
+					            android:layout_height="match_parent"
+					            android:layout_gravity="left"
+					            android:gravity="left" >
+				
+					            <TextView
+					                android:id="@+id/savedSample_stateLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="2dp"
+					                android:text="Región: "
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_state"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:ems="11"
+					                android:focusable="false"
+					                android:inputType="text" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+				
+				        	<LinearLayout
+				            	android:layout_width="wrap_content"
+				            	android:layout_height="match_parent"
+				             	android:layout_gravity="left"
+				            	android:gravity="left" >
+				
+					            <TextView
+					                android:id="@+id/savedSample_countryLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="2dp"
+					                android:text="País:"
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_country"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:inputType="text" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+				
+				        	<LinearLayout
+				            	android:layout_width="wrap_content"
+				            	android:layout_height="match_parent"
+				            	android:layout_gravity="center_horizontal"
+				            	android:padding="3dp">
+				
+					            <TextView
+					                android:id="@+id/savedSample_originDateLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:padding="1dp"
+					                android:text="Fecha:"
+					                android:textColor="@color/yellowFont" />
+					
+					            <TextView
+					                android:id="@+id/savedSample_originDate"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:text="Date"
+					                android:textSize="13dp" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+				        
+				       		 <LinearLayout
+				           	 	android:layout_width="wrap_content"
+				            	android:layout_height="match_parent"
+				            	android:layout_gravity="center_horizontal">
+				
+					            <TextView
+					                android:id="@+id/savedSample_noGPSDataLabel"
+					                android:layout_width="wrap_content"
+					                android:layout_height="match_parent"
+					                android:focusable="false"
+					                android:text="Sin datos de gps"
+					                android:textSize="13dp" 
+					                android:textColor="@color/white"/>
+				        	</LinearLayout>
+		        	  </LinearLayout>
+		        	 </ScrollView>
+		        	
+		
+		            <LinearLayout
+		                android:layout_width="match_parent"
+		                android:layout_height="0dp"
+		                android:layout_weight="15"
+		                android:layout_gravity="center_horizontal"
+		                android:gravity="center"
+		                android:padding="2dp" 
+		                >
+		
+		                <ListView
+		                    android:id="@+id/savedSampleImagesList"
+		                    android:layout_width="match_parent"
+		                    android:layout_height="match_parent"
+		                    />
+		            </LinearLayout>
+		            
+           		</LinearLayout>
+           		
         </LinearLayout>
         
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/savedSample_stateLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="2dp"
-                android:text="Región: "
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusable="false"
-                android:inputType="text" 
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/savedSample_countryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="2dp"
-                android:text="País:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_country"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:inputType="text" 
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            >
-
-            <TextView
-                android:id="@+id/savedSample_originDateLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="2dp"
-                android:text="Fecha:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/savedSample_originDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:text="Date"
-                android:textSize="13dp" 
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="2dp" >
-
-                <ListView
-                    android:id="@+id/savedSampleImagesList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
+   
 
 </FrameLayout>

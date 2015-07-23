@@ -22,6 +22,7 @@ public class Treatment implements Serializable{
 	private String extraLink1;
 	private String extraLink2;
 	private String extraLink3;
+	private String useExplanation;
 	
 	public Long getId() {
 		return id;
@@ -139,12 +140,24 @@ public class Treatment implements Serializable{
 	public void setImages(List<Image> images) {
 		this.images = images;
 	}
+	
+	
+
+
+	public String getUseExplanation() {
+		return useExplanation;
+	}
+
+
+	public void setUseExplanation(String useExplanation) {
+		this.useExplanation = useExplanation;
+	}
 
 
 	public Treatment(Long id, String name, String description,
 			List<Image> images, String unit, String unitType, String frequency,
 			String frequencyType, String extraLink1, String extraLink2,
-			String extraLink3) {
+			String extraLink3,String useExplanation) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -157,6 +170,7 @@ public class Treatment implements Serializable{
 		this.extraLink1 = extraLink1;
 		this.extraLink2 = extraLink2;
 		this.extraLink3 = extraLink3;
+		this.useExplanation = useExplanation;
 	}
 
 

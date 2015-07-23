@@ -37,9 +37,10 @@ public class TreatmentDataSource extends AbstractDataSource {
 		String extraLink1 = cursor.getString(8);
 		String extraLink2 = cursor.getString(9);
 		String extraLink3 = cursor.getString(10);
+		String useExplanation = cursor.getString(11);
 
 		Treatment tr = new Treatment(id, name, description, null, 
-				unit, unitType, frequency, frequencyType, extraLink1, extraLink2, extraLink3);
+				unit, unitType, frequency, frequencyType, extraLink1, extraLink2, extraLink3,useExplanation);
 
 		tr.setIdImages(idImages);
 		
@@ -119,6 +120,7 @@ public class TreatmentDataSource extends AbstractDataSource {
 			String extraLink1 = tr.getExtraLink1();
 			String extraLink2 = tr.getExtraLink2();
 			String extraLink3 = tr.getExtraLink3();
+			String useExplanation = tr.getUseExplanation();
 
 			ContentValues values = new ContentValues();
 			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_ID, id);

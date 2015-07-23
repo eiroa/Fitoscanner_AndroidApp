@@ -12,7 +12,7 @@ public class Base64Helper {
 	public static String encodeTobase64(Bitmap image)
 	{
 		Log.d("Base64Helper","attempting to encode image");
-	    Log.d("Base64Helper", " image size attempting to encode: " +image.getByteCount());
+		if (android.os.Build.VERSION.SDK_INT>10)Log.d("Base64Helper", " image size attempting to encode: " +image.getByteCount());
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 	    image.compress(Bitmap.CompressFormat.JPEG, 95, baos);
 	    byte[] b = baos.toByteArray();

@@ -97,6 +97,7 @@ public class ResolvedSamples extends Activity{
 	private ListView listview;
 	private CustomImageListViewAdapter customAdapter;
 	private Bitmap imageSelected;
+	private TextView txtNoGpsDataLabel;
 	
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +163,7 @@ public class ResolvedSamples extends Activity{
         txtCityLabel = (TextView) findViewById(R.id.savedSample_cityLabel);
         txtStateLabel = (TextView) findViewById(R.id.savedSample_stateLabel);
         txtCountryLabel = (TextView) findViewById(R.id.savedSample_countryLabel);
+        txtNoGpsDataLabel = (TextView) findViewById(R.id.savedSample_noGPSDataLabel);
         
         txtDate = (TextView) findViewById(R.id.savedSample_originDate);
         txtSample = (TextView) findViewById(R.id.savedSample_sampleName);
@@ -190,10 +192,12 @@ public class ResolvedSamples extends Activity{
 	
 	private void anulateAllTextViews(){
 		setTextFieldsVisibility(View.GONE);
+		 txtNoGpsDataLabel.setVisibility(View.GONE);
 	}
 	
 	private void configureTextFields(){
         setTextFieldsVisibility(View.VISIBLE);
+        txtNoGpsDataLabel.setVisibility(View.GONE);
         
         txtDate.setText(currentSample.getOriginDate());
         txtSample.setText(currentSample.getSampleName());
@@ -202,6 +206,19 @@ public class ResolvedSamples extends Activity{
         txtCity.setText(currentSample.getLocationData().getCity());
         txtState.setText(currentSample.getLocationData().getState());
         txtCountry.setText(currentSample.getLocationData().getCountry());
+	}
+	
+	private void anulateGPSFields(){
+		 txtLatAndLondLabel.setVisibility(View.GONE);
+	        txtCityLabel.setVisibility(View.GONE);
+	        txtStateLabel.setVisibility(View.GONE);
+	        txtCountryLabel.setVisibility(View.GONE);
+	        txtNoGpsDataLabel.setVisibility(View.VISIBLE);
+	        
+	        txtLatAndLond.setVisibility(View.GONE);
+	        txtCity.setVisibility(View.GONE);
+	        txtState.setVisibility(View.GONE);
+	        txtCountry.setVisibility(View.GONE);
 	}
 	
 	public void setSpinnerSelector(){
@@ -245,9 +262,11 @@ public class ResolvedSamples extends Activity{
 				currentSample = samplesMap.get(parent.getItemAtPosition(position).toString());
 				//Seleccionar imagenes
 				currentSampleImages = currentSample.getImages();
-				
-				//Actualizar datos de muestra seleccionada
 				configureTextFields();
+				//Actualizar datos de muestra seleccionada
+				if((currentSample.getLocationData() == null) ||  currentSample.getLocationData().getLatitude().equals("")){
+					anulateGPSFields();
+				}
 				//Generar listView para imagenes de muestra
 				customAdapter = new CustomImageListViewAdapter(
 						getApplicationContext(),

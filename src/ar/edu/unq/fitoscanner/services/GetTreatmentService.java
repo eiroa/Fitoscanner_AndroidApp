@@ -172,6 +172,7 @@ public class GetTreatmentService extends Service {
 						String specieScientificName = specie.getString("scientific_name");
 						String specieDescription = specie.getString("description");
 						
+						
 						JSONArray treatments = jsonResponse.getJSONArray("treatments");
 						
 						//procesamos la lista de tratamientos
@@ -367,12 +368,27 @@ public class GetTreatmentService extends Service {
 		    JSONObject element = treatments.getJSONObject(i);
 		    Treatment newTreatment = new Treatment();
 		    JSONArray treatmentImages = element.getJSONArray("images");
-		    
+		    String quant = element.getString("quantity");
+			String typeQuan = element.getString("typeQuantity");
+			String freq =element.getString("frequency");
+			String typeFreq =element.getString("typeFrequency");
+			String useEx =element.getString("useExplanation");
+			String extra1 =element.getString("extraLink1");
+			String extra2 =element.getString("extraLink2");
+			String extra3 =element.getString("extraLink3");
 		    String serverTreatmentImagesIds = parseToStringPropertyInArray(treatmentImages, "id", "-");
 		    
 		    String treatmentImagesIds = downloadAndMakeImageIds("Imagen_tratamiento_",serverTreatmentImagesIds);
 		    newTreatment.setName(element.getString("name"));
 		    newTreatment.setDescription(element.getString("description"));
+		    newTreatment.setUnit(quant);
+		    newTreatment.setUnitType(typeQuan);
+		    newTreatment.setFrequency(freq);
+		    newTreatment.setFrequencyType(typeFreq);
+		    newTreatment.setUseExplanation(useEx);
+		    newTreatment.setExtraLink1(extra1);
+		    newTreatment.setExtraLink2(extra1);
+		    newTreatment.setExtraLink3(extra1);
 		    newTreatment.setIdImages(treatmentImagesIds);
 		    treatmentsParsed.add(newTreatment);
 		}

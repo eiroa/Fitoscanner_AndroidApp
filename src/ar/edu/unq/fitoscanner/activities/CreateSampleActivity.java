@@ -255,7 +255,9 @@ public class CreateSampleActivity extends Activity {
 	    }
 	    Log.d(TAG, "Width of image  selected: "+b.getWidth());
 		Log.d(TAG, "Height of image selected: "+b.getHeight());
-		Log.d(TAG, "Bytes of image selected: "+b.getByteCount());
+		
+		
+		if (android.os.Build.VERSION.SDK_INT>10)Log.d(TAG, "Bytes of image selected: "+b.getByteCount());
 	    int scale = 1;
 	    if (b.getHeight() > IMAGE_MAX_SIZE || b.getWidth() > IMAGE_MAX_SIZE) {
 	    	Log.d(TAG, "Image size too big, reducing...");
@@ -281,7 +283,7 @@ public class CreateSampleActivity extends Activity {
 		    
 		    Log.d(TAG, "Width of image processed : "+b.getWidth());
 			Log.d(TAG, "Height of image processed: "+b.getHeight());
-			Log.d(TAG, "Bytes of image processed: "+b.getByteCount());
+			if (android.os.Build.VERSION.SDK_INT>10)Log.d(TAG, "Bytes of image processed: "+b.getByteCount());
 	    }
 	    
 	    
