@@ -387,8 +387,8 @@ public class GetTreatmentService extends Service {
 		    newTreatment.setFrequencyType(typeFreq);
 		    newTreatment.setUseExplanation(useEx);
 		    newTreatment.setExtraLink1(extra1);
-		    newTreatment.setExtraLink2(extra1);
-		    newTreatment.setExtraLink3(extra1);
+		    newTreatment.setExtraLink2(extra2);
+		    newTreatment.setExtraLink3(extra3);
 		    newTreatment.setIdImages(treatmentImagesIds);
 		    treatmentsParsed.add(newTreatment);
 		}
