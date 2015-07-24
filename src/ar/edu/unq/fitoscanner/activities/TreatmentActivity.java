@@ -44,6 +44,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -51,6 +52,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -86,6 +88,31 @@ public class TreatmentActivity extends Activity{
 	private TextView txtTreatmentDescriptionLabel;
 	private TextView txtTreatmentName;
 	private TextView txtTreatmentDescription;
+	
+	private TextView txtTreatmentTypeQuantLabel;
+	private TextView txtTreatmentTypeQuantity;
+	
+	private TextView txtTreatmentQuantityLabel;
+	private TextView txtTreatmentQuantity;
+	
+	private TextView txtTreatmentTypeFrequencyLabel;
+	private TextView txtTreatmentTypeFrequency;
+	
+	private TextView txtTreatmentFrequencyLabel;
+	private TextView txtTreatmentFrequency;
+	
+	private TextView txtTreatmentUseExLabel;
+	private TextView txtTreatmentUseEx;
+	
+	private TextView txtTreatmentExtra1Label;
+	private TextView txtTreatmentExtra1;
+	
+	private TextView txtTreatmentExtra2Label;
+	private TextView txtTreatmentExtra2;
+	
+	private TextView txtTreatmentExtra3Label;
+	private TextView txtTreatmentExtra3;
+	
 	private CustomImageListViewAdapter customAdapterTreatmentImages;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +170,30 @@ public class TreatmentActivity extends Activity{
         
         txtTreatmentName = (TextView) findViewById(R.id.treatmentName_text);
         txtTreatmentDescription = (TextView) findViewById(R.id.treatmentDescription_text);
+        
+        txtTreatmentTypeQuantLabel = (TextView) findViewById(R.id.quantityType_label);
+    	txtTreatmentTypeQuantity = (TextView) findViewById(R.id.quantityType_text);
+    	
+    	txtTreatmentQuantityLabel = (TextView) findViewById(R.id.quantity_label);
+    	txtTreatmentQuantity = (TextView) findViewById(R.id.quantity_text);
+    	
+    	txtTreatmentTypeFrequencyLabel = (TextView) findViewById(R.id.typeFrequency_label);
+    	txtTreatmentTypeFrequency = (TextView) findViewById(R.id.typeFrequency_text);
+    	
+    	txtTreatmentFrequencyLabel = (TextView) findViewById(R.id.frequency_label);
+    	txtTreatmentFrequency = (TextView) findViewById(R.id.frequency_text);
+    	
+    	txtTreatmentUseExLabel = (TextView) findViewById(R.id.useExplanation_label);
+    	txtTreatmentUseEx = (TextView) findViewById(R.id.useExplanation_text);
+    	
+    	txtTreatmentExtra1Label = (TextView) findViewById(R.id.extraLink1_label);
+    	txtTreatmentExtra1 = (TextView) findViewById(R.id.extraLink1_text);
+    	
+    	txtTreatmentExtra2Label = (TextView) findViewById(R.id.extraLink2_label);
+    	txtTreatmentExtra2 = (TextView) findViewById(R.id.extraLink2_text);
+    	
+    	txtTreatmentExtra3Label = (TextView) findViewById(R.id.extraLink3_label);
+    	txtTreatmentExtra3 = (TextView) findViewById(R.id.extraLink3_text);
 	}
 	
 	
@@ -152,6 +203,30 @@ public class TreatmentActivity extends Activity{
         
         txtTreatmentName.setVisibility(v);
         txtTreatmentDescription.setVisibility(v);
+        
+        txtTreatmentTypeQuantLabel.setVisibility(v);
+    	txtTreatmentTypeQuantity.setVisibility(v);
+    	
+    	txtTreatmentQuantityLabel.setVisibility(v);
+    	txtTreatmentQuantity.setVisibility(v);
+    	
+    	txtTreatmentTypeFrequencyLabel.setVisibility(v);
+    	txtTreatmentTypeFrequency.setVisibility(v);
+    	
+    	txtTreatmentFrequencyLabel.setVisibility(v);
+    	txtTreatmentFrequency.setVisibility(v);
+    	
+    	txtTreatmentUseExLabel.setVisibility(v);
+    	txtTreatmentUseEx.setVisibility(v);
+    	
+    	txtTreatmentExtra1Label.setVisibility(v);
+    	txtTreatmentExtra1.setVisibility(v);
+    	
+    	txtTreatmentExtra2Label.setVisibility(v);
+    	txtTreatmentExtra2.setVisibility(v);
+    	
+    	txtTreatmentExtra3Label.setVisibility(v);
+    	txtTreatmentExtra3.setVisibility(v);
 	}
 	
 	private void anulateAllTextViews(){
@@ -159,14 +234,37 @@ public class TreatmentActivity extends Activity{
 	}
 	
 	private void configureTextFields(){
-        setTextFieldsVisibility(View.VISIBLE);
+//        setTextFieldsVisibility(View.VISIBLE);
         
         txtTreatmentName.setText(treatment.getName());
         txtTreatmentDescription.setText(treatment.getDescription());
-        
+        setPossibleNullValues();
 	}
 	
 	
+
+	private void setPossibleNullValues() {
+		setPossibleNullValue(txtTreatmentTypeQuantLabel,txtTreatmentTypeQuantity,treatment.getUnitType());
+		setPossibleNullValue(txtTreatmentQuantityLabel,txtTreatmentQuantity,treatment.getUnit());
+		setPossibleNullValue(txtTreatmentTypeFrequencyLabel,txtTreatmentTypeFrequency,treatment.getFrequencyType());
+		setPossibleNullValue(txtTreatmentFrequencyLabel,txtTreatmentFrequency,treatment.getFrequency());
+		setPossibleNullValue(txtTreatmentUseExLabel,txtTreatmentUseEx,treatment.getUseExplanation());
+		setPossibleNullValue(txtTreatmentExtra1Label,txtTreatmentExtra1,treatment.getExtraLink1());
+		setPossibleNullValue(txtTreatmentExtra2Label,txtTreatmentExtra2,treatment.getExtraLink2());
+		setPossibleNullValue(txtTreatmentExtra3Label,txtTreatmentExtra3,treatment.getExtraLink3());
+	}
+
+	private void setPossibleNullValue(TextView Label, TextView textView,String value) {
+		if(value != null && value != ""){
+			textView.setText(value);
+		}else{
+			Label.setHeight(0); //Seteo altura de label en 0, desaparece
+			textView.setHeight(0); // seteo altura de texto en cero, desaprece tambien
+			ViewGroup parent = (ViewGroup) textView.getParent();
+			((ViewGroup) parent.getParent()).removeView(parent); //remuevo el padre del texto, indistinto si es el padre de label y text, o si es un scroll para un textArea
+		}
+		
+	}
 
 	private void setDeleteSampleButton(){
 		Button deleteButton = (Button) findViewById(R.id.button_deleteSample);
@@ -224,6 +322,7 @@ public class TreatmentActivity extends Activity{
 				R.layout.samplepreview_fragment, treatment.getImages());
         listviewTreatmentTreatment.setAdapter(customAdapterTreatmentImages); 
 	}
+	
 	
 	
 }

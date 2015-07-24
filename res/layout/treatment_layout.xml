@@ -30,291 +30,303 @@
                 android:textColor="@color/greenLeaf"
                 android:textStyle="bold" />
         </LinearLayout>
-
+	
+	
+	<LinearLayout
+            	    android:layout_width="match_parent"
+            		android:layout_height="match_parent"
+            		android:orientation="vertical"
+            		weigthSum="20">	
+            		
+       <ScrollView
+       			android:layout_width="match_parent"
+       			android:layout_height="0dp"
+       			android:layout_weight="10" 
+       			android:fillViewport="true">	
         <LinearLayout
         
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp" >
 
            
-            <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/treatmentName_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Nombre:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/treatmentName_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/quantityType_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Tipo cantidad:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/quantityType_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/quantity_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Cantidad:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/quantity_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/typeFrequency_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Tipo frequencia:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/typeFrequency_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/frequency_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Frequencia:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/frequency_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white" />
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/useExplanation_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Modo de uso:"
-                android:textColor="@color/yellowFont" />
-		</LinearLayout>
-            <ScrollView
-       				android:id="@+id/scrollView1"
-        			android:layout_width="wrap_content"
-        			android:layout_height="120dip" >
-            <TextView
-                android:id="@+id/treatmentDescription_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:padding="5dp"/>
-           </ScrollView>
-        
+	          <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/treatmentName_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Nombre:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/treatmentName_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white" />
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/quantityType_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Tipo cantidad:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/quantityType_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white" />
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/quantity_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Cantidad:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/quantity_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white" />
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/typeFrequency_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Tipo frequencia:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/typeFrequency_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white" />
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/frequency_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Frequencia:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/frequency_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white" />
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/useExplanation_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Modo de uso:"
+	                android:textColor="@color/yellowFont" />
+			</LinearLayout>
+	            <ScrollView
+	       				android:id="@+id/scrollView1"
+	        			android:layout_width="wrap_content"
+	        			android:layout_height="120dip" >
+	            <TextView
+	                android:id="@+id/useExplanation_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:textColor="@color/white"
+	                android:padding="5dp"/>
+	           </ScrollView>
+	        
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="match_parent"
+		             android:layout_gravity="left"
+		            android:gravity="left" >
 		
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/treatmentDescription_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Breve descripción: "
-                android:textColor="@color/yellowFont" />
+		            <TextView
+		                android:id="@+id/treatmentDescription_label"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:focusable="false"
+		                android:padding="5dp"
+		                android:text="Breve descripción: "
+		                android:textColor="@color/yellowFont" />
+				
+		        </LinearLayout>
+		        
+		        <ScrollView
+		       				android:id="@+id/scrollView1"
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="120dip" >
+		            <TextView
+		                android:id="@+id/treatmentDescription_text"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textColor="@color/white"/>
+		         </ScrollView>
+			<LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/extraLink1_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Extra link:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/extraLink1_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white"
+	                android:autoLink="web"/>
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/extraLink2_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Extra link:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/extraLink2_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white"
+	                android:autoLink="web"/>
+	        </LinearLayout>
+	     
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_gravity="left"
+	            android:gravity="left" >
+	
+	            <TextView
+	                android:id="@+id/extraLink3_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"
+	                android:focusable="false"
+	                android:padding="5dp"
+	                android:text="Extra link:"
+	                android:textColor="@color/yellowFont" />
+	
+	            <TextView
+	                android:id="@+id/extraLink3_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"
+	                android:focusable="false"
+	                android:inputType="text"
+	                android:textColor="@color/white"
+	                android:autoLink="web"/>
+	        </LinearLayout>
 		
-        </LinearLayout>
-        
-        <ScrollView
-       				android:id="@+id/scrollView1"
-        			android:layout_width="wrap_content"
-        			android:layout_height="120dip" >
-            <TextView
-                android:id="@+id/treatmentDescription_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"/>
-         </ScrollView>
-		
-		<LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
+       	 </LinearLayout>
+		</ScrollView> 
+<!--         <LinearLayout -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_gravity="center_horizontal" -->
+<!--             android:padding="2dp" > -->
 
-            <TextView
-                android:id="@+id/extraLink1_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Extra link:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/extraLink1_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:autoLink="web"/>
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/extraLink2_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Extra link:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/extraLink2_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:autoLink="web"/>
-        </LinearLayout>
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:gravity="left" >
-
-            <TextView
-                android:id="@+id/extraLink3_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:padding="5dp"
-                android:text="Extra link:"
-                android:textColor="@color/yellowFont" />
-
-            <TextView
-                android:id="@+id/extraLink3_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:inputType="text"
-                android:textColor="@color/white"
-                android:autoLink="web"/>
-        </LinearLayout>
-		
-       </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="2dp" >
-
-        </LinearLayout>
+<!--         </LinearLayout> -->
 	 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="4dp" >
-
-                <ListView
-                    android:id="@+id/treatmentImagesList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+	            <LinearLayout
+	                android:layout_width="fill_parent"
+	                android:layout_height="0dp"
+	                android:layout_weight="10"
+	                android:layout_gravity="center_horizontal"
+	                android:gravity="center"
+	                android:padding="4dp" >
+	
+	                <ListView
+	                    android:id="@+id/treatmentImagesList"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="match_parent" />
+	            </LinearLayout>
             
-            
-        </LinearLayout>
+         </LinearLayout>
+         
+    </LinearLayout>
 
 </FrameLayout>

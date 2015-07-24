@@ -134,6 +134,7 @@ public class TreatmentDataSource extends AbstractDataSource {
 			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_1,extraLink1);
 			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_2,extraLink2);
 			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_EXTRA_LINK_3,extraLink3);
+			values.put(TreatmentSQLiteTable.COLUMN_TREATMENT_USE_EXPLANATION, useExplanation);
 			if (id != null && treatmentExists(tr)) {
 				getDatabase().update(
 						TreatmentSQLiteTable.TABLE,values,TreatmentSQLiteTable.COLUMN_TREATMENT_ID+ " = " + id, null);
