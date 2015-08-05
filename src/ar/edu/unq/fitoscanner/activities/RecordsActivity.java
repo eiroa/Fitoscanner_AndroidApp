@@ -110,12 +110,12 @@ public class RecordsActivity extends Activity{
         currentSampleImages = new ArrayList<Image>();
         samplesMap = new HashMap<String, Sample>();
         
+        
     }
 	
 	private void generateSamplesView(){
 		setContentView(R.layout.records_layout);
         samples = this.getSamples();
-        
         //Spinner seleccionador de muestras
         setSpinnerSelector();
         initiateTextFields();
@@ -388,6 +388,8 @@ public class RecordsActivity extends Activity{
 			               }              
 			         }
 			     );
+		}else{
+			sendButton.setVisibility(View.GONE);
 		}
 		
 	}
@@ -482,6 +484,13 @@ public class RecordsActivity extends Activity{
 	
 	
 	public void sendSample(final Sample sample){
+		//Actualizacion inmediata del estado al tocar en enviar, esto evita que el usuario siga viendo la muestra
+		sample.setSent(true);
+		sample.setValid(true);
+    	updateSampleValues(sample);
+    	samplesMap.remove(sample.getSampleName() + "  "+sample.getOriginDate());
+    	this.samples.remove(sample);
+    	
 		new SendSampleTask().execute("");
 		onBackPressed();
 	}
@@ -491,9 +500,7 @@ public class RecordsActivity extends Activity{
 	    @Override
 	    protected HttpResponse doInBackground(String... params) {
 	    	
-	    	sample.setSent(true);
 	    	
-	    	updateSentStatus(sample);
 	        final HttpParams httpParameters = new BasicHttpParams();
 			HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
 			HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);
@@ -515,7 +522,7 @@ public class RecordsActivity extends Activity{
     			//date, name, lat, lon, isAnon, imei
     		       nameValuePairs.add(new BasicNameValuePair("sample_name", sample.getSampleName()));
     		       
-    		       SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+    		       SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
     		       timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     		       String time = timeFormat.format(new Date());
     		       TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
@@ -547,7 +554,7 @@ public class RecordsActivity extends Activity{
     		                "application/x-www-form-urlencoded;charset=UTF-8");
     		       
     		       httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-    		       
+    		       Log.d(TAG, "Attempting to send sample "+sample.getSampleName());
     		   	   return httpclient.execute(httppost);
     			  
     		}catch (HttpHostConnectException e) {
@@ -570,6 +577,7 @@ public class RecordsActivity extends Activity{
     			e.printStackTrace();
     			Toast.makeText(context,"Error desconocido al enviar la muestra... "
     					+ "",Toast.LENGTH_SHORT).show();
+    			return null;
     		}finally{
     			httpclient.close();
     		}
@@ -582,6 +590,7 @@ public class RecordsActivity extends Activity{
 	        if (result != null){
 	        	Toast.makeText(context,"Muestra enviada al servidor, "
 						+ "el servidor intentará responder lo más pronto posible",Toast.LENGTH_LONG).show();
+	        	Log.d(TAG, "Sample sent, result: "+result.getAllHeaders().toString());
 	        	 sample.setSent(true);
 	        	 
 	        	 //La muestra pudo no haber sido resulta o invalida, permitir reenvio

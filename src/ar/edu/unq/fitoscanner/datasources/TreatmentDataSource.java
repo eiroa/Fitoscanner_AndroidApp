@@ -109,6 +109,7 @@ public class TreatmentDataSource extends AbstractDataSource {
 	public Long doSaveTreatment(Treatment tr) {
 		Long result = 0L;
 		if (tr != null) {
+			Log.d(TAG, "Attempting to save treatment: "+tr.toString());
 			Long id = tr.getId();
 			String name = tr.getName();
 			String description = tr.getDescription();

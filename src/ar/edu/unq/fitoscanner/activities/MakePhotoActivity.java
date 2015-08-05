@@ -88,6 +88,8 @@ public class MakePhotoActivity extends Activity {
 	private boolean usesLocation;
 	private boolean saving; 
 	public boolean debug = true;
+	public boolean takingPhoto;
+	public boolean onPause = false;
 	final private Activity activity = this;
 	private String sampleName = "";
 	private EditText sampleNameField;
@@ -131,6 +133,7 @@ public class MakePhotoActivity extends Activity {
 			sampleName = sampleNameField.getText().toString();
 		}
 		Log.d(TAG, "Setting Photo screen layout");
+		takingPhoto = true;
 		this.setContentView(R.layout.takepic_layout);
 		this.startPreview();
 		System.gc();
@@ -330,7 +333,7 @@ public class MakePhotoActivity extends Activity {
 				// Directamente asignamos la funcion de tomar la foto al tocar la pantalla
 				
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), "Error opening camera !",
+				Toast.makeText(getApplicationContext(), "Error al abrir cámara !",
 						Toast.LENGTH_SHORT).show();
 				Log.e(TAG, "Error opening camera -> "+e.getStackTrace().toString()+ 
 						" message: "+  
@@ -342,27 +345,37 @@ public class MakePhotoActivity extends Activity {
 	}
 	
 	private void setCameraParameters() {
-		Camera.Parameters p = camera.getParameters();
-		Log.d(TAG, "Setting camera parameters");
-		if(p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
-			Log.d(TAG,"using Auto flash...");
-			p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-		}else{
-			Log.d(TAG,"Auto flash not supported...");
-		}
-		if (p.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
-			Log.d(TAG, "Standard focus enabled");
-			p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-		}else{
-			Log.d(TAG, "Standard focus mode not supported, are you a samsung?");
-			if(p.getSupportedFocusModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
-				p.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
+		Camera.Parameters p = null;
+		try {
+			p = camera.getParameters();
+			Log.d(TAG, "Setting camera parameters");
+			if(p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
+				Log.d(TAG,"using Auto flash...");
+				p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 			}else{
-				Log.d(TAG, "No possible auto focus on camera... pitiful device");
+				Log.d(TAG,"Auto flash not supported...");
+			}
+			if (p.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)){
+				Log.d(TAG, "Standard focus enabled");
+				p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+			}else{
+				Log.d(TAG, "Standard focus mode not supported, are you a samsung?");
+				if(p.getSupportedFocusModes().contains(Camera.Parameters.FLASH_MODE_AUTO)){
+					p.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
+				}else{
+					Log.d(TAG, "No possible auto focus on camera... pitiful device");
+				}
+			}
+			p.setRotation(90);
+			camera.setParameters(p);
+		} catch (Exception e) {
+			if(p==null){
+				Log.d(TAG, "Error setting camera parameters. Attempting to continue. Camera Parameters are null!");
+			}else{
+				Log.d(TAG, "Error setting camera parameters. Attempting to continue. Camera Parameters:"+p.toString());
 			}
 		}
-		p.setRotation(90);
-		camera.setParameters(p);
+		
 	}
 
 
@@ -412,11 +425,20 @@ public class MakePhotoActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		if (camera != null) {
-			camera.release();
-			camera = null;
-		}
+		releaseCamera();
+		onPause=true;
 		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(takingPhoto && onPause){
+			Log.d(TAG, "Restoring camera from screen lock");
+			camera = camera.open();
+			setShotView();
+			onPause = false;
+		}
 	}
 
 	@Override
@@ -651,6 +673,7 @@ public class MakePhotoActivity extends Activity {
 	}
 	
 	
+	
 	private class NewSampleTask extends AsyncTask<String, Void,Void> {
 		Sample sample = null;
 		int size = 3;
@@ -716,6 +739,8 @@ public class MakePhotoActivity extends Activity {
 			return false;
 		}
 	}
+	
+	
 
 	public ImageDataSource getImageDatasource() {
 		return imageDatasource;

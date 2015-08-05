@@ -205,7 +205,6 @@ public class GetTreatmentService extends Service {
 						
 						//Guardar el tratamiento
 						sample.setTreatmentResolution(tr);
-						
 					}
 				}
 				
@@ -390,6 +389,8 @@ public class GetTreatmentService extends Service {
 		    newTreatment.setExtraLink2(extra2);
 		    newTreatment.setExtraLink3(extra3);
 		    newTreatment.setIdImages(treatmentImagesIds);
+		    
+		    Log.d(TAG, "Preparing new treatment to save:"+newTreatment.toString());
 		    treatmentsParsed.add(newTreatment);
 		}
 		return treatmentsParsed;

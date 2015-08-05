@@ -49,7 +49,9 @@ public class TreatmentResolutionDataSource extends AbstractDataSource{
 			//get treatments and specie determined images
 			imageDataSource.setDatabase(getDatabase());
 			treatmentDataSource.setDatabase(getDatabase());
+			Log.d(TAG, "Attempting to set specie images for ids "+idSpecieImages );
 			tr.setSpecieImages(imageDataSource.getEntitiesForIds(idSpecieImages));
+			Log.d(TAG, "Attempting to set treatments for ids "+idTreatments);
 			tr.setTreatments(treatmentDataSource.getEntitiesForIds(idTreatments));
 		}
 		

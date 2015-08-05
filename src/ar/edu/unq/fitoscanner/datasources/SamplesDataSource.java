@@ -79,6 +79,7 @@ public class SamplesDataSource extends AbstractDataSource{
 	public void updateSentStatusSample(Sample sample){
 		try {
 			Integer sent = sample.getSent()?1:0;
+			Log.d(TAG, "Updating sample " + sample.getSampleName()+ " to sent status: "+sent);
 			getDatabase().rawQuery("UPDATE "+ SampleSQLiteTable.TABLE +
 					" SET sent = "+sent+" where "
 					+SampleSQLiteTable.COLUMN_SAMPLE_ID+"="+sample.getId(), null);

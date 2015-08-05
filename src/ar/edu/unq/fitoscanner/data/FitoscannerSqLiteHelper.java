@@ -36,7 +36,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 		
 	private static final String DATABASE_CREATE_IMAGE = " create table "
 			+ ImageSQLiteTable.TABLE + "( " 
-			+ ImageSQLiteTable.COLUMN_IMAGE_ID + " integer primary key autoincrement, "
+			+ ImageSQLiteTable.COLUMN_IMAGE_ID + " integer primary key , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID+ " integer , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_ID+ " integer , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_RESOLUTION_ID+ " integer , "
@@ -49,7 +49,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_CREATE_CONFIGURATION = " create table "
 			+ ConfigurationSQLiteTable.TABLE + "( " 
-			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " integer primary key, " 
+			+ ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " integer primary key , " 
 			+ ConfigurationSQLiteTable.COLUMN_SERVER_IP + " text , "
 			+ ConfigurationSQLiteTable.COLUMN_USER_NICK + " text, "
 			+ ConfigurationSQLiteTable.COLUMN_USER_PASS + " text, " 
@@ -76,7 +76,7 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_CREATE_TREATMENT_RESOLUTION= " create table "
 			+ TreatmentResolutionSQLiteTable.TABLE + "( " 
-			+ TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_ID + " integer primary key, " 
+			+ TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_ID + " integer primary key , " 
 			+ TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_SPECIE_NAME + " text, " 
 			+ TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_SPECIE_SCIENTIFIC_NAME + " text, "
 			+ TreatmentResolutionSQLiteTable.COLUMN_TREATMENTR_SPECIE_DESCRIPTION+ " text, " 

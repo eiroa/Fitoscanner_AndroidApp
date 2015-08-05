@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.model.Image;
 
@@ -54,13 +55,21 @@ public abstract class AbstractDataSource<T> {
 		T target;
 		if (ids.contains("-")) {
 			for (String retval: ids.split("-")){
-				target = getById(Long.parseLong(retval));
-				result.add(target);
+				try {
+					target = getById(Long.parseLong(retval));
+					result.add(target);
+				} catch (Exception e) {
+					Log.e("Abstract Data Source", "Error trying to get entity for id "+retval);
+				}
 		      }
 		} else {
 			if(!ids.equals("")){
-				target = getById(Long.parseLong(ids));
-				result.add(target);
+				try {
+					target = getById(Long.parseLong(ids));
+					result.add(target);
+				} catch (Exception e) {
+					Log.e("Abstract Data Source", "Error trying to get entity for id "+ids);
+				}
 			}
 		}
 		return result;
