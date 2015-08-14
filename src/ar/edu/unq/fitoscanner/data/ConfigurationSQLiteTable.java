@@ -12,6 +12,8 @@ public class ConfigurationSQLiteTable {
 	public static final String COLUMN_USER_PASS = "pass";
 	public static final String COLUMN_USER_NAME = "name";
 	public static final String COLUMN_USER_SURNAME = "surname";
+	public static final String COLUMN_USER_DATABASE_VERSION = "version";
+	public static final String COLUMN_USER_LOGGED = "logged";
 	
 
 	
@@ -21,7 +23,9 @@ public class ConfigurationSQLiteTable {
 			ConfigurationSQLiteTable.COLUMN_USER_NICK,
 			ConfigurationSQLiteTable.COLUMN_USER_PASS,
 			ConfigurationSQLiteTable.COLUMN_USER_NAME,
-			ConfigurationSQLiteTable.COLUMN_USER_SURNAME};
+			ConfigurationSQLiteTable.COLUMN_USER_SURNAME,
+			ConfigurationSQLiteTable.COLUMN_USER_DATABASE_VERSION,
+			ConfigurationSQLiteTable.COLUMN_USER_LOGGED};
 	
 
 }

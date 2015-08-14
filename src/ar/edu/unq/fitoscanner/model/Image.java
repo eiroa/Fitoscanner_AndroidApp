@@ -16,6 +16,7 @@ public class Image implements Serializable{
 	private String description;
 	private String base64;
 	private String localPath;
+	private boolean sent;
 	
 	
 	public Image(Long id, Long idSample, Long idTreatment,Long idTreatmentResolution,String title, String desc,String base64){
@@ -26,6 +27,7 @@ public class Image implements Serializable{
 		this.title = title;
 		this.description = desc;
 		this.base64 =base64;
+		this.sent = false;
 		
 	}
 
@@ -92,6 +94,15 @@ public class Image implements Serializable{
 
 	public void setLocalPath(String localPath) {
 		this.localPath = localPath;
+	}
+	
+
+	public boolean isSent() {
+		return sent;
+	}
+
+	public void setSent(boolean sent) {
+		this.sent = sent;
 	}
 
 	@Override

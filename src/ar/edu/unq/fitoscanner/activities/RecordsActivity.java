@@ -62,6 +62,7 @@ import ar.edu.unq.fitoscanner.helpers.CustomImageListViewAdapter;
 import ar.edu.unq.fitoscanner.helpers.CustomSampleListViewAdapter;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.helpers.URLHelper;
+import ar.edu.unq.fitoscanner.model.Configuration;
 import ar.edu.unq.fitoscanner.model.Image;
 import ar.edu.unq.fitoscanner.model.Sample;
 
@@ -537,7 +538,7 @@ public class RecordsActivity extends Activity{
     		       
     		       nameValuePairs.add(new BasicNameValuePair("date", time));
     		       nameValuePairs.add(new BasicNameValuePair("imei", mngr.getDeviceId()));
-    		       nameValuePairs.add(new BasicNameValuePair("isAnon", Boolean.toString(!LoginActivity.logged)));
+    		       nameValuePairs.add(new BasicNameValuePair("isAnon", Boolean.toString(! isLogged())));
     		       nameValuePairs.add(new BasicNameValuePair("lon", lon));
     		       nameValuePairs.add(new BasicNameValuePair("lat",lat));
     		       nameValuePairs.add(new BasicNameValuePair("images_hash", sample.getHash()));
@@ -603,5 +604,18 @@ public class RecordsActivity extends Activity{
 						+ "intente reenviarla",Toast.LENGTH_LONG).show();
 	        }
 	    }
+	}
+	
+	private boolean isLogged(){
+		Configuration conf  = null;
+		configurationDataSource.open();
+    	try
+    	{	
+			conf = configurationDataSource.getConfigurationById(1);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+    	return conf.isLogged();
 	}
 }

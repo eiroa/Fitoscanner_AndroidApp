@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.helpers.GPSHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
@@ -86,7 +87,9 @@ public class MenuActivity extends Activity {
         btLogout.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {       		
-        		LoginActivity.logged = false;
+        		Configuration conf = getConfiguration();
+        		conf.setLogged(false);
+        		saveConfiguration(conf);
             	Toast.makeText(activity.getApplicationContext(),"Se ha desconectado",Toast.LENGTH_LONG).show();
             	activity.finish();
             }
@@ -213,7 +216,7 @@ public class MenuActivity extends Activity {
 					if(conf != null){
 						conf.setIp(result);
 					}else{
-						conf = new Configuration(1, result,null,null,null,null);
+						conf = new Configuration(1, result,null,null,null,null,FitoscannerSqLiteHelper.DATABASE_VERSION,false);
 					}
 					configurationDataSource.doSaveConfiguration(conf);
 				}finally{
@@ -236,6 +239,30 @@ public class MenuActivity extends Activity {
 		// show it
 		alertDialog.show();
     }
+    
+    private void saveConfiguration(Configuration conf){
+		configurationDataSource.open();
+    	try
+    	{	
+			configurationDataSource.doSaveConfiguration(conf);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+	}
+	
+	private Configuration getConfiguration(){
+		Configuration conf  = null;
+		configurationDataSource.open();
+    	try
+    	{	
+			conf = configurationDataSource.getConfigurationById(1);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+    	return conf;
+	}
     
 
 }

@@ -13,13 +13,15 @@ public class Configuration {
 	private String pass;
 	private String name;
 	private String surname;
+	private Integer dbVersion;
+	private boolean logged;
 
 	public Configuration() {
 	}
 	
 	
 	public Configuration(Integer id, String ip, String nick, String pass,
-			String name, String surname) {
+			String name, String surname, Integer dbVersion, boolean logged) {
 		super();
 		this.id = id;
 		this.ip = ip;
@@ -27,6 +29,8 @@ public class Configuration {
 		this.pass = pass;
 		this.name = name;
 		this.surname = surname;
+		this.dbVersion = dbVersion;
+		this.logged = logged;
 	}
 
 
@@ -77,7 +81,25 @@ public class Configuration {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	
-	
 
+
+	public Integer getDbVersion() {
+		return dbVersion;
+	}
+
+
+	public void setDbVersion(Integer dbVersion) {
+		this.dbVersion = dbVersion;
+	}
+
+
+	public boolean isLogged() {
+		return logged;
+	}
+
+
+	public void setLogged(boolean logged) {
+		this.logged = logged;
+	}
+	
 }

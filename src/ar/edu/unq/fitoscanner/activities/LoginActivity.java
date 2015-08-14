@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.data.ConfigurationSQLiteTable;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
+import ar.edu.unq.fitoscanner.data.ImageSQLiteTable;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.datasources.ImageDataSource;
 import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
@@ -34,9 +38,9 @@ import ar.edu.unq.fitoscanner.services.GetTreatmentService;
 @SuppressLint("NewApi")
 public class LoginActivity extends Activity implements OnClickListener {
 	LoginActivity activity;
-	public static boolean logged = false;
 	ConfigurationDataSource configurationDataSource;
 	Configuration conf;
+	public static final String TAG = "LoginActivity";
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.activity = this;
@@ -46,13 +50,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        setConfiguration();
         
-        
-        
+        checkDatabaseVersion();
         
 //		describeView();
 //		setDefaultIP();
 	}
+	
+	/**
+	 Metodo para actualizar cualquier cambio en la base. Deberia realizarse en un thread aparte
+	 */
+	public void checkDatabaseVersion(){
+			FitoscannerSqLiteHelper fitoBase = new FitoscannerSqLiteHelper(activity);
+			Integer currentVersion = fitoBase.getWritableDatabase().getVersion();
+			if(currentVersion < FitoscannerSqLiteHelper.DATABASE_VERSION){
+				//Hay que actualizar
+				Log.d(TAG, "Current version of DB is "+currentVersion+" starting upgrade to "+FitoscannerSqLiteHelper.DATABASE_VERSION);
+				fitoBase.onUpgrade(fitoBase.getWritableDatabase(), currentVersion, FitoscannerSqLiteHelper.DATABASE_VERSION);
+			}else{
+				Log.d(TAG, "Current version of DB is "+currentVersion+" . Database is up to date");
+			}
+	}
+	
 	
 	private void describeView(){
 		setContentView(R.layout.activity_login);
@@ -78,7 +98,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				String user = (loginUserField.getText()).toString();
 				String pass = (loginPassField.getText()).toString();
 				if (user.equals(conf.getNick()) &&  SecurityHelper.toSHA256(pass).equals(conf.getPass())) {
-					logged = true;
+					conf.setLogged(true);
+					saveConfiguration();
 					startMenu();
 					Toast.makeText(activity.getApplicationContext(),
 							"Se ha logueado correctamente", Toast.LENGTH_SHORT)
@@ -127,12 +148,40 @@ public class LoginActivity extends Activity implements OnClickListener {
 			if(conf != null){
 				conf.setIp(URLHelper.SERVER_ADDRESS);
 			}else{
-				conf = new Configuration(1, URLHelper.SERVER_ADDRESS,null,null,null,null);
+				conf = new Configuration(1, URLHelper.SERVER_ADDRESS,null,null,null,null, FitoscannerSqLiteHelper.DATABASE_VERSION,false);
 			}
 			configurationDataSource.doSaveConfiguration(conf);
     	}
     	finally{
     		configurationDataSource.close();
+    	}
+	}
+	
+	private void saveConfiguration(){
+		configurationDataSource.open();
+    	try
+    	{	
+			configurationDataSource.doSaveConfiguration(conf);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+	}
+	
+	private boolean isLogged(){
+		Configuration confx = null;;
+		configurationDataSource.open();
+    	try
+    	{	
+			confx = configurationDataSource.getConfigurationById(1);
+    	}
+    	finally{
+    		configurationDataSource.close();
+    	}
+    	if(confx == null){
+    		return false;
+    	}else{
+    		return confx.isLogged();
     	}
 	}
 	
@@ -147,19 +196,22 @@ public class LoginActivity extends Activity implements OnClickListener {
     	}
 	}
 	
-	public boolean checkIfUserRegistered(){
-		boolean result = false;
+	private Configuration getConfiguration(){
+		Configuration conf  = null;
 		configurationDataSource.open();
     	try
     	{	
-			if(conf != null && ( !(conf.getNick().isEmpty()) || conf.getNick()!= null)){
-				result= true;
-			}
+			conf = configurationDataSource.getConfigurationById(1);
     	}
     	finally{
     		configurationDataSource.close();
     	}
-    	return result;
+    	return conf;
+	}
+	
+	public boolean checkIfUserRegistered(){
+		Configuration confx = getConfiguration();
+    	return (conf.getNick() != null && !conf.getNick().equals(""));
 	}
 	
 	public void showIP(){
@@ -178,15 +230,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		logged = false;
 	}
 
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		setConfiguration();
-		if (logged) {
+		if (isLogged()) {
 			startMenu();
 		}else{
 			describeView();

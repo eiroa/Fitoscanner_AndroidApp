@@ -13,6 +13,7 @@ public class ImageSQLiteTable {
 	public static final String COLUMN_IMAGE_TITLE = "title";
 	public static final String COLUMN_IMAGE_DESCRIPTION = "description";
 	public static final String COLUMN_IMAGE_BASE64= "base64";
+	public static final String COLUMN_IMAGE_SENT= "sent";
 	
 	public static String[] ALL_COLUMNS = {
 			ImageSQLiteTable.COLUMN_IMAGE_ID,
@@ -21,6 +22,7 @@ public class ImageSQLiteTable {
 			ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_RESOLUTION_ID,
 			ImageSQLiteTable.COLUMN_IMAGE_TITLE,
 			ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION,
-			ImageSQLiteTable.COLUMN_IMAGE_BASE64};
+			ImageSQLiteTable.COLUMN_IMAGE_BASE64,
+			ImageSQLiteTable.COLUMN_IMAGE_SENT};
 		
 }

@@ -32,8 +32,10 @@ public class ImageDataSource extends AbstractDataSource{
 		String title = cursor.getString(4);
 		String description = cursor.getString(5);
 		String base64 = cursor.getString(6);
+		Boolean sent = ( 1 == cursor.getInt(7)?true:false);
 				
 		Image image = new Image(id,idSample,idTreatment,idTreatmentResolution,title,description,base64);
+		image.setSent(sent);
 		return image;
 	}
 	
@@ -99,7 +101,8 @@ public class ImageDataSource extends AbstractDataSource{
 			String title = image.getTitle();
 			String description = image.getDescription();
 			String base64 = image.getBase64();
-			
+			Integer sent = image.isSent()?1:0;
+
 			ContentValues values = new ContentValues();
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_SAMPLE_ID, idSample);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_ID, idTreatment);
@@ -107,6 +110,7 @@ public class ImageDataSource extends AbstractDataSource{
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_TITLE, title);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION, description);
 			values.put(ImageSQLiteTable.COLUMN_IMAGE_BASE64, base64);
+			values.put(ImageSQLiteTable.COLUMN_IMAGE_SENT, sent);
 			if(id!=null&&imageExists(image)){
 				getDatabase().update(ImageSQLiteTable.TABLE, values, ImageSQLiteTable.COLUMN_IMAGE_ID + " = " + id, null);
 				result =id;
@@ -232,21 +236,6 @@ public class ImageDataSource extends AbstractDataSource{
 		// TODO Auto-generated method stub
 		
 	}
-
-//	public List<Image> getImagesForIds(String idSpecieImages) {
-//		List<Image> result = new ArrayList<Image>();
-//		Image target;
-//		if (idSpecieImages.contains("-")) {
-//			for (String retval: idSpecieImages.split("-")){
-//				target = this.getById(Long.parseLong(retval));
-//				result.add(target);
-//		      }
-//		} else {
-//			target = this.getById(Long.parseLong(idSpecieImages));
-//			result.add(target);
-//		}
-//		return result;
-//	}
 
 
 

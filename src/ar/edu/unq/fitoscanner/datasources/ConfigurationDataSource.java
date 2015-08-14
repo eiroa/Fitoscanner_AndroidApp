@@ -30,7 +30,10 @@ public class ConfigurationDataSource extends AbstractDataSource{
 			String passHash= cursor.getString(3);
 			String name = cursor.getString(4);
 			String surname = cursor.getString(5);
-			Configuration conf = new Configuration(id,ip,nick,passHash,name,surname);
+			Integer db  = cursor.getInt(6);
+			Boolean logged = ( 1 == cursor.getInt(7)?true:false);
+			Log.d("Configuration Datasource", "Getting configuration of user: "+nick+" with logged state: "+logged);
+			Configuration conf = new Configuration(id,ip,nick,passHash,name,surname,db,logged);
 			return conf;
 		}
 
@@ -48,11 +51,15 @@ public class ConfigurationDataSource extends AbstractDataSource{
 	public void doSaveConfiguration(Configuration conf) {		
 		if (conf != null)
 		{
+			
 			String ip = conf.getIp();
 			String nick = conf.getNick();
 			String passHash= conf.getPass();
 			String name = conf.getName();
 			String surname = conf.getSurname();
+			Integer dbVersion = conf.getDbVersion();
+			Integer logged = conf.isLogged()?1:0;
+			Log.d("Configuration datasource", "Updating configuration with nick: "+nick+ " and logged state: " +logged);
 			
 			ContentValues values = new ContentValues();
 			values.put(ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID, 1);
@@ -61,11 +68,13 @@ public class ConfigurationDataSource extends AbstractDataSource{
 			values.put(ConfigurationSQLiteTable.COLUMN_USER_PASS, passHash);
 			values.put(ConfigurationSQLiteTable.COLUMN_USER_NAME, name);
 			values.put(ConfigurationSQLiteTable.COLUMN_USER_SURNAME, surname);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_DATABASE_VERSION, dbVersion);
+			values.put(ConfigurationSQLiteTable.COLUMN_USER_LOGGED, logged);
 			
 			if(this.configurationExists(conf))
 			{
-				getDatabase().update(ConfigurationSQLiteTable.TABLE, values, ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);			} else 
-			{
+				getDatabase().update(ConfigurationSQLiteTable.TABLE, values, ConfigurationSQLiteTable.COLUMN_CONFIGURATION_ID + " = " + 1, null);			
+			} else {
 				getDatabase().insert(ConfigurationSQLiteTable.TABLE, null, values);	
 			}	
 		}		

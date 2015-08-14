@@ -8,11 +8,15 @@ import android.util.Log;
 public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 
 	// DatabaseName
-	private static final String DATABASE_NAME = "fitoscanner.db";
-	private static final int DATABASE_VERSION = 1;
-	
+	public static final String DATABASE_NAME = "fitoscanner.db";
+	public static final int DATABASE_VERSION = 3;
+	public static final String TAG = "Fitoscanner Database";
+	private String sqlScriptToExecute;
+	private boolean doFullUpgrade;
+	private Context context;
 	// define the script to create table
 
+	
 	
 	private static final String DATABASE_CREATE_SAMPLE = " create table "
 			+ SampleSQLiteTable.TABLE + "( " 
@@ -34,6 +38,15 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ SampleSQLiteTable.COLUMN_VALID + " integer"
 			+ " );";
 		
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+
 	private static final String DATABASE_CREATE_IMAGE = " create table "
 			+ ImageSQLiteTable.TABLE + "( " 
 			+ ImageSQLiteTable.COLUMN_IMAGE_ID + " integer primary key , "
@@ -42,7 +55,8 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ ImageSQLiteTable.COLUMN_IMAGE_TREATMENT_RESOLUTION_ID+ " integer , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_TITLE+ " text , "
 			+ ImageSQLiteTable.COLUMN_IMAGE_DESCRIPTION+ " text , "
-			+ ImageSQLiteTable.COLUMN_IMAGE_BASE64 + " text not null"
+			+ ImageSQLiteTable.COLUMN_IMAGE_BASE64 + " text not null , "
+			+ ImageSQLiteTable.COLUMN_IMAGE_SENT+ " integer"
 			+ " );";
 
 
@@ -54,7 +68,9 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 			+ ConfigurationSQLiteTable.COLUMN_USER_NICK + " text, "
 			+ ConfigurationSQLiteTable.COLUMN_USER_PASS + " text, " 
 			+ ConfigurationSQLiteTable.COLUMN_USER_NAME+ " text, " 
-			+ ConfigurationSQLiteTable.COLUMN_USER_SURNAME + " text" 
+			+ ConfigurationSQLiteTable.COLUMN_USER_SURNAME + " text, "
+			+ ConfigurationSQLiteTable.COLUMN_USER_DATABASE_VERSION+ " integer,"
+			+ ConfigurationSQLiteTable.COLUMN_USER_LOGGED+ " integer"
 			+ " );";
 	
 	
@@ -99,19 +115,56 @@ public class FitoscannerSqLiteHelper extends SQLiteOpenHelper {
 		database.execSQL(DATABASE_CREATE_TREATMENT_RESOLUTION);
 		database.execSQL(DATABASE_CREATE_SAMPLE);
 		database.execSQL(DATABASE_CREATE_IMAGE);
-		database.execSQL(DATABASE_CREATE_CONFIGURATION);	
-		Log.d("Database Fitoscanner:", "OnCreate executed");		
+		database.execSQL(DATABASE_CREATE_CONFIGURATION);
+		database.setVersion(DATABASE_VERSION);
+		Log.d(TAG, "OnCreate executed");		
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+		
+		//full upgrade
+		if(database.getVersion() == 1){
+			
+			Log.d(TAG, "Db is in version 1. Full upgrading database");	
+			resetTables(database);
+		}else{
+			initiateDatabaseUpgrade(database, oldVersion, newVersion);
+//			database.setVersion(version);
+		}
+	}
+	
+	public void resetTables(SQLiteDatabase database){
 		database.execSQL("DROP TABLE IF EXISTS " + TreatmentSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + TreatmentResolutionSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + SampleSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + ImageSQLiteTable.TABLE);
 		database.execSQL("DROP TABLE IF EXISTS " + ConfigurationSQLiteTable.TABLE);
 		onCreate(database);
-		Log.d("Database Fitoscanner:", "OnUpgrade executed");		
+	}
+	
+	public void updateDatabase(SQLiteDatabase database,int oldVersion, int newVersion,boolean dropTablesFirst, Context cxt){
+		this.context = cxt;
+		this.onUpgrade(database, oldVersion, newVersion);
+	}
+	
+	
+	public void initiateDatabaseUpgrade(SQLiteDatabase database, int oldVersion, int newVersion){
+		int currentVersion = oldVersion;
+		while (currentVersion < newVersion) {
+			Log.d(TAG, "Upgrading to version => "+ (currentVersion+1));		
+			sqlScriptToExecute = FitoScannerIncrementalScripts.INCREMENTAL_SCRIPTS.get(currentVersion);
+			Log.d(TAG, "Executing script for version "+ currentVersion +": "+sqlScriptToExecute);	
+			database.execSQL(sqlScriptToExecute);
+			currentVersion = currentVersion + 1;
+			database.setVersion(currentVersion);
+			Log.d(TAG, "DB upgraded to version "+currentVersion);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
 

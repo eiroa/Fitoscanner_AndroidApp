@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
+import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
 import ar.edu.unq.fitoscanner.helpers.SecurityHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
@@ -141,8 +142,9 @@ public class NewUserActivity extends Activity {
 					conf.setNick(userNickField.getText().toString());
 					conf.setPass(SecurityHelper.toSHA256(userPassField.getText().toString()));
 					conf.setSurname(userSurnameField.getText().toString());
+					conf.setDbVersion(FitoscannerSqLiteHelper.DATABASE_VERSION);
+					conf.setLogged(true);
 					saveConfiguration(conf);
-					LoginActivity.logged = true;
 	    		}catch (HttpHostConnectException e) {
 	    			Log.d("New User Activity", "WARNING: Server address from database unreacheable, using default address");
 	    			try {
@@ -153,8 +155,9 @@ public class NewUserActivity extends Activity {
 	    				conf.setNick(userNickField.getText().toString());
 	    				conf.setPass(SecurityHelper.toSHA256(userPassField.getText().toString()));
 	    				conf.setSurname(userSurnameField.getText().toString());
+	    				conf.setLogged(true);
+	    				conf.setDbVersion(FitoscannerSqLiteHelper.DATABASE_VERSION);
 	    				saveConfiguration(conf);
-	    				LoginActivity.logged = true;
 	    				
 //	    				Toast.makeText(context,"Usuario registrado, para ingresar deberá utilizar nick y clave",Toast.LENGTH_LONG).show();
 	    			} catch (Exception ex) {
@@ -190,9 +193,6 @@ public class NewUserActivity extends Activity {
 		return et.getText().toString() != null && !et.getText().toString().equals("") ;
 	}
 	
-	private void registerUser(){
-		
-	}
 	
 	private void setConfiguration(){
 		configurationDataSource.open();
@@ -214,7 +214,7 @@ public class NewUserActivity extends Activity {
     	finally{
     		configurationDataSource.close();
     	}
-    	this.finish();
+    	this.finish();  // Ver que este save se ejecuta al final del guardado del usuario. Por eso el finish
 	}
 	
 	@Override

@@ -89,7 +89,8 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Nombre:"
-                    android:textColor="@color/yellowFont" />
+                    android:textSize="15sp"
+                    android:textColor="@color/white" />
 
                 <EditText
                     android:id="@+id/preview_sampleNameField"

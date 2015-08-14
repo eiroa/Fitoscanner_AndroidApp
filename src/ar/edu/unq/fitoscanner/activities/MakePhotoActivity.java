@@ -44,11 +44,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.Selection;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -304,6 +306,11 @@ public class MakePhotoActivity extends Activity {
 										getApplicationContext(),
 										"Aplique un nombre a la muestra por favor",
 										Toast.LENGTH_LONG).show();
+								//Ayudamos a que el usuario rapidamente coloque un nombre reubicando cursor y abriendo teclado
+								sampleNameField.setSelection(0);
+								sampleNameField.requestFocus();
+								InputMethodManager inputMethodManager=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+							    inputMethodManager.toggleSoftInputFromWindow(sampleNameField.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
 							}else{
 								processNewSample();
 							}
