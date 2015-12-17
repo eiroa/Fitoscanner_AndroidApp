@@ -16,8 +16,8 @@ public class Sample {
 	private TreatmentResolution treatmentResolution;
 	//Id directo del tratamiendo, solo por motivo de performance
 	private Long treatmentResolutionId;
-	private LocationData locationData = new LocationData();
 	private Integer requestTreatmentIntents;
+	private LocationData locationData = new LocationData();
 	private Integer minutesFromLastRequest;
 	private Boolean resolved;
 	private Boolean valid;

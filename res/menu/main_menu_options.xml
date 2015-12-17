@@ -8,6 +8,14 @@
          android:icon="@drawable/cancel_icon" 
         android:title="Activar ubicación"/>  
         
+    <item  android:id="@+id/useLowDefinition"  
+         android:icon="@drawable/cancel_icon" 
+        android:title="Baja resolución imagen"/>  
+        
+    <item  android:id="@+id/useHighDefinition"  
+         android:icon="@drawable/cancel_icon" 
+        android:title="Alta resolución imagen"/>  
+        
   
 
 </menu>

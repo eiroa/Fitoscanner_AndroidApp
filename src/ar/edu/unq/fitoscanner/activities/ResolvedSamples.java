@@ -150,6 +150,8 @@ public class ResolvedSamples extends Activity{
         	    imgPopup.setImageBitmap(imageSelected);
         	    imgPopup.getLayoutParams().height = (int) (size.y*0.75);
         	    imgPopup.getLayoutParams().width = (int) (size.x*0.90);
+        	    Button delete = (Button)builder.findViewById(R.id.buttonDeleteImageSample);
+        	    delete.setVisibility(View.GONE);
         	    builder.show();
              
            }

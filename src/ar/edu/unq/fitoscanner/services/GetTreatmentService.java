@@ -63,7 +63,7 @@ public class GetTreatmentService extends Service {
 	private ImageDataSource imageDataSource;
 	private TreatmentResolutionDataSource trds;
 	private TreatmentDataSource tds;
-	public Integer timeRepetition = 300000; // ms
+	public Integer timeRepetition = 100000; // ms
 	public String imei;
 	public Integer notifyId;
 

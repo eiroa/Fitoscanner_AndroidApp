@@ -86,7 +86,6 @@ public class GPSHelper extends Service implements LocationListener {
                         	try {
                     			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     		} catch (IOException e) {
-                    			// TODO Auto-generated catch block
                     			e.printStackTrace();
                     		}
                             latitude = location.getLatitude();
@@ -172,7 +171,7 @@ public class GPSHelper extends Service implements LocationListener {
 			state = addresses.get(0).getAdminArea();
 			country = addresses.get(0).getCountryName();
 		} catch (NullPointerException e) {
-			Log.e("GPSHelper", "Error, addresses var is null,  internet deisabled?");
+			Log.e("GPSHelper", "Error, addresses var is null,  internet disabled?");
 		}
     	return city + ","+state+","+country;
     	
@@ -220,7 +219,9 @@ public class GPSHelper extends Service implements LocationListener {
  
     @Override
     public void onLocationChanged(Location location) { 	
-		
+    	this.location = location;
+    	getLatitude();
+        getLongitude();
     }
  
     @Override

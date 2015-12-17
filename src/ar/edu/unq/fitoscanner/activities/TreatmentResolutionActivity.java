@@ -150,7 +150,8 @@ public class TreatmentResolutionActivity extends Activity{
          	    Display display = getWindowManager().getDefaultDisplay();
          	    Point size = new Point();
          	    display.getSize(size);	
-         	    
+         	    Button delete = (Button)builder.findViewById(R.id.buttonDeleteImageSample);
+       	        delete.setVisibility(View.GONE);
         	    imgPopup.setImageBitmap(imageSelected);
         	    imgPopup.getLayoutParams().height = (int) (size.y*0.75);
         	    imgPopup.getLayoutParams().width = (int) (size.x*0.90);

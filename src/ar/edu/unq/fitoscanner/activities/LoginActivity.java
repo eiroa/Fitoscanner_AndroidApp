@@ -45,7 +45,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		this.activity = this;
 		Intent test = new Intent(activity, GetTreatmentService.class);
-		// Flag de publicidad se activará al instalarse la app, valor de lastSearch seteado en string vacio.
 		activity.startService(test);
 		configurationDataSource = new ConfigurationDataSource(this);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -54,8 +53,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         
         checkDatabaseVersion();
         
-//		describeView();
-//		setDefaultIP();
+		setDefaultIP();
 	}
 	
 	/**
@@ -211,7 +209,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	public boolean checkIfUserRegistered(){
 		Configuration confx = getConfiguration();
-    	return (conf.getNick() != null && !conf.getNick().equals(""));
+    	return (confx != null && confx.getNick() != null && !confx.getNick().equals(""));
 	}
 	
 	public void showIP(){

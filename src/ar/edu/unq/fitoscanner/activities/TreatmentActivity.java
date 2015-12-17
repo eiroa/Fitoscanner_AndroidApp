@@ -34,9 +34,12 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.pdf.PdfDocument.Page;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.print.PrintManager;
+import android.print.pdf.PrintedPdfDocument;
 import android.provider.CalendarContract.Instances;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -154,7 +157,8 @@ public class TreatmentActivity extends Activity{
          	    Display display = getWindowManager().getDefaultDisplay();
          	    Point size = new Point();
          	    display.getSize(size);	
-         	    
+         	    Button delete = (Button)builder.findViewById(R.id.buttonDeleteImageSample);
+       	        delete.setVisibility(View.GONE);
         	    imgPopup.setImageBitmap(imageSelected);
         	    imgPopup.getLayoutParams().height = (int) (size.y*0.75);
         	    imgPopup.getLayoutParams().width = (int) (size.x*0.90);
@@ -163,6 +167,7 @@ public class TreatmentActivity extends Activity{
            }
          });
 	}
+	
 	
 	private void initiateTextFields(){
 		txtTreatmentNameLabel = (TextView) findViewById(R.id.treatmentName_label);

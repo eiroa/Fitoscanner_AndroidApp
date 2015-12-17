@@ -30,6 +30,23 @@ public class Image implements Serializable{
 		this.sent = false;
 		
 	}
+	
+	public Image(Long id, Long idSample, Long idTreatment,Long idTreatmentResolution,String title, String desc,String base64,String localPath){
+		this.id = id;
+		this.idSample = idSample;	
+		this.idTreatment = idTreatment;
+		this.idTreatmentResolution = idTreatmentResolution;
+		this.title = title;
+		this.description = desc;
+		this.base64 =base64;
+		this.localPath = localPath;
+		this.sent = false;
+		
+	}
+
+	public Image() {
+		this.sent = false;
+	}
 
 	public String getTitle() {
 		return title;

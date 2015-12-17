@@ -2,6 +2,8 @@ package ar.edu.unq.fitoscanner.activities;
 
 
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,9 +23,11 @@ import android.widget.Toast;
 import ar.edu.unq.fitoscanner.R;
 import ar.edu.unq.fitoscanner.data.FitoscannerSqLiteHelper;
 import ar.edu.unq.fitoscanner.datasources.ConfigurationDataSource;
+import ar.edu.unq.fitoscanner.helpers.ArrayHelper;
 import ar.edu.unq.fitoscanner.helpers.GPSHelper;
 import ar.edu.unq.fitoscanner.helpers.TypefacesHelper;
 import ar.edu.unq.fitoscanner.model.Configuration;
+import ar.edu.unq.fitoscanner.model.Image;
 
 @SuppressLint("NewApi")
 public class MenuActivity extends Activity {
@@ -34,8 +38,8 @@ public class MenuActivity extends Activity {
 	ConfigurationDataSource configurationDataSource;
 	private String result;
 	final Context context = this;
-	private boolean longClick = false;
 	private boolean usesLocation = true;
+	private boolean usesLowDefinition = true;
 	public boolean debug = true;
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,40 +54,13 @@ public class MenuActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				ArrayHelper ar = new ArrayHelper(context);
+				ar.saveArray("paths", new ArrayList<String>());
+				ar.saveArray("base64s", new ArrayList<String>());
 				Intent intent = new Intent(activity, CreateSampleActivity.class);
         		activity.startActivity(intent);
 			}
 		});
-//        btnShowLocation.setOnClickListener(new View.OnClickListener() {
-//             
-//            @Override
-//            public void onClick(View arg0) {  
-//            	if(!longClick){
-//            		// create class object
-//                    gps = new GPSHelper(MenuActivity.this);
-//     
-//                    // check if GPS enabled     
-//                    if(gps.canGetLocation()){
-//                         
-//                        double latitude = gps.getLatitude();
-//                        double longitude = gps.getLongitude();
-//                         
-//                        // \n is for new line
-//                        Toast.makeText(getApplicationContext(), "Tu ubicación es - \nLat: " + latitude + "\nLong: " + 
-//                        longitude + "\n  Lugar geográfico: "+gps.getAddress(), Toast.LENGTH_SHORT).show();    
-//                    }else{
-//                        // can't get location
-//                        // GPS or Network is not enabled
-//                        // Ask user to enable GPS/network in settings
-//                        gps.showSettingsAlert();
-//                    }
-//            	}else{
-//            		longClick = !longClick;
-//            	}
-//                
-//                 
-//            }
-//        });
         btLogout.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {       		
@@ -101,6 +78,7 @@ public class MenuActivity extends Activity {
         		if(debug)Log.d("Menu Activity", "Starting Make Photo Activity from Menu");
             	Intent intent = new Intent(activity, MakePhotoActivity.class);
             	intent.putExtra("usesLocation", usesLocation);
+            	intent.putExtra("usesLowDefinition",usesLowDefinition);
         		activity.startActivity(intent);
             }
             
@@ -125,9 +103,11 @@ public class MenuActivity extends Activity {
 	@Override  
     public boolean onCreateOptionsMenu(Menu menu) {  
         // Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main_menu_gps, menu); 
+		getMenuInflater().inflate(R.menu.main_menu_options, menu); 
 		menu.findItem(R.id.activateSampleLocation).setVisible(false);
 		menu.findItem(R.id.deactivateSampleLocation).setVisible(false);
+		menu.findItem(R.id.useLowDefinition).setVisible(false);
+		menu.findItem(R.id.useHighDefinition).setVisible(false);
 		
         return true;  
     }
@@ -140,6 +120,14 @@ public class MenuActivity extends Activity {
 			
 		}else{
 			menu.findItem(R.id.activateSampleLocation).setVisible(true);
+			
+		}
+		
+		if (this.usesLowDefinition){
+			menu.findItem(R.id.useHighDefinition).setVisible(true);
+			
+		}else{
+			menu.findItem(R.id.useLowDefinition).setVisible(true);
 			
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -157,6 +145,15 @@ public class MenuActivity extends Activity {
                 Toast.makeText(getApplicationContext(),"No se adjuntará la ubicación geográfica para las muestras",Toast.LENGTH_SHORT).show();  
                 this.usesLocation = false;
                 break;
+            case R.id.useLowDefinition:  
+                Toast.makeText(getApplicationContext(),"Se utilizará baja definición para las imágenes de  nuevas muestras",Toast.LENGTH_SHORT).show();  
+                this.usesLowDefinition = true;
+                break;
+            case R.id.useHighDefinition:  
+                Toast.makeText(getApplicationContext(),"Se utilizará alta definición para las imágenes de  nuevas muestras \n Esto aumentará el consumo de datos utilizados",Toast.LENGTH_SHORT).show();  
+                this.usesLowDefinition = false;
+                break;
+                
               default:  
                 return super.onOptionsItemSelected(item);  
         }
