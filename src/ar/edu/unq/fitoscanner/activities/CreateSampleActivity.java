@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -56,7 +54,7 @@ import ar.edu.unq.fitoscanner.model.Sample;
 public class CreateSampleActivity extends Activity {
 	public final static String TAG = "CreateSampleActivity";
 	private static final int REQUEST_CHOOSER = 1234;
-	private static final int IMAGE_MAX_SIZE  = 2500;
+	private static final int IMAGE_MAX_SIZE  = 1800;
 	private  Button btnChooseImage;
 	private static ArrayList<Image> previews;
 	private static ArrayList<String> paths = new ArrayList<String>();
