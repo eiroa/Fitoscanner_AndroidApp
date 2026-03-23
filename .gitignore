@@ -18,6 +18,7 @@ build/
 local.properties
 
 # Android Studio / IntelliJ
+.idea/
 *.iml
 .idea/caches/
 .idea/libraries/

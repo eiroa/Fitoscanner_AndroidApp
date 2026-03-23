@@ -35,8 +35,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {
@@ -51,9 +51,13 @@ repositories {
 
 dependencies {
     // Local JARs in libs/
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: ['android-support-v4.jar'])
 
     // AppCompat (replaces the android.library.reference.1 appcompat_v7 dependency)
     implementation 'com.android.support:appcompat-v7:21.0.3'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-parameters']
 }
 
